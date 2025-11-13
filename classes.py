@@ -62,3 +62,5 @@ class student(user):
         pass
     def view_enrolled_subjects(self):
         pass
+omar=admin("omar","omar123","12345","dfgdg email")
+print(omar.display_info())
