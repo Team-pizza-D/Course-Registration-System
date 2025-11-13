@@ -50,8 +50,8 @@ class admin(user):
         pass
     def expand_capacity(self, subject_code, new_capacity):
         pass 
-    def display_info_admin(self):
-        return super().display_info() , f"from admin class"
+    def display_info(self):
+        return super().display_info() + f"from admin class"
     
 
 class student(user):
@@ -66,4 +66,4 @@ class student(user):
     def view_enrolled_subjects(self):
         pass
 omar=admin("omar","omar123","12345","dfgdg email")
-print(omar.display_info_admin())
+print(omar.display_info())
