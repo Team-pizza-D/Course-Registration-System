@@ -1,12 +1,17 @@
 # Here we will add the courses
 import sqlite3
-computer_codes = {"EE-250": "Introduction to Electrical Engineering",
-                  "CS-101": "Introduction to Computer Science",
-                  "MATH-201": "Calculus I",
-                  "PHYS-150": "Generl Phaysics",}
+course_codes_Y1 = ["MATH110", "PHYS110", "CHEM110", "CPIT110", "BIO110","STAT110","ELIS110","ELIS120"]
+course_codes_Y2 = ["MATH206", "IE200","PHYS202", "CHEM281", "EE201", "ISLS101", "ARAB101", "IE201", "IE255", "MENG102", "MATH207", "PHYS281"]
 
-computer_credits = {"EE-250": 3, "CS-101": 4, "MATH-201": 4, "PHYS-150": 2}
-computer_prerequests = {"EE-250": "PHYS-202", "CS-101": None, "MATH-201": None, "PHYS-150": "PHYS-100"}
+course_credits = {}
+course_prerequests = {}
+course_sections = {}
+course_section_codes = {}
+course_instructors = {}
+computer_capacitys = {}
+
+
+
 def loop_dict_key(d):
     x = []
     for key in d.keys():
@@ -19,9 +24,9 @@ def loop_dict_value(d):
         y.append(value)
     return y
 A = loop_dict_value(computer_codes)
-B = loop_dict_key(computer_codes)
-C = loop_dict_value(computer_credits)
-D = loop_dict_value(computer_prerequests)
+B = loop_dict_key(course_codes)
+C = loop_dict_value(course_credits)
+D = loop_dict_value(course_prerequests)
 
 def add_course(x, y ,z, p):
     db = sqlite3.connect('courses.db')
