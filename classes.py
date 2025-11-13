@@ -14,7 +14,7 @@
 #     def __init__(self, name, student_id,)
 
 class user:
-    def __init__(self, username, password, Id=None , email, status):
+    def __init__(self, username, password,  email, status, Id=None ):
         self.username = username
         self.password = password
         self.Id = Id
@@ -22,4 +22,4 @@ class user:
         self.status = status
 
     def display_info(self):
-        return f"Username: {self.username}, Role: {self.role}"
+        return f"Username: {self.username}, Email: {self.email}, Status: {self.status}, ID: {self.Id}"
