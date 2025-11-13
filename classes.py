@@ -22,7 +22,7 @@ class user:
         self.status = status
 
     def display_info(self):
-        return f"Username: {self.username}, Email: {self.email}, Status: {self.status}, ID: {self.Id}"
+        return f"Username: {self.username}, Email: {self.email}, Status: {self.status}, ID: {self.Id} "
     def activate(self):
         self.status = "active"
     def deactivate(self):
@@ -50,6 +50,9 @@ class admin(user):
         pass
     def expand_capacity(self, subject_code, new_capacity):
         pass 
+    def display_info_admin(self):
+        return super().display_info() , f"from admin class"
+    
 
 class student(user):
     def __init__(self, username, password, email, status="inactive", Id=None):
@@ -63,4 +66,4 @@ class student(user):
     def view_enrolled_subjects(self):
         pass
 omar=admin("omar","omar123","12345","dfgdg email")
-print(omar.display_info())
+print(omar.display_info_admin())
