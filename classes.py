@@ -45,4 +45,14 @@ class admin(user):
     def expand_capacity(self, subject_code, new_capacity):
         pass 
 
+class student(user):
+    def __init__(self, username, password, email, status="inactive", Id=None):
+        super().__init__(username, password, email, status, Id)
+        self.enrolled_subjects = []
 
+    def enroll_subject(self, subject_code):
+        pass
+    def drop_subject(self, subject_code):
+        pass
+    def view_enrolled_subjects(self):
+        pass
