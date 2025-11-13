@@ -25,6 +25,12 @@ class user:
         return f"Username: {self.username}, Email: {self.email}, Status: {self.status}, ID: {self.Id}"
     def activate(self):
         self.status = "active"
+    def deactivate(self):
+        self.status = "inactive"
+    def is_admin(self):
+        return True if isinstance(self, admin) else False
+    def is_student(self):
+        return True if isinstance(self, student) else False
 
 
 class admin(user):
