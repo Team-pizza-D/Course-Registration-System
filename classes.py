@@ -36,7 +36,7 @@ class user:
 class admin(user):
     def __init__(self, username, password, email, status="active", Id=None):
         super().__init__(username, password, email, status, Id)
-    def add_subject(self, subject_code):
+    def add_subject(self, subject_code, student_id):
         pass
     def remove_subject(self, subject_code, student_id):
         pass
@@ -46,12 +46,14 @@ class admin(user):
         pass
     def view_all_subjects(self):
         pass
-    def find_subject(self, subject_code):
+    def find_subject(self, subject_code):# to find a subject by its code
         pass
-    def expand_capacity(self, subject_code, new_capacity):
+    def expand_capacity(self, subject_code, new_capacity):# to expand the capacity of a subject
         pass 
-    def display_info(self):
-        return super().display_info() + f"from admin class"
+    def reduce_capacity(self, subject_code, new_capacity): # to reduce the capacity of a subject
+        pass
+    def avilable_subjects(self, student_id): # to view subjects that a student can enroll in
+        pass 
     
 
 class student(user):
@@ -65,5 +67,3 @@ class student(user):
         pass
     def view_enrolled_subjects(self):
         pass
-omar=admin("omar","omar123","12345","dfgdg email")
-print(omar.display_info())
