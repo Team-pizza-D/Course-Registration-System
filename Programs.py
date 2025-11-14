@@ -44,6 +44,79 @@ BBB = {"EE331": "Principles of Automatic Control",
        "IE331": "Probability and Engineering Statistics", 
        "EE312": "Electronics 2", 
        "EE351": "Electrical Power Systems I"}
+###all the shared courses codes
+secondYear_courses = {"ARAB201":0, "EE202":0, "EE250":0, "MATH204":0, "ISLS201":0, "EE300":0, "EE301":0, "IE202":0}
+secondYear_courses2 = {"ARAB201":0, "EE202":0, "EE250":0, "MATH204":0, "ISLS201":0, "EE300":0, "EE301":0, "IE202":0}
+secondyear_coursesName= {"ARAB201":"Arabic Language 2",
+                        "EE202":"Object-Oriented Computer Programming",
+                        "EE250":"Basic Electrical Circuits",
+                        "MATH204":"Differential Equations 1",
+                        "ISLS201":"Islamic Culture 2",
+                        "EE300":"Analytical Methods in Engineering",
+                        "EE301":"Electrical Circuits and Systems",
+                        "IE202":"Introduction to Engineering Design 2"}
+
+thirdYear_courses = {"EE321":0, "EE311":0, "IE256":0, "EE360":0, "EE366":0, "ISLS301":0}
+thirdYear_courses2 = {"EE321":0, "EE311":0, "IE256":0, "EE360":0, "EE366":0, "ISLS301":0}
+thirdyear_coursesName= {"EE321":"Introduction to Communications",  
+                       "EE311":"Electronics 1", 
+                       "IE256":"Engineering Management", 
+                       "EE360":"Digital Design 1", 
+                       "EE366":"Microprocessors and Microcontrollers", 
+                       "ISLS301":"Islamic Culture 3"}
+
+fourthYear_courses = {"EE499":0, "ISLS401":0, "EE390":0}
+fourthYear_courses2 = {"EE499":0, "ISLS401":0, "EE390":0}
+fourthyear_coursesName= {"EE499":"Senior Project",
+                         "ISLS401":"Islamic Culture 4", 
+                         "EE390":"Summer Training"}
+# Power and machine courses :
+power_courses = {"MEP261":0, "EE303":0, "EE341":0, "EE442":0, "EE441":0, "EE404":0, "EE451":0, "EE405":0, "EE453":0, "EE454":0} 
+power_courses2 = {"MEP261":0, "EE303":0, "EE341":0, "EE442":0, "EE441":0, "EE404":0, "EE451":0, "EE405":0, "EE453":0, "EE454":0}
+power_coursesName= {"MEP261":"Thermodynamics I",
+                    "EE303":"Electrical Measurement and Instrumentation ",
+                    "EE341":"Electromechanical Energy Conversion I",
+                    "EE442":"Power Electronics I",
+                    "EE441":"Electromechanical Energy Conversion II",
+                    "EE404":"Machines Lab",
+                    "EE451":"Electrical Power Systems II",
+                    "EE405":"Power System Lab",
+                    "EE453":"Power Transmission and Distribution",
+                    "EE454":"Switchgear and Protection of Power Systems I"}
+#  Computer courses :
+computer_courses = {"EE305":0, "EE364":0, "EE361":0, "EE367":0, "EE460":0, "EE462":0, "EE463":0}
+computer_courses2 = {"EE305":0, "EE364":0, "EE361":0, "EE367":0, "EE460":0, "EE462":0, "EE463":0}
+computer_coursesName= {"EE305":"Discrete Mathematics and its Applications",
+                       "EE364":"Advanced Programming",
+                       "EE361":"Digital Computer Organization",
+                       "EE367":"Data Structures and Algorithms",
+                       "EE460":"Digital Design 2",
+                       "EE462":"Computer Communication Networks",
+                       "EE463":"Operating Systems"}
+# Electronics and communication courses :
+communication_courses = {"EE421":0, "EE423":0, "EE413":0, "EE425":0}
+communication_courses2 = {"EE421":0, "EE423":0, "EE413":0, "EE425":0}
+communication_coursesName= {"EE421":"Communication Theory 1",
+                            "EE423":"Magnetic 2",
+                            "EE413":"Communication Circuits",
+                            "EE425":"Communication Systems"}
+#  Biomedical courses :
+biomedical_courses = {"BIO321":0, "EE374":0, "EE372":0, "EE370":0, "EE472":0, "EE474":0, "EE471":0, "EE470":0}
+biomedical_courses2 = {"BIO321":0, "EE374":0, "EE372":0, "EE370":0, "EE472":0, "EE474":0, "EE471":0, "EE470":0}
+biomedical_coursesName= {"BIO321":"Biomedical Engineering",
+                        "EE374":"Experimental &Data Analysis",
+                        "EE372":"Physiology",
+                        "EE370":"Biomedical Primer",
+                        "EE472":"Imaging Systems",
+                        "EE474":"Safety, Reliability & Maintenance",
+                        "EE471":"Instrumentation",
+                        "EE470":"Signals & Systems"}
+                       
+
+
+
+
+
 
 
 course_credits = {}
@@ -66,8 +139,8 @@ def loop_dict_value(d):
     for value in d.values():
         y.append(value)
     return y
-# A = loop_dict_value(computer_codes)
-# B = loop_dict_key(course_codes)
+A = loop_dict_value(computer_codes)
+B = loop_dict_key(course_codes)
 C = loop_dict_value(course_credits)
 D = loop_dict_value(course_prerequests)
 
@@ -80,4 +153,4 @@ def add_course(x, y ,z, p):
                (x[i] , y[i], z[i], p[i]))
     db.commit()
     db.close()
-# add_course(A, B, C, D)
+add_course(A, B, C, D)
