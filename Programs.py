@@ -1,7 +1,32 @@
 # Here we will add the courses
 import sqlite3
+# Shared courses :
+####################################################################################################
 course_codes_Y1 = ["MATH110", "PHYS110", "CHEM110", "CPIT110", "BIO110","STAT110","ELIS110","ELIS120"]
 course_codes_Y2 = ["MATH206", "IE200","PHYS202", "CHEM281", "EE201", "ISLS101", "ARAB101", "IE201", "IE255", "MENG102", "MATH207", "PHYS281"]
+course_codes_Y3 = ["ARAB201", "EE202", "EE250", "MATH204", "ISLS201", "IE331", "EE300", "EE301", "IE202"]
+course_codes_Y4 = ["EE321", "EE311", "IE256", "EE360", "EE366", "ISLS301"]
+course_codes_Y5 = ["EE499", "ISLS401", "EE390"]
+####################################################################################################
+
+# Power and machine courses :
+
+
+# Computer courses :
+
+
+# Electronics and communication courses :
+
+
+# Biomedical courses :
+
+
+
+# Y1_Credits = 
+# Y2_Credits = 
+# Y3_Credits = 
+# Y4_Credits = 
+# Y5_Credits = 
 
 course_credits = {}
 course_prerequests = {}
@@ -23,8 +48,8 @@ def loop_dict_value(d):
     for value in d.values():
         y.append(value)
     return y
-A = loop_dict_value(computer_codes)
-B = loop_dict_key(course_codes)
+# A = loop_dict_value(computer_codes)
+# B = loop_dict_key(course_codes)
 C = loop_dict_value(course_credits)
 D = loop_dict_value(course_prerequests)
 
@@ -37,4 +62,4 @@ def add_course(x, y ,z, p):
                (x[i] , y[i], z[i], p[i]))
     db.commit()
     db.close()
-add_course(A, B, C, D)
+# add_course(A, B, C, D)
