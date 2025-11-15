@@ -49,6 +49,7 @@ Semi_Shared_Courses_Names = {"EE331": "Principles of Automatic Control",
 # PR = prerequisites
 First_Year_C = {"MATH110": 3, "PHYS110": 3, "CHEM110": 3, "CPIT110": 3, "BIO110": 3,"STAT110": 3,"ELIS110": 3,"ELIS120": 3}
 First_Year_PR = {"MATH110": None, "PHYS110": None, "CHEM110": None, "CPIT110": None, "BIO110": None,"STAT110": None,"ELIS110": None,"ELIS120": None}
+First_Year_Terms = {"MATH110": 1, "PHYS110": 2, "CHEM110": 1, "CPIT110": 2, "BIO110": 2,"STAT110": 1,"ELIS110": 1,"ELIS120": 2}
 First_Year_Courses_Names= {"MATH110":"General Mathematics 1",
                         "PHYS110":"General Physics 1",
                         "CHEM110":" General Chemistry 1",
@@ -62,6 +63,8 @@ Second_Year_C = {"MATH206": 4, "IE200": 2,"PHYS202": 4, "CHEM281": 1, "EE201": 2
                 "ARAB101": 3, "IE201": 3, "IE255": 3, "MENG102": 3, "MATH207": 4, "PHYS281": 1}
 Second_Year_PR = {"MATH206": "MATH110", "IE200": None,"PHYS202": "MATH110" and "Phys110", "CHEM281": "CHEM110", "EE201": None, "ISLS101": None,
                 "ARAB101": None, "IE201": None, "IE255": None, "MENG102": None, "MATH207": "Math206", "PHYS281": None}
+Second_Year_Terms = {"MATH206": 3, "IE200": 3,"PHYS202": 3, "CHEM281": 3, "EE201": 3, "ISLS101": 3,
+                "ARAB101": 4, "IE201": 4, "IE255": 4, "MENG102": 4, "MATH207": 4, "PHYS281": 4}
 Second_Year_Courses_Names= {"MATH206":"Calculus 2 for Engineers",
                         "IE200":"Technical Communication Skills",
                         "PHYS202":"General Physics 2",
@@ -77,6 +80,8 @@ Second_Year_Courses_Names= {"MATH206":"Calculus 2 for Engineers",
 
 Third_Year_C = {"ARAB201":0, "EE202":0, "EE250":0, "MATH204":0, "ISLS201":0, "EE300":0, "EE301":0, "IE202":0}
 Third_Year_PR = {"ARAB201":0, "EE202":0, "EE250":0, "MATH204":0, "ISLS201":0, "EE300":0, "EE301":0, "IE202":0}
+Third_Year_Terms = {"ARAB201":5, "EE202":5, "EE250":5, "MATH204":5, "ISLS201":5,
+                    "EE300":6, "EE301":6, "IE202":6}
 Third_Year_Courses_Names= {"ARAB201":"Arabic Language 2",
                         "EE202":"Object-Oriented Computer Programming",
                         "EE250":"Basic Electrical Circuits",
@@ -88,6 +93,7 @@ Third_Year_Courses_Names= {"ARAB201":"Arabic Language 2",
 
 Fourth_Year_C = {"EE321":0, "EE311":0, "IE256":0, "EE360":0, "EE366":0, "ISLS301":0}
 Fourth_Year_PR = {"EE321":0, "EE311":0, "IE256":0, "EE360":0, "EE366":0, "ISLS301":0}
+Fourth_Year_Terms = {"EE321":1, "EE311":1, "IE256":1, "EE360":2, "EE366":2, "ISLS301":2}
 Fourth_Year_Courses_Names= {"EE321":"Introduction to Communications",  
                        "EE311":"Electronics 1", 
                        "IE256":"Engineering Management", 
@@ -96,7 +102,8 @@ Fourth_Year_Courses_Names= {"EE321":"Introduction to Communications",
                        "ISLS301":"Islamic Culture 3"}
 
 Fifth_Year_C = {"EE499":0, "ISLS401":0, "EE390":0} 
-Fifth_Year_PR = {"EE499":0, "ISLS401":0, "EE390":0} 
+Fifth_Year_PR = {"EE499":0, "ISLS401":0, "EE390":0}
+Fifth_Year_Terms = {"EE499":9, "ISLS401":10, "EE390":3}
 Fifth_Year_Courses_Names= {"EE499":"Senior Project",
                          "ISLS401":"Islamic Culture 4", 
                          "EE390":"Summer Training"}
