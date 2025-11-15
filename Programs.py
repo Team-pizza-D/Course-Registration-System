@@ -37,6 +37,7 @@ biomedical = ["BIO321", "EE374", "EE372", "EE370", "EE472", "EE474", "EE471", "E
 ### For who is working with databases , these are temporary values(only credits and prerequisites)
 Semi_Shared_C = {"EE331": 0, "EE302": 0, "EE306": 0, "EE332": 0, "IE331": 0, "EE312": 0, "EE351": 0,}
 Semi_Shared_PR = {"EE331": 0, "EE302": 0, "EE306": 0, "EE332": 0, "IE331": 0, "EE312": 0, "EE351": 0,}
+Semi_Shared_Terms = {"EE331": 7, "EE302": 8, "EE306": 7, "EE332": 8, "IE331": 7, "EE312": 8, "EE351": 8,}
 Semi_Shared_Courses_Names = {"EE331": "Principles of Automatic Control",
        "EE302": "Magnetic 1", 
        "EE306": "Electrical Engineering Technologies", 
@@ -103,7 +104,7 @@ Fourth_Year_Courses_Names= {"EE321":"Introduction to Communications",
 
 Fifth_Year_C = {"EE499":0, "ISLS401":0, "EE390":0} 
 Fifth_Year_PR = {"EE499":0, "ISLS401":0, "EE390":0}
-Fifth_Year_Terms = {"EE499":9, "ISLS401":10, "EE390":3}
+Fifth_Year_Terms = {"EE499":9, "ISLS401":10, "EE390":10}
 Fifth_Year_Courses_Names= {"EE499":"Senior Project",
                          "ISLS401":"Islamic Culture 4", 
                          "EE390":"Summer Training"}
@@ -137,6 +138,7 @@ computer_coursesName= {"EE305":"Discrete Mathematics and its Applications",
 # Electronics and communication courses :
 communication_courses = {"EE421":0, "EE423":0, "EE413":0, "EE425":0}
 communication_courses2 = {"EE421":0, "EE423":0, "EE413":0, "EE425":0}
+communication_terms = {"EE421":9, "EE423":9, "EE413":10, "EE425":10}
 communication_coursesName= {"EE421":"Communication Theory 1",
                             "EE423":"Magnetic 2",
                             "EE413":"Communication Circuits",
@@ -144,6 +146,7 @@ communication_coursesName= {"EE421":"Communication Theory 1",
 #  Biomedical courses :
 biomedical_courses = {"BIO321":0, "EE374":0, "EE372":0, "EE370":0, "EE472":0, "EE474":0, "EE471":0, "EE470":0}
 biomedical_courses2 = {"BIO321":0, "EE374":0, "EE372":0, "EE370":0, "EE472":0, "EE474":0, "EE471":0, "EE470":0}
+biomedical_terms = {"BIO321":6, "EE374":7, "EE372":7, "EE370":8, "EE472":9, "EE474":10, "EE471":10, "EE470":10}
 biomedical_coursesName= {"BIO321":"Biomedical Engineering",
                         "EE374":"Experimental &Data Analysis",
                         "EE372":"Physiology",
@@ -152,6 +155,9 @@ biomedical_coursesName= {"BIO321":"Biomedical Engineering",
                         "EE474":"Safety, Reliability & Maintenance",
                         "EE471":"Instrumentation",
                         "EE470":"Signals & Systems"}
+
+
+
                        
 
 
