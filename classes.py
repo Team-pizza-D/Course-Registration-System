@@ -106,9 +106,10 @@ class admin(user):
     
 
 class student(user):
-    def __init__(self, username, password, email,enrolled_subjects = None,completed_subjects = None, status="inactive", Id=None, GPA=None):
+    def __init__(self, username, password, email,enrolled_subjects = None,completed_subjects = None, status="inactive", Id=None, GPA=None, cummulative_GPA=None):
         super().__init__(username, password, email, status, Id)
         self.GPA = GPA
+        self.cummulative_GPA = cummulative_GPA
         self.enrolled_subjects = enrolled_subjects if enrolled_subjects is not None else [] # list of section codes the student is currently enrolled in
         self.completed_subjects = completed_subjects if completed_subjects is not None else [] # list of section codes the student has completed
     def enroll_subject(self,section_code): 
@@ -143,15 +144,29 @@ class student(user):
         ### this is the second use of this function after admin.avilable_subjects
         ### always put in mind error handling and edge cases (e.g., what if section_code does not exist?)
 
-        self.enrolled_subjects.append(section_code) ### this line and the next line will only work if the previous checks are done (return true)
+        self.enrolled_subjects.append(section_code) ### append wont be used if we are using a database, instead we will have to update the database
+        section_code.enrolled_students.append(self.Id) ### same here, we will have to update the database instead of appending
         return f"Enrolled in subject {section_code} successfully."
 
     def drop_subject(self, subject_code): # to drop a subject (student initiated)
+
+        if subject_code not in self.enrolled_subjects:
+            return f"Not enrolled in subject {subject_code}."  
+        
+        self.enrolled_subjects.remove(subject_code) ### again, this is for list, for database we will have to update the database
+        subject_code.enrolled_students.remove(self.Id) ### same here, update database instead of removing
+
+        return f"Dropped subject {subject_code} successfully."
         ### make sure student is enrolled in the subject before dropping
         ### not sure if we should put in mind a certain deadline for dropping subjects
         pass
     
     def view_enrolled_subjects(self):# to view all enrolled subjects (student initiated)
+        
+        if self.enrolled_subjects == None or len(self.enrolled_subjects) == 0:
+            return "No subjects enrolled."
+        else:
+            return self.enrolled_subjects ### again, this is for list, for database we will have to fetch from database (return all inmformantion about enrolled subjects)
         ### i think this function should return schedule, instructor, section name
         ### notce that section name is different from subject code, for example, subject code is 233746 but section name can be SA, SB etc. so far this is a data base design issue
 
@@ -159,6 +174,5 @@ class student(user):
         pass
     
     def calculate_GPA(self): # to calculate GPA based on completed subjects and their grades
-
         pass   
     
