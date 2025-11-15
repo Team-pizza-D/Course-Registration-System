@@ -37,7 +37,11 @@ biomedical = ["BIO321", "EE374", "EE372", "EE370", "EE472", "EE474", "EE471", "E
 ### For who is working with databases , these are temporary values(only credits and prerequisites)
 Semi_Shared_C = {"EE331": 0, "EE302": 0, "EE306": 0, "EE332": 0, "IE331": 0, "EE312": 0, "EE351": 0,}
 Semi_Shared_PR = {"EE331": 0, "EE302": 0, "EE306": 0, "EE332": 0, "IE331": 0, "EE312": 0, "EE351": 0,}
-Semi_Shared_Terms = {"EE331": 7, "EE302": 8, "EE306": 7, "EE332": 8, "IE331": 7, "EE312": 8, "EE351": 8,}
+Semi_Shared_Terms_Power         = {"EE331": 8, "EE302": 7, "EE332": 8, "EE351": 8}
+Semi_Shared_Terms_Computer      = {"EE331": 9, "EE306": 6, "EE332": 8, "IE331": 6}
+Second_Year_Terms_Communication = {"EE331": 8, "EE302": 6, "EE306": 6, "EE332": 8, "IE331": 7, "EE312": 8, "EE351": 9}
+Semi_Shared_Terms_Biomedical    = {"EE302": 7, "EE306": 6, "EE312": 8, "EE351": 9}
+
 Semi_Shared_Courses_Names = {"EE331": "Principles of Automatic Control",
        "EE302": "Magnetic 1", 
        "EE306": "Electrical Engineering Technologies", 
