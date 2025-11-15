@@ -9,10 +9,18 @@ class user:
     def display_info(self): # to display user information
         return f"Username: {self.username}, Email: {self.email}, Status: {self.status}, ID: {self.Id}"
     def activate(self): # to activate user account
-        self.status = "active"
+        if self.status == "active":
+            return f"{self.username}'s account is already active."
+        else:
+            self.status = "active"
+            return f"{self.username}'s account has been activated."
 
     def deactivate(self): # to deactivate user account
-        self.status = "inactive"
+        if self.status == "inactive":
+            return f"{self.username}'s account is already inactive."
+        else:
+            self.status = "inactive"
+            return f"{self.username}'s account has been deactivated."
 
     def is_admin(self): # to check if user is admin
         return True if isinstance(self, admin) else False
@@ -20,7 +28,7 @@ class user:
     def is_student(self): # to check if user is student
         return True if isinstance(self, student) else False
 
-class subject:
+class subject: ### Data base team said that this is currently not needed but i think its better to have it for future use
     def __init__(self, subject_name, subject_code,prerequisites=None):
         self.subject_code = subject_code
         self.subject_name = subject_name
@@ -34,11 +42,24 @@ class subject:
         pass
 
 class section(subject):
-    def __init__(self, subject_name, subject_code, capacity = None, schedule=None, instructor=None, prerequisites=None):
+    def __init__(self,section_name,section_code, subject_name, subject_code, capacity = None, schedule=None,enrolled_students=None, instructor=None, prerequisites=None):
         super().__init__(subject_name, subject_code, capacity, prerequisites)
         self.schedule = schedule
         self.instructor = instructor
-    pass
+        self.capacity = capacity
+        self.enrolled_students = enrolled_students if enrolled_students is not None else []
+        self.section_name = section_name
+        self.section_code = section_code
+
+    def is_full(self): # to check if section is full
+            return True if len(self.enrolled_students) >= self.capacity else False
+    
+    def view_enrolled_students(self): # to view all enrolled students in the section
+            return self.enrolled_students
+    
+    def has_time_conflict(self, other_sections): # to check for time conflicts with other sections
+            pass
+    
 
 class admin(user):
     def __init__(self, username, password, email, status="inactive", Id=None):
@@ -72,14 +93,32 @@ class admin(user):
     
 
 class student(user):
-    def __init__(self, username, password, email,taken_subjects = None, status="inactive", Id=None, GPA=None):
+    def __init__(self, username, password, email,enrolled_subjects = None,completed_subjects = None, status="inactive", Id=None, GPA=None):
         super().__init__(username, password, email, status, Id)
         self.GPA = GPA
-        self.enrolled_subjects = taken_subjects if taken_subjects is not None else [] # list of section codes the student is currently enrolled in
+        self.enrolled_subjects = enrolled_subjects if enrolled_subjects is not None else [] # list of section codes the student is currently enrolled in
+        self.completed_subjects = completed_subjects if completed_subjects is not None else [] # list of section codes the student has completed
+    def enroll_subject(self,section_code): 
+
+        if section_code in self.enrolled_subjects:
+            return f"Already enrolled in subject {section_code}."
+        
+        if section_code in self.completed_subjects:
+            return f"Subject {section_code} has already been completed."
+        
+        if len(self.enrolled_subjects) >= 5:  ### assuming max 5 subjects can be taken
+            return "Cannot enroll in more than 5 subjects."
+        
+        if section_code.is_full():  ### assuming this function checks if the section is full
+            return f"Subject {section_code} is full."
+        
+        if section_code.has_time_conflict(self.enrolled_subjects): ### assuming this function checks for time conflicts with currently enrolled subjects
+            return f"Subject {section_code} has a time conflict with your current schedule."
+        
+        if not section_code.prerequisites_met(self.completed_subjects): ### assuming this function checks if prerequisites are met
+            return f"Prerequisites for subject {section_code} are not met."
         
 
-    def enroll_subject(self,section_code): 
-    
         ### after making sure subject can be taken (not full, not already taken,prerequisites met,time conflict etc.)
         ### this is the second use of this function after admin.avilable_subjects
         ### always put in mind error handling and edge cases (e.g., what if section_code does not exist?)
