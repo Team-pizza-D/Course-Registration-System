@@ -42,7 +42,7 @@ class subject: ### Data base team said that this is currently not needed but i t
         pass
 
 class section(subject):
-    def __init__(self,section_name,section_code, subject_name, subject_code, capacity = None, schedule=None,enrolled_students=None, instructor=None, prerequisites=None):
+    def __init__(self,section_name,section_code, subject_name, subject_code, capacity = None, schedule=None,enrolled_students=None, instructor=None, prerequisites=None, status="closed"):
         super().__init__(subject_name, subject_code, capacity, prerequisites)
         self.schedule = schedule
         self.instructor = instructor
@@ -51,6 +51,13 @@ class section(subject):
         self.section_name = section_name
         self.section_code = section_code
 
+    def open_section(self): # to open section for enrollment
+            if self.status == "open":
+                return f"Section {self.section_code} is already open for enrollment."
+            else:
+                self.status = "open"
+                return f"Section {self.section_code} is now open for enrollment."
+            
     def is_full(self): # to check if section is full
             return True if len(self.enrolled_students) >= self.capacity else False
     
@@ -59,6 +66,12 @@ class section(subject):
     
     def has_time_conflict(self, other_sections): # to check for time conflicts with other sections
             pass
+    def prerequisites_met(self, completed_subjects): # to check if prerequisites are met
+            for prereq in self.prerequisites:
+                if prereq not in completed_subjects:
+                    return False
+            return True
+    
     
 
 class admin(user):
@@ -117,6 +130,13 @@ class student(user):
         
         if not section_code.prerequisites_met(self.completed_subjects): ### assuming this function checks if prerequisites are met
             return f"Prerequisites for subject {section_code} are not met."
+        
+        if section_code.status != "open":
+            return f"Subject {section_code} is not open for enrollment."
+        
+        if section_code not in section_db: ### assuming section_db is a database or list of all sections
+            return f"Subject {section_code} does not exist."
+        
         
 
         ### after making sure subject can be taken (not full, not already taken,prerequisites met,time conflict etc.)
