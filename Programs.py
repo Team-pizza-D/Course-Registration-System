@@ -115,6 +115,7 @@ All_Courses_Names = {**First_Year_Courses_Names, **Second_Year_Courses_Names, **
 # Power and machine courses :
 power_courses = {"MEP261":0, "EE303":0, "EE341":0, "EE442":0, "EE441":0, "EE404":0, "EE451":0, "EE405":0, "EE453":0, "EE454":0} 
 power_courses2 = {"MEP261":0, "EE303":0, "EE341":0, "EE442":0, "EE441":0, "EE404":0, "EE451":0, "EE405":0, "EE453":0, "EE454":0}
+power_terms= {"MEP261":6, "EE303":7, "EE341":8, "EE442":9, "EE441":9, "EE404":9, "EE451":9, "EE405":10, "EE453":10, "EE454":10}
 power_coursesName= {"MEP261":"Thermodynamics I",
                     "EE303":"Electrical Measurement and Instrumentation ",
                     "EE341":"Electromechanical Energy Conversion I",
@@ -128,6 +129,7 @@ power_coursesName= {"MEP261":"Thermodynamics I",
 #  Computer courses :
 computer_courses = {"EE305":0, "EE364":0, "EE361":0, "EE367":0, "EE460":0, "EE462":0, "EE463":0}
 computer_courses2 = {"EE305":0, "EE364":0, "EE361":0, "EE367":0, "EE460":0, "EE462":0, "EE463":0}
+computer_courses_terms= {"EE305":7, "EE364":8, "EE361":8, "EE367":8, "EE460":9, "EE462":10, "EE463":10}
 computer_coursesName= {"EE305":"Discrete Mathematics and its Applications",
                        "EE364":"Advanced Programming",
                        "EE361":"Digital Computer Organization",
