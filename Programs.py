@@ -41,7 +41,7 @@ all_biomedical = biomedical_sh + biomedical
 ### For who is working with databases , these are temporary values(only credits and prerequisites)
 Semi_Shared_Courses = ["EE331", "EE302", "EE306", "EE332", "IE331", "EE312", "EE351"]
 Semi_Shared_C = {"EE331": 4, "EE302": 3, "EE306": 3, "EE332": 3, "IE331": 3, "EE312": 4, "EE351": 3,}
-Semi_Shared_PR = {"EE331": "EE300" and "EE301", "EE302": "EE250", "EE306": "EE250" and "STAT110", "EE332": "EE201" and "MATH 204", "IE331": "MATH207" and "STAT110", "EE312": "EE311", "EE351": "EE250",}
+Semi_Shared_PR = {"EE331": "EE300, EE301", "EE302": "EE250", "EE306": "EE250, STAT110", "EE332": "EE201, MATH 204", "IE331": "MATH207, STAT110", "EE312": "EE311", "EE351": "EE250",}
 Semi_Shared_Terms_Power         = {"EE331": 8, "EE302": 7, "EE332": 8, "EE351": 8}
 Semi_Shared_Terms_Computer      = {"EE331": 9, "EE306": 6, "EE332": 8, "IE331": 6}
 Semi_Shared_Terms_Communication = {"EE331": 8, "EE302": 6, "EE306": 6, "EE332": 8, "IE331": 7, "EE312": 8, "EE351": 9}
@@ -101,7 +101,7 @@ Third_Year_Courses_Names= {"ARAB201":"Arabic Language 2",
                         "IE202":"Introduction to Engineering Design 2"}
 
 Fourth_Year_C = {"EE321":4, "EE311":4, "IE256":2, "EE360":4, "EE366":3, "ISLS301":2}
-Fourth_Year_PR = {"EE321":"EE301", "EE311":"EE250", "IE256":"IE255", "EE360":"EE250", "EE366":"EE202" and "EE360", "ISLS301":"ISLS201"}
+Fourth_Year_PR = {"EE321":"EE301", "EE311":"EE250", "IE256":"IE255", "EE360":"EE250", "EE366":"EE202, EE360", "ISLS301":"ISLS201"}
 Fourth_Year_Terms = {"EE321":7, "EE311":7, "IE256":7, "EE360":7, "EE366":8, "ISLS301":8}
 Fourth_Year_Courses_Names= {"EE321":"Introduction to Communications",  
                        "EE311":"Electronics 1", 
@@ -123,7 +123,7 @@ All_Courses_Names = Fifth_Year_Courses_Names | Fourth_Year_Courses_Names | Third
 All_Terms = First_Year_Terms | Second_Year_Terms | Third_Year_Terms | Fourth_Year_Terms | Fifth_Year_Terms
 # Power and machine courses :
 power_courses_C = {"MEP261":3, "EE303":3, "EE341":3, "EE442":3, "EE441":3, "EE404":1, "EE451":3, "EE405":1, "EE453":3, "EE454":3} 
-power_courses_PR = {"MEP261":None, "EE303":"EE311", "EE341":"EE250", "EE442":"EE311", "EE441":"EE351" and "EE341", "EE404":"EE441", "EE451":"EE351" and "EE332", "EE405":"EE451", "EE453":"EE351" and "EE332", "EE454":"EE351" and "EE341"}
+power_courses_PR = {"MEP261":None, "EE303":"EE311", "EE341":"EE250", "EE442":"EE311", "EE441":"EE351, EE341", "EE404":"EE441", "EE451":"EE351, EE332", "EE405":"EE451", "EE453":"EE351, EE332", "EE454":"EE351, EE341"}
 power_terms= {"MEP261":6, "EE303":7, "EE341":8, "EE442":9, "EE441":9, "EE404":9, "EE451":9, "EE405":10, "EE453":10, "EE454":10}
 power_coursesName= {"MEP261":"Thermodynamics I",
                     "EE303":"Electrical Measurement and Instrumentation ",
@@ -137,7 +137,7 @@ power_coursesName= {"MEP261":"Thermodynamics I",
                     "EE454":"Switchgear and Protection of Power Systems I"}
 #  Computer courses :
 computer_courses_C = {"EE305":3, "EE364":3, "EE361":3, "EE367":3, "EE460":4, "EE462":3, "EE463":4}
-computer_courses_PR = {"EE305":"EE202" and "MATH204" and "IE202", "EE364":"EE202", "EE361":"EE360" and "STAT110", "EE367":"EE202" and "EE305", "EE460":"EE360", "EE462":"EE202" and "EE364", "EE463":"EE361" and "EE367"}
+computer_courses_PR = {"EE305":"EE202, MATH204, IE202", "EE364":"EE202", "EE361":"EE360, STAT110", "EE367":"EE202, EE305", "EE460":"EE360", "EE462":"EE202, EE364", "EE463":"EE361, EE367"}
 computer_terms= {"EE305":7, "EE364":8, "EE361":8, "EE367":8, "EE460":9, "EE462":10, "EE463":10}
 computer_coursesName= {"EE305":"Discrete Mathematics and its Applications",
                        "EE364":"Advanced Programming",
@@ -148,7 +148,7 @@ computer_coursesName= {"EE305":"Discrete Mathematics and its Applications",
                        "EE463":"Operating Systems"}
 # Electronics and communication courses :
 communication_courses_C = {"EE421":3, "EE423":3, "EE413":4, "EE425":3}
-communication_courses_PR = {"EE421":"EE321" and "IE331", "EE423":"EE302" and "MATH204", "EE413":"EE312" and "EE321", "EE425":"EE421"}
+communication_courses_PR = {"EE421":"EE321, IE331", "EE423":"EE302, MATH204", "EE413":"EE312, EE321", "EE425":"EE421"}
 communication_terms = {"EE421":9, "EE423":9, "EE413":10, "EE425":10}
 communication_coursesName= {"EE421":"Communication Theory 1",
                             "EE423":"Magnetic 2",
@@ -156,7 +156,7 @@ communication_coursesName= {"EE421":"Communication Theory 1",
                             "EE425":"Communication Systems"}
 #  Biomedical courses :
 biomedical_courses_C = {"BIO321":3, "EE374":3, "EE372":3, "EE370":4, "EE472":3, "EE474":3, "EE471":3, "EE470":4}
-biomedical_courses_PR = {"BIO321":None, "EE374":"BIO321", "EE372":"BIO321", "EE370":"EE306" and "BIO321", "EE472":"EE370" and "EE303", "EE474":"EE370", "EE471":"EE370" and "EE372" and "EE312", "EE470":"EE301" and "EE370"}
+biomedical_courses_PR = {"BIO321":None, "EE374":"BIO321", "EE372":"BIO321", "EE370":"EE306, BIO321", "EE472":"EE370, EE303", "EE474":"EE370", "EE471":"EE370, EE372, EE312", "EE470":"EE301, EE370"}
 biomedical_terms = {"BIO321":6, "EE374":7, "EE372":7, "EE370":8, "EE472":9, "EE474":10, "EE471":10, "EE470":10}
 biomedical_coursesName= {"BIO321":"Biomedical Engineering",
                         "EE374":"Experimental &Data Analysis",
