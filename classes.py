@@ -1,4 +1,5 @@
 class user:
+    user_count = 0  # class variable to keep track of user IDs
     def __init__(self, username, password,  email, status="inactive", Id=None ):
         self.username = username
         self.password = password
@@ -40,16 +41,30 @@ class subject: ### Data base team said that this is currently not needed but i t
     
     def view_enrolled_students(self): # to view all enrolled students
         pass
+    def inroll_student_in_subject(self, student_id): # to enroll a student in the subject for data only ( admin use only)
+        self.enrolled_students.append(student_id) ### just for data tracking, actual enrollment is handled in student class
+        ### notce that when considering database design, functions like inroll_student_in_section and drop_student_from_section will have to update the database instead of just removing from list
+
+
+    def drop_student_from_subject(self, student_id): # to drop a student from the subject for data only ( admin use only)
+        if student_id in self.enrolled_students:
+            self.enrolled_students.remove(student_id) ### i didnt put error handling here becuase it will be handled in student class or section class
+        ### notce that when considering database design, functions like inroll_student_in_section and drop_student_from_section will have to update the database instead of just removing from list
+
 
 class section(subject):
     def __init__(self,section_name,section_code, subject_name, subject_code, capacity = None, schedule=None,enrolled_students=None, instructor=None, prerequisites=None, status="closed"):
-        super().__init__(subject_name, subject_code, capacity, prerequisites)
+        super().__init__(subject_name, subject_code,prerequisites)
         self.schedule = schedule
         self.instructor = instructor
         self.capacity = capacity
         self.enrolled_students = enrolled_students if enrolled_students is not None else []
         self.section_name = section_name
         self.section_code = section_code
+        self.student_in_section = [] # list of student IDs enrolled in this section
+
+    def sectioon_info_student(self): # to display section information
+        return f"Section Name: {self.section_name}, Section Code: {self.section_code}, Subject Name: {self.subject_name}, Subject Code: {self.subject_code}, Instructor: {self.instructor}, Schedule: {self.schedule}"    
 
     def open_section(self): # to open section for enrollment
             if self.status == "open":
@@ -71,16 +86,30 @@ class section(subject):
                 if prereq not in completed_subjects:
                     return False
             return True
-    
-    
+    def inroll_student_in_section(self, student_id): # to enroll a student in the section for data only ( admin use only)
+        self.student_in_section.append(student_id) ### just for data tracking, actual enrollment is handled in student class
+        self.inroll_student_in_subject(student_id)
+
+    def drop_student_from_section(self, student_id): # to drop a student from the section for data only ( admin use only)    
+        if student_id in self.student_in_section:
+            self.student_in_section.remove(student_id) ### i didnt put error handling here becuase it will be handled in student class or subject class
+            self.drop_student_from_subject(student_id)
+            ### notce that when considering database design, functions like inroll_student_in_section and drop_student_from_section will have to update the database instead of just removing from list
+           
+
+
+
+   
 
 class admin(user):
     def __init__(self, username, password, email, status="inactive", Id=None):
         super().__init__(username, password, email, status, Id)
     def add_subject(self, section_code, student_id): # to add a subject to a student
+
         pass
     
     def remove_subject(self, section_code, student_id): # to remove a subject from a student
+
         pass
     
     def view_all_students(self, section_code=None): # to view all students, optionally filtered by section 
@@ -112,6 +141,8 @@ class student(user):
         self.cummulative_GPA = cummulative_GPA
         self.enrolled_subjects = enrolled_subjects if enrolled_subjects is not None else [] # list of section codes the student is currently enrolled in
         self.completed_subjects = completed_subjects if completed_subjects is not None else [] # list of section codes the student has completed
+        self.current_credits = 0  ### total credits of currently enrolled subjects, i believe this is needed for checking max credits allowed per semester not current total subjects
+
     def enroll_subject(self,section_code): 
 
         if section_code in self.enrolled_subjects:
@@ -120,8 +151,11 @@ class student(user):
         if section_code in self.completed_subjects:
             return f"Subject {section_code} has already been completed."
         
-        if len(self.enrolled_subjects) >= 5:  ### assuming max 5 subjects can be taken
-            return "Cannot enroll in more than 5 subjects."
+        # if len(self.enrolled_subjects) >= 5:  ### assuming max 5 subjects can be taken, ### pkay but since when was this decided? i think max credits should be the limit not max subjects
+        #     return "Cannot enroll in more than 5 subjects."
+        
+        if self.current_credits + section_code.credits > 21:  ### assuming max 21 credits allowed per semester
+            return "Cannot exceed maximum credit limit of 21."
         
         if section_code.is_full():  ### assuming this function checks if the section is full
             return f"Subject {section_code} is full."
@@ -138,23 +172,31 @@ class student(user):
         if section_code not in section_db: ### assuming section_db is a database or list of all sections
             return f"Subject {section_code} does not exist."
         
+        else:
+            self.enrolled_subjects.append(section_code)  ### append wont be used if we are using a database, instead we will have to update the database
+            self.current_credits += section_code.credits 
+            self.inroll_student_in_section(self.Id) ### enroll student in section for data tracking , ### same here, we will have to update the database instead of appending
+            return f"Enrolled in subject {section_code} successfully.\n Here is all the information about the section you just enrolled in:\n {section_code.sectioon_info_student()}"
+        
+
+        
         
 
         ### after making sure subject can be taken (not full, not already taken,prerequisites met,time conflict etc.)
         ### this is the second use of this function after admin.avilable_subjects
         ### always put in mind error handling and edge cases (e.g., what if section_code does not exist?)
 
-        self.enrolled_subjects.append(section_code) ### append wont be used if we are using a database, instead we will have to update the database
-        section_code.enrolled_students.append(self.Id) ### same here, we will have to update the database instead of appending
-        return f"Enrolled in subject {section_code} successfully."
+      
 
     def drop_subject(self, subject_code): # to drop a subject (student initiated)
 
         if subject_code not in self.enrolled_subjects:
             return f"Not enrolled in subject {subject_code}."  
         
-        self.enrolled_subjects.remove(subject_code) ### again, this is for list, for database we will have to update the database
+        else :
+            self.enrolled_subjects.remove(subject_code) ### again, this is for list, for database we will have to update the database
         subject_code.enrolled_students.remove(self.Id) ### same here, update database instead of removing
+        self.drop_student_from_section(self.Id) ### same here, update database instead of removing
 
         return f"Dropped subject {subject_code} successfully."
         ### make sure student is enrolled in the subject before dropping
