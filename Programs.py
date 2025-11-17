@@ -186,9 +186,9 @@ def computer_adding(x1, y1, z1, p1, m1):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS Computer')
-    cr.execute('CREATE TABLE IF NOT EXISTS Computer (course_name TEXT, course_code TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER)')
+    cr.execute('CREATE TABLE IF NOT EXISTS Computer (course_code TEXT, course_name TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER)')
     for i in range(len(x1)):
-        cr.execute('INSERT INTO Computer (course_name, course_code, credit, prerequisites, terms) VALUES (?, ?, ?, ?, ?)',
+        cr.execute('INSERT INTO Computer (course_code, course_name, credit, prerequisites, terms) VALUES (?, ?, ?, ?, ?)',
                (x1[i] , y1[i], z1[i], p1[i], m1[i]))
     db.commit()
     db.close()
@@ -197,9 +197,9 @@ def power_adding(x1, y1, z1, p1, m1):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS Power')
-    cr.execute('CREATE TABLE IF NOT EXISTS Power (course_name TEXT, course_code TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER)')
+    cr.execute('CREATE TABLE IF NOT EXISTS Power (course_code TEXT, course_name TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER)')
     for i in range(len(x1)):
-        cr.execute('INSERT INTO Power (course_name, course_code, credit, prerequisites, terms) VALUES (?, ?, ?, ?, ?)',
+        cr.execute('INSERT INTO Power (course_code, course_name, credit, prerequisites, terms) VALUES (?, ?, ?, ?, ?)',
                (x1[i] , y1[i], z1[i], p1[i], m1[i]))
     db.commit()
     db.close()
@@ -208,9 +208,9 @@ def communication_adding(x1, y1, z1, p1, m1):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS Communication')
-    cr.execute('CREATE TABLE IF NOT EXISTS Communication (course_name TEXT, course_code TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER)')
+    cr.execute('CREATE TABLE IF NOT EXISTS Communication (course_code TEXT, course_name TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER)')
     for i in range(len(x1)):
-        cr.execute('INSERT INTO Communication (course_name, course_code, credit, prerequisites, terms) VALUES (?, ?, ?, ?, ?)',
+        cr.execute('INSERT INTO Communication (course_code, course_name, credit, prerequisites, terms) VALUES (?, ?, ?, ?, ?)',
                (x1[i] , y1[i], z1[i], p1[i], m1[i]))
     db.commit()
     db.close()
@@ -219,9 +219,9 @@ def biomedical_adding(x1, y1, z1, p1, m1):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS Biomedical')
-    cr.execute('CREATE TABLE IF NOT EXISTS Biomedical (course_name TEXT, course_code TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER)')
+    cr.execute('CREATE TABLE IF NOT EXISTS Biomedical (course_code TEXT, course_name TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER)')
     for i in range(len(x1)):
-        cr.execute('INSERT INTO Biomedical (course_name, course_code, credit, prerequisites, terms) VALUES (?, ?, ?, ?, ?)',
+        cr.execute('INSERT INTO Biomedical (course_code, course_name, credit, prerequisites, terms) VALUES (?, ?, ?, ?, ?)',
                (x1[i] , y1[i], z1[i], p1[i], m1[i]))
     db.commit()
     db.close()
