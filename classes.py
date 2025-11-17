@@ -33,10 +33,10 @@ class user:
             return f"{self.username}'s account has been deactivated."
 
     def is_admin(self): # to check if user is admin
-        return True if isinstance(self, admin) else False
+        return True if isinstance(self, admin) else False ### This will be known by which table is the information in (student or admin)
     
     def is_student(self): # to check if user is student
-        return True if isinstance(self, student) else False
+        return True if isinstance(self, student) else False ### This will be known by which table is the information in (student or admin)
 
 class subject: ### Data base team said that this is currently not needed but i think its better to have it for future use
     def __init__(self, subject_name, subject_code,prerequisites=None):
@@ -77,7 +77,7 @@ class section(subject):
         return f"Section Name: {self.section_name} Subject Name: {self.subject_name}, Subject Code: {self.subject_code}, Instructor: {self.instructor}, Schedule: {self.schedule}"    
 
     def open_section(self): # to open section for enrollment
-            if self.status == "open":
+            if self.status == "open": ### From database guy : work at this by capacity ! Also, This should be at admin class .
                 return f"Section {self.section_name} is already open for enrollment."
             else:
                 self.status = "open"
