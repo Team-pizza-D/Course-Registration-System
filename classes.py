@@ -62,7 +62,7 @@ class subject: ### Data base team said that this is currently not needed but i t
             self.enrolled_students.remove(student_id) ### i didnt put error handling here becuase it will be handled in student class or section class
         ### notce that when considering database design, functions like inroll_student_in_section and drop_student_from_section will have to update the database instead of just removing from list
 
-
+#___________________________________________________________________________________________________________________________
 
 class section(subject):
     # def __init__(self,section_name=None,section_code=None, subject_name=None, subject_code=None, capacity = None, schedule=None,enrolled_students=None, instructor=None, prerequisites=None, status="closed"):
@@ -115,7 +115,7 @@ class section(subject):
     def remaining_seats(self): # to check remaining seats in the section
             return self.capacity - len(self.enrolled_students)
            
-
+#___________________________________________________________________________________________________________________________
 
 existing_ids = set()
 
@@ -231,7 +231,7 @@ class student(user):
     def transcript(self): # to generate a transcript of completed subjects and grades
         pass
     
-
+#___________________________________________________________________________________________________________________________
 
 class admin(user):
     def __init__(self, username, password, email, status="inactive", Id=None):
