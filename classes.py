@@ -63,6 +63,9 @@ class section(subject):
         self.section_code = section_code
         self.student_in_section = [] # list of student IDs enrolled in this section
 
+    def display_student_in_section(self): # to display students in the section
+        return f"Enrolled Students in Section {self.section_code}: {self.enrolled_students}"    
+
     def sectioon_info_student(self): # to display section information
         return f"Section Name: {self.section_name}, Section Code: {self.section_code}, Subject Name: {self.subject_name}, Subject Code: {self.subject_code}, Instructor: {self.instructor}, Schedule: {self.schedule}"    
 
@@ -98,40 +101,6 @@ class section(subject):
            
 
 
-
-   
-
-class admin(user):
-    def __init__(self, username, password, email, status="inactive", Id=None):
-        super().__init__(username, password, email, status, Id)
-    def add_subject(self, section_code, student_id): # to add a subject to a student
-
-        pass
-    
-    def remove_subject(self, section_code, student_id): # to remove a subject from a student
-
-        pass
-    
-    def view_all_students(self, section_code=None): # to view all students, optionally filtered by section 
-        pass
-    
-    def find_student(self, student_id): # to find student's information by ID
-        pass
-    
-    def view_all_subjects(self, available_only=False): # to view all subjects, optionally filtering only available ones
-        pass
-    def find_sections(self, subject_code,): # to find subject's information by code
-        ### return subject details each with section info (schedule, instructor, capacity, enrolled students etc.)
-        ### not sure if including enrolled students is a good idea
-        pass
-    def expand_capacity(self, section_code, new_capacity): # to expand the capacity of a section
-        pass 
-    def reduce_capacity(self, section_code, new_capacity): # to reduce the capacity of a subject
-        pass
-    def avilable_subjects(self, student_id): # to view subjects that a student can enroll in
-        ### must check prerequisites, time conflicts, capacity etc.
-
-        pass 
     
 
 class student(user):
@@ -216,5 +185,43 @@ class student(user):
         pass
     
     def calculate_GPA(self): # to calculate GPA based on completed subjects and their grades
-        pass   
+        pass  
+    ### not sure if these all the mwthods needed for student class
     
+
+
+class admin(user,student,section):
+    def __init__(self, username, password, email, status="inactive", Id=None):
+        super().__init__(username, password, email, status, Id)
+    def add_subject(self, section_code, student_id): # to add a subject to a student
+        student_id.enroll_subject(section_code)
+    
+    def remove_subject(self, section_code, student_id): # to remove a subject from a student
+        student_id.drop_subject(section_code)  ### have to rview this later
+
+        pass
+    def display_student_in_section(self):
+        return super().display_student_in_section() ### have to rview this later
+    
+    def view_all_students(self, section_code=None): # to view all students, optionally filtered by section 
+        if section_code != None:
+            return section_code.display_student_in_section() ### return list of student IDs enrolled in the section
+        pass
+    
+    def find_student(self, student_id): # to find student's information by ID
+        pass
+    
+    def view_all_subjects(self, available_only=False): # to view all subjects, optionally filtering only available ones
+        pass
+    def find_sections(self, subject_code,): # to find subject's information by code
+        ### return subject details each with section info (schedule, instructor, capacity, enrolled students etc.)
+        ### not sure if including enrolled students is a good idea
+        pass
+    def expand_capacity(self, section_code, new_capacity): # to expand the capacity of a section
+        pass 
+    def reduce_capacity(self, section_code, new_capacity): # to reduce the capacity of a subject
+        pass
+    def avilable_subjects(self, student_id): # to view subjects that a student can enroll in
+        ### must check prerequisites, time conflicts, capacity etc.
+
+        pass 
