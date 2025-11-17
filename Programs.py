@@ -6,26 +6,26 @@ course_codes_Y1 = ["MATH110", "PHYS110", "CHEM110", "CPIT110", "BIO110","STAT110
 course_codes_Y2 = ["MATH206", "IE200","PHYS202", "CHEM281", "EE201", "ISLS101", "ARAB101", "IE201", "IE255", "MENG102", "MATH207", "PHYS281"]
 course_codes_Y3 = ["ARAB201", "EE202", "EE250", "MATH204", "ISLS201", "EE300", "EE301", "IE202"]
 course_codes_Y4 = ["EE321", "EE311", "IE256", "EE360", "EE366", "ISLS301"]
-course_codes_Y5 = ["EE499", "ISLS401", "EE390"]
+course_codes_Y5 = ["EE499", "ISLS401", "EE390", "COMM101"]
 All = course_codes_Y1 + course_codes_Y2 + course_codes_Y3 + course_codes_Y4 + course_codes_Y5
 ####################################################################################################
 Y1_Credits = [3, 3, 3, 3, 3, 3, 3, 3]
 Y2_Credits = [4, 2, 4, 1, 2, 2, 2, 3, 3, 3, 4, 1]
 Y3_Credits = [3, 3, 4, 3, 2, 3, 3, 3]
 Y4_Credits = [4, 4, 2, 4, 3, 2]
-Y5_Credits = [4, 2, 3]
+Y5_Credits = [4, 2, 3, 3]
 
 All_Credits = Y1_Credits + Y2_Credits + Y3_Credits + Y4_Credits + Y5_Credits
 PP = dict(zip(All, All_Credits))
 
 # Power and machine courses :
-power_sh = ["EE331", "EE332", "EE302", "EE351", "COMM-101"]################################################################### Not shared with all majors
+power_sh = ["EE331", "EE332", "EE302", "EE351",]################################################################### Not shared with all majors
 power = ["MEP261", "EE303", "EE341", "EE442", "EE441", "EE404", "EE451", "EE405", "EE453", "EE454"] 
 all_power = power_sh + power
 
 # Computer courses :
 computer_sh = ["EE331", "EE306", "EE332", "IE331"]####################################################### Not shared with all majors
-computer = ["EE305", "EE364", "EE361", "EE367", "EE460", "EE462", "EE463", "COMM-101"]
+computer = ["EE305", "EE364", "EE361", "EE367", "EE460", "EE462", "EE463",]
 all_computer = computer_sh + computer
 
 # Electronics and communication courses :
@@ -34,27 +34,26 @@ communication = ["EE421", "EE423", "EE413", "EE425"]
 all_communication = communication_sh + communication
 
 # Biomedical courses :
-biomedical_sh = ["EE306", "EE302", "EE312", "EE351"]##################################################### Not shared with all majors
+biomedical_sh = ["EE306", "EE302", "EE312"]##################################################### Not shared with all majors
 biomedical = ["BIO321", "EE374", "EE372", "EE370", "EE472", "EE474", "EE471", "EE470"]
 all_biomedical = biomedical_sh + biomedical
 
 ### For who is working with databases , these are temporary values(only credits and prerequisites)
-Semi_Shared_Courses = ["EE331", "EE302", "EE306", "EE332", "IE331", "EE312", "EE351", "COMM-101"]
-Semi_Shared_C = {"EE331": 4, "EE302": 3, "EE306": 3, "EE332": 3, "IE331": 3, "EE312": 4, "EE351": 3, "COMM-101":3}
-Semi_Shared_PR = {"EE331": "EE300, EE301", "EE302": "EE250", "EE306": "EE250, STAT110", "EE332": "EE201, MATH 204", "IE331": "MATH207, STAT110", "EE312": "EE311", "EE351": "EE250", "COMM-101":None}
+Semi_Shared_Courses = ["EE331", "EE302", "EE306", "EE332", "IE331", "EE312", "EE351"]
+Semi_Shared_C = {"EE331": 4, "EE302": 3, "EE306": 3, "EE332": 3, "IE331": 3, "EE312": 4, "EE351": 3,}
+Semi_Shared_PR = {"EE331": "EE300, EE301", "EE302": "EE250", "EE306": "EE250, STAT110", "EE332": "EE201, MATH 204", "IE331": "MATH207, STAT110", "EE312": "EE311", "EE351": "EE250",}
 
-Semi_Shared_Terms_Power         = {"EE331": 8, "EE302": 7, "EE332": 8, "EE351": 8, "COMM-101":10}
-Semi_Shared_Terms_Computer      = {"EE331": 9, "EE306": 6, "EE332": 8, "IE331": 6, "COMM-101":10}
+Semi_Shared_Terms_Power         = {"EE331": 8, "EE302": 7, "EE332": 8, "EE351": 8}
+Semi_Shared_Terms_Computer      = {"EE331": 9, "EE306": 6, "EE332": 8, "IE331": 6}
 Semi_Shared_Terms_Communication = {"EE331": 8, "EE302": 6, "EE306": 6, "EE332": 8, "IE331": 7, "EE312": 8, "EE351": 9}
-Semi_Shared_Terms_Biomedical    = {"EE302": 7, "EE306": 6, "EE312": 8, "EE351": 9}
+Semi_Shared_Terms_Biomedical    = {"EE302": 7, "EE306": 6, "EE312": 8}
 Semi_Shared_Courses_Names = {"EE331": "Principles of Automatic Control",
        "EE302": "Magnetic 1", 
        "EE306": "Electrical Engineering Technologies", 
        "EE332": "Numerical Methods in Engineering", 
        "IE331": "Probability and Engineering Statistics", 
        "EE312": "Electronics 2", 
-       "EE351": "Electrical Power Systems I",
-        "COMM-101":"Communication Skills"}
+       "EE351": "Electrical Power Systems I"}
 ###all the shared courses codes
 # C = credits
 # PR = prerequisites
@@ -112,12 +111,13 @@ Fourth_Year_Courses_Names= {"EE321":"Introduction to Communications",
                        "EE366":"Microprocessors and Microcontrollers", 
                        "ISLS301":"Islamic Culture 3"}
 
-Fifth_Year_C = {"EE499":4, "ISLS401":2, "EE390":2} 
-Fifth_Year_PR = {"EE499":"Department Approval", "ISLS401":"ISLS301", "EE390":"Department Approval"}
-Fifth_Year_Terms = {"EE499":9, "ISLS401":10, "EE390":11}
+Fifth_Year_C = {"EE499":4, "ISLS401":2, "EE390":2, "COMM101":10} 
+Fifth_Year_PR = {"EE499":"Department Approval", "ISLS401":"ISLS301", "EE390":"Department Approval", "COMM101": None}
+Fifth_Year_Terms = {"EE499":9, "ISLS401":10, "COMM101":10, "EE390":11,}
 Fifth_Year_Courses_Names= {"EE499":"Senior Project",
                          "ISLS401":"Islamic Culture 4", 
-                         "EE390":"Summer Training"}
+                         "EE390":"Summer Training",
+                        "COMM101":"Communication Skills"}
 
 All_Courses_C = {**First_Year_C, **Second_Year_C, **Third_Year_C, **Fourth_Year_C, **Fifth_Year_C}  
 All_Courses_PR = {**First_Year_PR, **Second_Year_PR, **Third_Year_PR, **Fourth_Year_PR, **Fifth_Year_PR}
@@ -159,7 +159,7 @@ communication_coursesName= {"EE421":"Communication Theory 1",
 #  Biomedical courses :
 biomedical_courses_C = {"BIO321":3, "EE374":3, "EE372":3, "EE370":4, "EE472":3, "EE474":3, "EE471":3, "EE470":4}
 biomedical_courses_PR = {"BIO321":None, "EE374":"BIO321", "EE372":"BIO321", "EE370":"EE306, BIO321", "EE472":"EE370, EE303", "EE474":"EE370", "EE471":"EE370, EE372, EE312", "EE470":"EE301, EE370"}
-biomedical_terms = {"BIO321":6, "EE374":7, "EE372":7, "EE370":8, "EE472":9, "EE474":10, "EE471":10, "EE470":10}
+biomedical_terms = {"BIO321":6, "EE374":7, "EE372":7, "EE370":8, "EE472":10, "EE474":10, "EE471":9, "EE470":9}
 biomedical_coursesName= {"BIO321":"Biomedical Engineering",
                         "EE374":"Experimental &Data Analysis",
                         "EE372":"Physiology",
@@ -182,7 +182,7 @@ def loop_dict_value(d):
     return y
 
 
-def computer(x1, y1, z1, p1, m1):
+def computer_adding(x1, y1, z1, p1, m1):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS Computer')
@@ -193,7 +193,7 @@ def computer(x1, y1, z1, p1, m1):
     db.commit()
     db.close()
 
-def power(x1, y1, z1, p1, m1):
+def power_adding(x1, y1, z1, p1, m1):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS Power')
@@ -204,7 +204,7 @@ def power(x1, y1, z1, p1, m1):
     db.commit()
     db.close()
 
-def communication(x1, y1, z1, p1, m1):
+def communication_adding(x1, y1, z1, p1, m1):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS Communication')
@@ -215,7 +215,7 @@ def communication(x1, y1, z1, p1, m1):
     db.commit()
     db.close()
 
-def biomedical(x1, y1, z1, p1, m1):
+def biomedical_adding(x1, y1, z1, p1, m1):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS Biomedical')
@@ -240,7 +240,7 @@ for key in power_terms:
     if key =="EE366":
         power_terms[key]=9
         break
-power((power_codes), (build_course_dict(power_codes, power_names)), (build_course_dict(power_codes, power_credits)), (build_course_dict(power_codes, power_prerequisites)), build_course_dict(power_codes, power_terms))
+power_adding((power_codes), (build_course_dict(power_codes, power_names)), (build_course_dict(power_codes, power_credits)), (build_course_dict(power_codes, power_prerequisites)), build_course_dict(power_codes, power_terms))
 
 
 computer_codes = list(set(All + all_computer))
@@ -248,7 +248,7 @@ computer_names = All_Courses_Names | Semi_Shared_Courses_Names | computer_course
 computer_credits = PP | computer_courses_C | Semi_Shared_C
 computer_prerequisites = All_Courses_PR | computer_courses_PR | Semi_Shared_PR
 computer_terms = All_Terms | computer_terms | Semi_Shared_Terms_Computer
-computer((computer_codes), (build_course_dict(computer_codes, computer_names)), (build_course_dict(computer_codes, computer_credits)), (build_course_dict(computer_codes, computer_prerequisites)), build_course_dict(computer_codes, (computer_terms)))
+computer_adding((computer_codes), (build_course_dict(computer_codes, computer_names)), (build_course_dict(computer_codes, computer_credits)), (build_course_dict(computer_codes, computer_prerequisites)), build_course_dict(computer_codes, (computer_terms)))
 
 
 communication_codes = list(set(All + all_communication))
@@ -256,7 +256,7 @@ communication_names = All_Courses_Names | Semi_Shared_Courses_Names | communicat
 communication_credits = PP | communication_courses_C | Semi_Shared_C
 communication_prerequisites = All_Courses_PR | communication_courses_PR | Semi_Shared_PR
 communication_terms = All_Terms | communication_terms | Semi_Shared_Terms_Communication
-communication((communication_codes), (build_course_dict(communication_codes, communication_names)), (build_course_dict(communication_codes, communication_credits)), (build_course_dict(communication_codes, communication_prerequisites)), build_course_dict(communication_codes, communication_terms))
+communication_adding((communication_codes), (build_course_dict(communication_codes, communication_names)), (build_course_dict(communication_codes, communication_credits)), (build_course_dict(communication_codes, communication_prerequisites)), build_course_dict(communication_codes, communication_terms))
 
 
 biomedical_codes = list(set(All + all_biomedical))
@@ -264,6 +264,53 @@ biomedical_names = All_Courses_Names | Semi_Shared_Courses_Names | biomedical_co
 biomedical_credits = PP | biomedical_courses_C | Semi_Shared_C
 biomedical_prerequisites = All_Courses_PR | biomedical_courses_PR | Semi_Shared_PR
 biomedical_terms = All_Terms | biomedical_terms | Semi_Shared_Terms_Biomedical
-biomedical((biomedical_codes), (build_course_dict(biomedical_codes, biomedical_names)), (build_course_dict(biomedical_codes, biomedical_credits)), (build_course_dict(biomedical_codes, biomedical_prerequisites)), build_course_dict(biomedical_codes, biomedical_terms))
+for key in biomedical_terms:
+    if key == "IE256":
+        biomedical_terms[key] = 8
+    if key == "EE321":
+        biomedical_terms[key] = 8
+    if key == "ISLS301":
+        biomedical_terms[key] = 9
+biomedical_adding((biomedical_codes), (build_course_dict(biomedical_codes, biomedical_names)), (build_course_dict(biomedical_codes, biomedical_credits)), (build_course_dict(biomedical_codes, biomedical_prerequisites)), build_course_dict(biomedical_codes, biomedical_terms))
 
 
+######################################
+# All courses:
+def all_courses(x1, y1, z1, p1, m1):
+    db = sqlite3.connect('courses.db')
+    cr = db.cursor()
+    cr.execute('DROP TABLE IF EXISTS courses')
+    cr.execute('CREATE TABLE IF NOT EXISTS Courses (course_name TEXT, course_code TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER)')
+    for i in range(len(x1)):
+        cr.execute('INSERT INTO Courses (course_name, course_code, credit, prerequisites, terms) VALUES (?, ?, ?, ?, ?)',
+               (x1[i] , y1[i], z1[i], p1[i], m1[i]))
+    db.commit()
+    db.close()
+
+
+
+All_Courses = All + Semi_Shared_Courses + power + computer + communication + biomedical
+All_Names = All_Courses_Names | Semi_Shared_Courses_Names | power_coursesName | computer_coursesName | communication_coursesName | biomedical_coursesName
+All_Credits = PP | Semi_Shared_C | power_courses_C | computer_courses_C | communication_courses_C | biomedical_courses_C
+All_Prerequisites = All_Courses_PR | Semi_Shared_PR | power_courses_PR | computer_courses_PR | communication_courses_PR | biomedical_courses_PR
+
+B = {}
+
+letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+count = 0
+
+for course in All_Courses:
+    first = letters[count // 26]       
+    second = letters[count % 26]        
+    B[course] = first + second
+    count += 1
+
+db = sqlite3.connect('courses.db')
+cr = db.cursor()
+cr.execute('DROP TABLE IF EXISTS Courses')
+cr.execute('CREATE TABLE IF NOT EXISTS Courses (course_code TEXT, course_name TEXT, section TEXT)')
+for i in range (len(All_Courses)):
+    cr.execute('INSERT INTO Courses (course_code, course_name, section) VALUES (?, ?, ?)',
+               (All_Courses[i] , All_Names[All_Courses[i]], B[All_Courses[i]]))
+db.commit()
+db.close()
