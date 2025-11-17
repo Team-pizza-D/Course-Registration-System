@@ -1,3 +1,5 @@
+import _sqlite3
+
 class user:
     user_count = 0  # class variable to keep track of user IDs
     def __init__(self, username, password,  email, status="inactive", Id=None ):
@@ -52,8 +54,9 @@ class subject: ### Data base team said that this is currently not needed but i t
         ### notce that when considering database design, functions like inroll_student_in_section and drop_student_from_section will have to update the database instead of just removing from list
 
 
+
 class section(subject):
-    def __init__(self,section_name,section_code, subject_name, subject_code, capacity = None, schedule=None,enrolled_students=None, instructor=None, prerequisites=None, status="closed"):
+    def __init__(self,section_name=None,section_code=None, subject_name=None, subject_code=None, capacity = None, schedule=None,enrolled_students=None, instructor=None, prerequisites=None, status="closed"):
         super().__init__(subject_name, subject_code,prerequisites)
         self.schedule = schedule
         self.instructor = instructor
@@ -77,7 +80,7 @@ class section(subject):
                 return f"Section {self.section_code} is now open for enrollment."
             
     def is_full(self): # to check if section is full
-            return True if len(self.enrolled_students) >= self.capacity else False
+            return True if len(self.enrolled_students) >= self.capacity else False ### this function is alredy in subject class ?
     
     def view_enrolled_students(self): # to view all enrolled students in the section
             return self.enrolled_students
@@ -98,6 +101,10 @@ class section(subject):
             self.student_in_section.remove(student_id) ### i didnt put error handling here becuase it will be handled in student class or subject class
             self.drop_student_from_subject(student_id)
             ### notce that when considering database design, functions like inroll_student_in_section and drop_student_from_section will have to update the database instead of just removing from list
+    def new_capacity(self, new_capacity): # to expand the capacity of the section
+            self.capacity = new_capacity
+    def remaining_seats(self): # to check remaining seats in the section
+            return self.capacity - len(self.enrolled_students)
            
 
 
@@ -111,6 +118,7 @@ class student(user):
         self.enrolled_subjects = enrolled_subjects if enrolled_subjects is not None else [] # list of section codes the student is currently enrolled in
         self.completed_subjects = completed_subjects if completed_subjects is not None else [] # list of section codes the student has completed
         self.current_credits = 0  ### total credits of currently enrolled subjects, i believe this is needed for checking max credits allowed per semester not current total subjects
+
 
     def enroll_subject(self,section_code): 
 
@@ -190,38 +198,59 @@ class student(user):
     
 
 
-class admin(user,student,section):
+class admin(user):
     def __init__(self, username, password, email, status="inactive", Id=None):
         super().__init__(username, password, email, status, Id)
     def add_subject(self, section_code, student_id): # to add a subject to a student
         student_id.enroll_subject(section_code)
     
     def remove_subject(self, section_code, student_id): # to remove a subject from a student
-        student_id.drop_subject(section_code)  ### have to rview this later
+        self.The_student= student(student_id=student_id)
+        self.The_student.drop_subject(section_code)  ### we made an object of student class to access drop_subject method
 
-        pass
-    def display_student_in_section(self):
-        return super().display_student_in_section() ### have to rview this later
+
+    def display_student_in_section(self, section_code): # to display students in a section
+        self.sectionCode= section(section_code=section_code) 
+        return self.sectionCode.display_student_in_section()
     
-    def view_all_students(self, section_code=None): # to view all students, optionally filtered by section 
-        if section_code != None:
-            return section_code.display_student_in_section() ### return list of student IDs enrolled in the section
-        pass
-    
+    # def view_all_students(self, section_code=None): # to view all students, optionally filtered by section 
+    #     if section_code != None:
+    #         return section_code.display_student_in_section() ### return list of student IDs enrolled in the section
+    #     pass
+    ### idont think we need view_all_students function, admin can just use display_student_in_section function 
     def find_student(self, student_id): # to find student's information by ID
+        self.The_student= student(student_id=student_id)
+        return self.The_student.display_info()
         pass
     
-    def view_all_subjects(self, available_only=False): # to view all subjects, optionally filtering only available ones
+    def view_all_subjects(self, available_only): # to view all subjects, optionally filtering only available ones
+        ### I have to understand data base more to implement this function
         pass
+
     def find_sections(self, subject_code,): # to find subject's information by code
+        ### here as well i have to understand data base more to implement this function, i reallt need to understand the relationships between subjects and sections and how to access them
+       
         ### return subject details each with section info (schedule, instructor, capacity, enrolled students etc.)
-        ### not sure if including enrolled students is a good idea
+        ### not sure if including enrolled students is a good idea, so far i think its better to exclude it 
         pass
+
     def expand_capacity(self, section_code, new_capacity): # to expand the capacity of a section
+        self.sectionCode= section(section_code=section_code)
+        if self.sectionCode.is_full():
+            self.sectionCode.new_capacity(new_capacity)
+        else:
+            return f"Section {section_code} is not full. Cannot expand capacity. \n the remaning seats are {self.sectionCode.remaining_seats()}"
+
         pass 
     def reduce_capacity(self, section_code, new_capacity): # to reduce the capacity of a subject
+        self.sectionCode= section(section_code=section_code)
+        if new_capacity=< len(self.sectionCode.enrolled_students):
+            return f"Cannot reduce capacity to {new_capacity}. Currently enrolled students: {len(self.sectionCode.enrolled_students)}" 
+        else:
+            self.sectionCode.new_capacity(new_capacity)
         pass
     def avilable_subjects(self, student_id): # to view subjects that a student can enroll in
+        ### here as well i have to understand data base more to implement this function
         ### must check prerequisites, time conflicts, capacity etc.
 
         pass 
