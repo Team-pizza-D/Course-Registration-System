@@ -9,7 +9,7 @@ course_codes_Y4 = ["EE321", "EE311", "IE256", "EE360", "EE366", "ISLS301"]
 course_codes_Y5 = ["EE499", "ISLS401", "EE390"]
 All = course_codes_Y1 + course_codes_Y2 + course_codes_Y3 + course_codes_Y4 + course_codes_Y5
 ####################################################################################################
-Y1_Credits = [3, 3, 3, 3, 3, 3, 2, 2]
+Y1_Credits = [3, 3, 3, 3, 3, 3, 3, 3]
 Y2_Credits = [4, 2, 4, 1, 2, 2, 2, 3, 3, 3, 4, 1]
 Y3_Credits = [3, 3, 4, 3, 2, 3, 3, 3]
 Y4_Credits = [4, 4, 2, 4, 3, 2]
@@ -19,13 +19,13 @@ All_Credits = Y1_Credits + Y2_Credits + Y3_Credits + Y4_Credits + Y5_Credits
 PP = dict(zip(All, All_Credits))
 
 # Power and machine courses :
-power_sh = ["EE331", "EE332", "EE302"]################################################################### Not shared with all majors
+power_sh = ["EE331", "EE332", "EE302", "EE351", "COMM-101"]################################################################### Not shared with all majors
 power = ["MEP261", "EE303", "EE341", "EE442", "EE441", "EE404", "EE451", "EE405", "EE453", "EE454"] 
 all_power = power_sh + power
 
 # Computer courses :
 computer_sh = ["EE331", "EE306", "EE332", "IE331"]####################################################### Not shared with all majors
-computer = ["EE305", "EE364", "EE361", "EE367", "EE460", "EE462", "EE463"]
+computer = ["EE305", "EE364", "EE361", "EE367", "EE460", "EE462", "EE463", "COMM-101"]
 all_computer = computer_sh + computer
 
 # Electronics and communication courses :
@@ -39,11 +39,12 @@ biomedical = ["BIO321", "EE374", "EE372", "EE370", "EE472", "EE474", "EE471", "E
 all_biomedical = biomedical_sh + biomedical
 
 ### For who is working with databases , these are temporary values(only credits and prerequisites)
-Semi_Shared_Courses = ["EE331", "EE302", "EE306", "EE332", "IE331", "EE312", "EE351"]
-Semi_Shared_C = {"EE331": 4, "EE302": 3, "EE306": 3, "EE332": 3, "IE331": 3, "EE312": 4, "EE351": 3,}
-Semi_Shared_PR = {"EE331": "EE300, EE301", "EE302": "EE250", "EE306": "EE250, STAT110", "EE332": "EE201, MATH 204", "IE331": "MATH207, STAT110", "EE312": "EE311", "EE351": "EE250",}
-Semi_Shared_Terms_Power         = {"EE331": 8, "EE302": 7, "EE332": 8, "EE351": 8}
-Semi_Shared_Terms_Computer      = {"EE331": 9, "EE306": 6, "EE332": 8, "IE331": 6}
+Semi_Shared_Courses = ["EE331", "EE302", "EE306", "EE332", "IE331", "EE312", "EE351", "COMM-101"]
+Semi_Shared_C = {"EE331": 4, "EE302": 3, "EE306": 3, "EE332": 3, "IE331": 3, "EE312": 4, "EE351": 3, "COMM-101":3}
+Semi_Shared_PR = {"EE331": "EE300, EE301", "EE302": "EE250", "EE306": "EE250, STAT110", "EE332": "EE201, MATH 204", "IE331": "MATH207, STAT110", "EE312": "EE311", "EE351": "EE250", "COMM-101":None}
+
+Semi_Shared_Terms_Power         = {"EE331": 8, "EE302": 7, "EE332": 8, "EE351": 8, "COMM-101":10}
+Semi_Shared_Terms_Computer      = {"EE331": 9, "EE306": 6, "EE332": 8, "IE331": 6, "COMM-101":10}
 Semi_Shared_Terms_Communication = {"EE331": 8, "EE302": 6, "EE306": 6, "EE332": 8, "IE331": 7, "EE312": 8, "EE351": 9}
 Semi_Shared_Terms_Biomedical    = {"EE302": 7, "EE306": 6, "EE312": 8, "EE351": 9}
 Semi_Shared_Courses_Names = {"EE331": "Principles of Automatic Control",
@@ -52,7 +53,8 @@ Semi_Shared_Courses_Names = {"EE331": "Principles of Automatic Control",
        "EE332": "Numerical Methods in Engineering", 
        "IE331": "Probability and Engineering Statistics", 
        "EE312": "Electronics 2", 
-       "EE351": "Electrical Power Systems I"}
+       "EE351": "Electrical Power Systems I",
+        "COMM-101":"Communication Skills"}
 ###all the shared courses codes
 # C = credits
 # PR = prerequisites
@@ -122,7 +124,7 @@ All_Courses_PR = {**First_Year_PR, **Second_Year_PR, **Third_Year_PR, **Fourth_Y
 All_Courses_Names = Fifth_Year_Courses_Names | Fourth_Year_Courses_Names | Third_Year_Courses_Names | Second_Year_Courses_Names | First_Year_Courses_Names
 All_Terms = First_Year_Terms | Second_Year_Terms | Third_Year_Terms | Fourth_Year_Terms | Fifth_Year_Terms
 # Power and machine courses :
-power_courses_C = {"MEP261":3, "EE303":3, "EE341":3, "EE442":3, "EE441":3, "EE404":1, "EE451":3, "EE405":1, "EE453":3, "EE454":3} 
+power_courses_C = {"MEP261":3, "EE303":3, "EE341":3, "EE442":3, "EE441":3, "EE404":1, "EE451":3, "EE405":1, "EE453":3, "EE454":3,} 
 power_courses_PR = {"MEP261":None, "EE303":"EE311", "EE341":"EE250", "EE442":"EE311", "EE441":"EE351, EE341", "EE404":"EE441", "EE451":"EE351, EE332", "EE405":"EE451", "EE453":"EE351, EE332", "EE454":"EE351, EE341"}
 power_terms= {"MEP261":6, "EE303":7, "EE341":8, "EE442":9, "EE441":9, "EE404":9, "EE451":9, "EE405":10, "EE453":10, "EE454":10}
 power_coursesName= {"MEP261":"Thermodynamics I",
@@ -234,6 +236,10 @@ power_names = All_Courses_Names | Semi_Shared_Courses_Names | power_coursesName
 power_credits = PP | power_courses_C | Semi_Shared_C
 power_prerequisites = All_Courses_PR | power_courses_PR | Semi_Shared_PR
 power_terms = All_Terms | power_terms | Semi_Shared_Terms_Power
+for key in power_terms:
+    if key =="EE366":
+        power_terms[key]=9
+        break
 power((power_codes), (build_course_dict(power_codes, power_names)), (build_course_dict(power_codes, power_credits)), (build_course_dict(power_codes, power_prerequisites)), build_course_dict(power_codes, power_terms))
 
 
