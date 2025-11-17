@@ -31,10 +31,10 @@ class user:
             return f"{self.username}'s account has been deactivated."
 
     def is_admin(self): # to check if user is admin
-        return True if isinstance(self, admin) else False
+        return True if isinstance(self, admin) else False ### This will be known by which table is the information in (student or admin)
     
     def is_student(self): # to check if user is student
-        return True if isinstance(self, student) else False
+        return True if isinstance(self, student) else False ### This will be known by which table is the information in (student or admin)
 
 class subject: ### Data base team said that this is currently not needed but i think its better to have it for future use
     def __init__(self, subject_name, subject_code,prerequisites=None):
@@ -60,7 +60,7 @@ class subject: ### Data base team said that this is currently not needed but i t
 
 
 class section(subject):
-    def __init__(self,section_name,, subject_name, subject_code, capacity = None, schedule=None,enrolled_students=None, instructor=None, prerequisites=None, status="closed"):
+    def __init__(self,section_name, subject_name, subject_code, capacity = None, schedule=None,enrolled_students=None, instructor=None, prerequisites=None, status="closed"):
         super().__init__(subject_name, subject_code,prerequisites)
         self.schedule = schedule
         self.instructor = instructor
@@ -75,7 +75,7 @@ class section(subject):
         return f"Section Name: {self.section_name} Subject Name: {self.subject_name}, Subject Code: {self.subject_code}, Instructor: {self.instructor}, Schedule: {self.schedule}"    
 
     def open_section(self): # to open section for enrollment
-            if self.status == "open":
+            if self.status == "open": ### From database guy : work at this by capacity ! Also, This should be at admin class .
                 return f"Section {self.section_name} is already open for enrollment."
             else:
                 self.status = "open"
@@ -117,7 +117,7 @@ class student(user):
         self.enrolled_subjects = enrolled_subjects if enrolled_subjects is not None else [] # list of section codes the student is currently enrolled in
         self.completed_subjects = completed_subjects if completed_subjects is not None else [] # list of section codes the student has completed
         self.current_credits = 0  ### total credits of currently enrolled subjects, i believe this is needed for checking max credits allowed per semester not current total subjects
-
+        
     def enroll_subject(self, section_code): # to enroll in a subject (student initiated)
     
         availabilty = True  ### Check availability of the subject first
