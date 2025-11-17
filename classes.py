@@ -1,4 +1,6 @@
+import random
 import sqlite3
+
 
 classes_db = sqlite3.connect('courses.db')
 cr = classes_db.cursor()
@@ -7,7 +9,7 @@ a = cr.fetchall()
 print(a)
 class user:
     user_count = 0  # class variable to keep track of user IDs
-    def __init__(self, username, password,  email, status="inactive", Id=None ):
+    def __init__(self, username, password,  email=None, status="inactive", Id=None ):
         self.username = username
         self.password = password
         self.Id = Id
@@ -95,9 +97,9 @@ class section(subject):
                 if prereq not in completed_subjects:
                     return False
             return True
-    def inroll_student_in_section(self, student_id): # to enroll a student in the section for data only ( admin use only)
+    def enroll_student_in_section(self, student_id): # to enroll a student in the section for data only ( admin use only)
         self.student_in_section.append(student_id) ### just for data tracking, actual enrollment is handled in student class
-        self.inroll_student_in_subject(student_id)
+        self.enroll_student_in_subject(student_id)
 
     def drop_student_from_section(self, student_id): # to drop a student from the section for data only ( admin use only)    
         if student_id in self.student_in_section:
@@ -107,17 +109,26 @@ class section(subject):
            
 
 
-    
+existing_ids = set()
 
 class student(user):
-    def __init__(self, username, password, email,enrolled_subjects = None,completed_subjects = None, status="inactive", Id=None, GPA=None, cummulative_GPA=None):
+    def __init__(self, username, password, email=None,enrolled_subjects = None,completed_subjects = None, status="inactive", Id=None, GPA=None, cummulative_GPA=None):
         super().__init__(username, password, email, status, Id)
         self.GPA = GPA
         self.cummulative_GPA = cummulative_GPA
         self.enrolled_subjects = enrolled_subjects if enrolled_subjects is not None else [] # list of section codes the student is currently enrolled in
         self.completed_subjects = completed_subjects if completed_subjects is not None else [] # list of section codes the student has completed
         self.current_credits = 0  ### total credits of currently enrolled subjects, i believe this is needed for checking max credits allowed per semester not current total subjects
-        
+        self.Id = self.generate_unique_id()
+        self.email = f"{self.username}@stu.kau.edu.sa"
+    
+    def generate_unique_id(self): # generates random id for each student
+        while True:
+            Id = random.randint(100000, 999999)  # Generate a random 6-digit ID
+            cursor.execute("SELECT 1 FROM students WHERE Id = ?", (Id,))
+            if cursor.fetchone() is None:
+                return Id
+            
     def enroll_subject(self, section_code): # to enroll in a subject (student initiated)
     
         availabilty = True  ### Check availability of the subject first
