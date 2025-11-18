@@ -18,7 +18,7 @@ def add_random_students(x,y,z,p):
     db.commit()
     db.close()
 
-# st1 = student('ABDULAZIZ', 1234, 'Electrical communication and electronics engineering', Id = 2490248)
+st1 = student('ABDULAZIZ', 1234, 'Electrical communication and electronics engineering', Id = 2490248)
 add_random_students('2430020', 'tariq', 'tariq@stu.kau.edu.sa', 'Electrical communication and electronics')
 add_random_students('2495918', 'zubair', 'zubair@stu.kau.edu.sa', 'Electrical communication and electronics')
 add_random_students('2422666', 'fahad', 'fahad@stu.kau.edu.sa', 'Electrical biomedical engineering')
