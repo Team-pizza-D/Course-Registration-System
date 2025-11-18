@@ -1,8 +1,5 @@
-
-
 import random
 import sqlite3
-
 
 classes_db = sqlite3.connect('courses.db')
 cr = classes_db.cursor()
@@ -11,12 +8,13 @@ a = cr.fetchall()
 print(a)
 class user:
     user_count = 0  # class variable to keep track of user IDs
-    def __init__(self, username, password,  email=None, status="inactive", Id=None ):
+    def __init__(self, username, password= None, email=None, status="inactive", Id=None ):
         self.username = username
-        self.password = password
-        self.Id = Id
+        # self.password = password ### This is going to be automaticly generated
+        self.Id = Id ### This is going to be automaticly generated IF it is not exists
         self.email = email
         self.status = status
+        self.password = password
 
     def display_info(self): # to display user information
         return f"Username: {self.username}, Email: {self.email}, Status: {self.status}, ID: {self.Id}"
@@ -120,22 +118,22 @@ class section(subject):
 existing_ids = set()
 
 class student(user):
-    def __init__(self, username, password, email=None,enrolled_subjects = None,completed_subjects = None, status="inactive", Id=None, GPA=None, cummulative_GPA=None):
+    def __init__(self, username, password, major, email=None,enrolled_subjects = None,completed_subjects = None, status="inactive", Id=None, GPA=None):
         super().__init__(username, password, email, status, Id)
         self.GPA = GPA
-        self.cummulative_GPA = cummulative_GPA
         self.enrolled_subjects = enrolled_subjects if enrolled_subjects is not None else [] # list of section codes the student is currently enrolled in
         self.completed_subjects = completed_subjects if completed_subjects is not None else [] # list of section codes the student has completed
         self.current_credits = 0  ### total credits of currently enrolled subjects, i believe this is needed for checking max credits allowed per semester not current total subjects
-        self.Id = self.generate_unique_id()
-        self.email = f"{self.username}@stu.kau.edu.sa"
+        # self.Id = Id
+        # self.email = f"{self.username}@stu.kau.edu.sa"
+        self.major = major
     
-    def generate_unique_id(self): # generates random id for each student
-        while True:
-            Id = random.randint(100000, 999999)  # Generate a random 6-digit ID
-            cursor.execute("SELECT 1 FROM students WHERE Id = ?", (Id,))
-            if cursor.fetchone() is None:
-                return Id
+    # def generate_unique_id(self): # generates random id for each student
+    #     while True:
+    #         Id = random.randint(100000, 999999)  # Generate a random 6-digit ID
+    #         cursor.execute("SELECT 1 FROM students WHERE Id = ?", (Id,))
+    #         if cursor.fetchone() is None:
+    #             return Id
             
     def enroll_subject(self, section_code): # to enroll in a subject (student initiated)
     
@@ -279,7 +277,7 @@ class admin(user):
         pass 
     def reduce_capacity(self, section_code, new_capacity): # to reduce the capacity of a subject
         self.sectionCode= section(section_code=section_code)
-        if new_capacity=< len(self.sectionCode.enrolled_students):
+        if new_capacity<= len(self.sectionCode.enrolled_students):
             return f"Cannot reduce capacity to {new_capacity}. Currently enrolled students: {len(self.sectionCode.enrolled_students)}" 
         else:
             self.sectionCode.new_capacity(new_capacity)
