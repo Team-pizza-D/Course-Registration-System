@@ -11,7 +11,7 @@ class user:
     def __init__(self, username, password= None, email=None, status="inactive", Id=None ):
         self.username = username
         # self.password = password ### This is going to be automaticly generated
-        self.Id = Id ### This is going to be automaticly generated IF it is not exists
+        self.Id = int(Id) ### This is going to be automaticly generated IF it is not exists
         self.email = email
         self.status = status
         if password == None:
@@ -120,6 +120,14 @@ class section(subject):
 
 existing_ids = set()
 
+db = sqlite3.connect("Users.db")
+cr = db.cursor()
+cr.execute("SELECT email from students")
+emails = cr.fetchall()
+db.commit()
+db.close()
+
+
 class student(user):
     def __init__(self, Id, username, email, major, password = None, enrolled_subjects = None,completed_subjects = None, status="inactive", GPA=None):
         super().__init__(username, password, email, status, Id)
@@ -130,7 +138,7 @@ class student(user):
         # self.Id = self.generate_unique_id()
         self.email = f"{self.username}@stu.kau.edu.sa"
         # self.Id = Id
-        # self.email = f"{self.username}@stu.kau.edu.sa"
+        self.email = f"{self.username}@stu.kau.edu.sa" if email is None else email
         self.major = major
     
     # def generate_unique_id(self): # generates random id for each student
@@ -145,7 +153,7 @@ class student(user):
     #             return Id
 
 
-    def data_base_guy_did_this_temporary(self):
+    def return_info(self):
         return self.Id, self.username, self.email, self.major, self.password
     
     def display_info(self):
