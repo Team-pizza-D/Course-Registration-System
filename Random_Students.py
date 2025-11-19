@@ -75,6 +75,7 @@ st49 = student('2478657', 'hussain', 'hussain@stu.kau.edu.sa', 'Electrical commu
 st50 = student('2474598', 'hamad', 'hamad@stu.kau.edu.sa', 'Electrical computer engineering')
 
 
+print(st4.test())
 
 st = [st1, st2, st3, st4, st5, st6, st7, st8, st9, st10,
       st11, st12, st13, st14, st15, st16, st17, st18, st19, st20,
@@ -1048,6 +1049,7 @@ rows = [('2430020', 'ELIS120', 'C', 73),
 ('2474598', 'PHYS281', 'B+', 86),
 ('2474598', 'MENG102', 'D+', 69)]
 
+
 db = sqlite3.connect("Users.db")
 cr = db.cursor()
 cr.executemany("INSERT INTO grades (student_id, course, letter_grade, numeric_grade) VALUES (?, ?, ?, ?)", (rows))
@@ -1094,5 +1096,5 @@ def calculate_gpa():
     return final_GPAs
 
 B = calculate_gpa()
-# print(Programs.loop_dict_value(B))
+print(B)
 # print(Programs.loop_dict_key(B))

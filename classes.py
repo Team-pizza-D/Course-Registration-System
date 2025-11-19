@@ -152,6 +152,55 @@ class student(user):
     #         if cursor.fetchone() is None:
     #             return Id
 
+    def test(self):
+        a = {'Electrical communication and electronics engineering': 'Communication',
+            'Electrical biomedical engineering': 'Biomedical',
+            'Electrical power and machines engineering': 'Power',
+            'Electrical computer engineering': 'Computer'}
+        return a[self.major]
+
+    def add_term(self): ### Abdulaziz territory !!! walk away, I'm working on this
+        a = {'Electrical communication and electronics engineering': 'Communication',
+            'Electrical biomedical engineering': 'Biomedical',
+            'Electrical power and machines engineering': 'Power',
+            'Electrical computer engineering': 'Computer'}
+        
+        db = sqlite3.connect("courses.db")
+        cr = db.cursor()
+
+        cr.execute(f"SELECT capacity FROM {a[self.major]} WHERE terms = ?", (course_code,))
+        row = cr.fetchone()
+
+        if row is None:
+            print("Course not found in transcript.")
+            db.close()
+            return
+        
+        capacity = row[0]
+
+        if capacity <= 0:
+            print("Course is full.")
+            db.close()
+            return
+
+        try:
+            cr.execute(
+                "INSERT INTO StudentCourses (student_id, course_code) VALUES (?, ?)",
+                (student_id, course_code)
+            )
+        except sqlite3.IntegrityError:
+            print("Student already registered in that course.")
+            db.close()
+            return
+
+        cr.execute(
+            f"UPDATE {transcript} SET capacity = capacity - 1 WHERE course_code = ?",
+            (course_code,)
+        )
+
+        db.commit()
+        db.close()
+        print("Course added, capacity reduced.")
 
     def return_info(self):
         return self.Id, self.username, self.email, self.major, self.password
