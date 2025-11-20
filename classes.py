@@ -5,16 +5,19 @@ classes_db = sqlite3.connect('courses.db')
 cr = classes_db.cursor()
 cr.execute('SELECT prerequisites,course_code FROM biomedical WHERE course_code = "Basic Electrical Circuits" ')
 a = cr.fetchall()
-print(a)
+# print(a)
 class user:
     user_count = 0  # class variable to keep track of user IDs
     def __init__(self, username, password= None, email=None, status="inactive", Id=None ):
         self.username = username
         # self.password = password ### This is going to be automaticly generated
-        self.Id = Id ### This is going to be automaticly generated IF it is not exists
+        self.Id = int(Id) ### This is going to be automaticly generated IF it is not exists
         self.email = email
         self.status = status
-        self.password = password
+        if password == None:
+            self.password = self.username + str(random.randint(100000, 999999)) ### I did this (Abdulaziz)
+        else:
+            self.password = password
 
     def display_info(self): # to display user information
         return f"Username: {self.username}, Email: {self.email}, Status: {self.status}, ID: {self.Id}"
@@ -113,12 +116,20 @@ class section(subject):
     def remaining_seats(self): # to check remaining seats in the section
             return self.capacity - len(self.enrolled_students)
            
-#___________________________________________________________________________________________________________________________
+#__________________________________________________________________________________________________________________________________________________________
 
 existing_ids = set()
 
+db = sqlite3.connect("Users.db")
+cr = db.cursor()
+cr.execute("SELECT email from students")
+emails = cr.fetchall()
+db.commit()
+db.close()
+
+
 class student(user):
-    def __init__(self, username, password, major, email=None,enrolled_subjects = None,completed_subjects = None, status="inactive", Id=None, GPA=None):
+    def __init__(self, Id, username, email, major, password = None, enrolled_subjects = None,completed_subjects = None, status="inactive", GPA=None):
         super().__init__(username, password, email, status, Id)
         self.GPA = GPA
         self.enrolled_subjects = enrolled_subjects if enrolled_subjects is not None else [] # list of section codes the student is currently enrolled in
@@ -127,7 +138,7 @@ class student(user):
         # self.Id = self.generate_unique_id()
         self.email = f"{self.username}@stu.kau.edu.sa"
         # self.Id = Id
-        # self.email = f"{self.username}@stu.kau.edu.sa"
+        self.email = f"{self.username}@stu.kau.edu.sa" if email is None else email
         self.major = major
     
     # def generate_unique_id(self): # generates random id for each student
@@ -140,6 +151,62 @@ class student(user):
     #         cursor.execute("SELECT 1 FROM students WHERE Id = ?", (Id,))
     #         if cursor.fetchone() is None:
     #             return Id
+
+    def test(self):
+        a = {'Electrical communication and electronics engineering': 'Communication',
+            'Electrical biomedical engineering': 'Biomedical',
+            'Electrical power and machines engineering': 'Power',
+            'Electrical computer engineering': 'Computer'}
+        return a[self.major]
+
+    def add_term(self): ### Abdulaziz territory !!! walk away, I'm working on this
+        a = {'Electrical communication and electronics engineering': 'Communication',
+            'Electrical biomedical engineering': 'Biomedical',
+            'Electrical power and machines engineering': 'Power',
+            'Electrical computer engineering': 'Computer'}
+        
+        db = sqlite3.connect("courses.db")
+        cr = db.cursor()
+
+        cr.execute(f"SELECT capacity FROM {a[self.major]} WHERE terms = ?", (course_code,))
+        row = cr.fetchone()
+
+        if row is None:
+            print("Course not found in transcript.")
+            db.close()
+            return
+        
+        capacity = row[0]
+
+        if capacity <= 0:
+            print("Course is full.")
+            db.close()
+            return
+
+        try:
+            cr.execute(
+                "INSERT INTO StudentCourses (student_id, course_code) VALUES (?, ?)",
+                (student_id, course_code)
+            )
+        except sqlite3.IntegrityError:
+            print("Student already registered in that course.")
+            db.close()
+            return
+
+        cr.execute(
+            f"UPDATE {transcript} SET capacity = capacity - 1 WHERE course_code = ?",
+            (course_code,)
+        )
+
+        db.commit()
+        db.close()
+        print("Course added, capacity reduced.")
+
+    def return_info(self):
+        return self.Id, self.username, self.email, self.major, self.password
+    
+    def display_info(self):
+        return super().display_info() , f"major: {self.major}"
             
     def enroll_subject(self, section_code): # to enroll in a subject (student initiated)
     
@@ -297,3 +364,5 @@ class admin(user):
 
 st1 = student('ABDULAZIZ', 1234, 'Electrical communication and electronics engineering', Id = 2490248)
 print(st1.display_info())
+# s1 = student(username='tariq', password='Electrical communication and electronics', email='tariq@stu.kau.edu.sa', Id='2430020')
+# print(s1.display_info())
