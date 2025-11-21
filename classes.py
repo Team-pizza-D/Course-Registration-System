@@ -307,8 +307,9 @@ class student(user):
 class admin(user):
     def __init__(self, username, password, email, status="inactive", Id=None):
         super().__init__(username, password, email, status, Id)
-    def add_subject(self, section_code, student_id): # to add a subject to a student
-        student_id.enroll_subject(section_code)
+    def add_subject(self,   section_code, student_id): # to add a subject to a student
+        self.The_student= student(student_id=student_id)
+        self.The_student.enroll_subject(section_code)  ### we made an object of student class to access enroll_subject method
     
     def remove_subject(self, section_code, student_id): # to remove a subject from a student
         self.The_student= student(student_id=student_id)
