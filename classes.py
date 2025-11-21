@@ -1,10 +1,10 @@
 import random
 import sqlite3
 
-classes_db = sqlite3.connect('courses.db')
-cr = classes_db.cursor()
-cr.execute('SELECT prerequisites,course_code FROM biomedical WHERE course_code = "Basic Electrical Circuits" ')
-a = cr.fetchall()
+# classes_db = sqlite3.connect('courses.db')
+# cr = classes_db.cursor()
+# cr.execute('SELECT prerequisites,course_code FROM biomedical WHERE course_code = "Basic Electrical Circuits" ')
+# a = cr.fetchall()
 # print(a)
 class user:
     user_count = 0  # class variable to keep track of user IDs
@@ -165,38 +165,33 @@ class student(user):
             'Electrical power and machines engineering': 'Power',
             'Electrical computer engineering': 'Computer'}
         
+        db = sqlite3.connect("Users.db")
+        cr = db.cursor()
+        cr.execute(f"SELECT course FROM grades WHERE student_id = {self.Id}")
+        courses_taken = cr.fetchall()
+        courses_taken = [i[0] for i in courses_taken]
+        db.commit()
+        db.close()
         db = sqlite3.connect("courses.db")
         cr = db.cursor()
+        rand = []
+        for i in range(len(courses_taken)):
+            cr.execute(f"SELECT term FROM {a[self.major]} WHERE course_code = ?", (courses_taken[i],))
+            rand.append(cr.fetchall)
+        last_term_taken = max(rand)
+        cr.execute(f"SELECT capacity FROM {a[self.major]} WHERE terms = ?", (last_term_taken,))
+        row = cr.fetchall()
 
-        cr.execute(f"SELECT capacity FROM {a[self.major]} WHERE terms = ?", (course_code,))
-        row = cr.fetchone()
+        for j in row:
+            if j[0] > 0:
+                return f"This section is available"
+            else:
+                return f"We apologize, this section is anavailable"
+            ### Not finished yet
+            ### Just tryna find the easier way so I can re do them easily later :)
 
-        if row is None:
-            print("Course not found in transcript.")
-            db.close()
-            return
-        
-        capacity = row[0]
 
-        if capacity <= 0:
-            print("Course is full.")
-            db.close()
-            return
 
-        try:
-            cr.execute(
-                "INSERT INTO StudentCourses (student_id, course_code) VALUES (?, ?)",
-                (student_id, course_code)
-            )
-        except sqlite3.IntegrityError:
-            print("Student already registered in that course.")
-            db.close()
-            return
-
-        cr.execute(
-            f"UPDATE {transcript} SET capacity = capacity - 1 WHERE course_code = ?",
-            (course_code,)
-        )
 
         db.commit()
         db.close()
