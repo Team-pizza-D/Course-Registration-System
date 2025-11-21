@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>490</width>
+    <height>653</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Login</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">/*Copyright (c) DevSec Studio. All rights reserved.
+
+MIT License
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+/*-----QWidget-----*/
+QWidget
+{
+	background-color: #00111d;
+	color: #000000;
+	border-color: #000000;
+
+}
+
+
+/*-----QLabel-----*/
+QLabel
+{
+	background-color: #00111d;
+	color: #717e87;
+	border-color: #000000;
+
+}
+
+
+/*-----QPushButton-----*/
+QPushButton
+{
+	background-color: #3de6af;
+	color: #000000;
+	border-style: solid;
+	border-color: #000000;
+	font-weight : bold;
+	padding: 13px;
+
+}
+
+
+QPushButton::hover
+{
+	background-color: #3dffaf;
+	color: #000000;
+	border-style: solid;
+	border-color: #000000;
+	font-weight : bold;
+	padding: 13px;
+
+}
+
+
+QPushButton::pressed
+{
+	background-color: #3dc8af;
+	color: #000000;
+	border-style: solid;
+	border-color: #000000;
+	font-weight : bold;
+	padding: 13px;
+
+}
+
+
+/*-----QToolButton-----*/
+QToolButton
+{
+	background-color: #00111d;
+	color: #000000;
+	border-style: solid;
+	border-color: #000000;
+	padding: 5px;
+
+}
+
+
+QToolButton::hover
+{
+	background-color: #00111d;
+	color: #000000;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #01dcff;
+
+}
+
+
+QToolButton::pressed
+{
+	background-color: #01dcff;
+	color: #000000;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #01dcff;
+
+}
+
+
+/*-----QLineEdit-----*/
+QLineEdit
+{
+	background-color: #082336;
+	color: #3e93ff;
+	border-style: solid;
+	border-width: 2px;
+	border-color: #1e4b6d;
+	padding: 10px;
+
+}
+
+
+QLineEdit::hover
+{
+	background-color: #082336;
+	color: #3e93ca;
+	border-style: solid;
+	border-width: 2px;
+	border-color: #01dcff;
+	padding: 10px;
+
+}
+
+
+QLineEdit::focus
+{
+	
+	color: #3e93ca;
+	border-style: solid;
+	border-width: 2px;
+	border-color: #01dcff;
+	padding: 10px;
+
+}
+
+
+
+
+
+
+</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="loginButton">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>490</y>
+      <width>101</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Consolas,Courier New,monospace</family>
+      <pointsize>-1</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="acceptDrops">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    height: 50px;
+    width: 120px;
+    background-color: #333;
+    border: 1px solid #404c5d;
+    color: rgb(232, 232, 232);
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+    font-size: 16px;
+    border-radius: 5px;
+
+    /* Gradient background similar to original */
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:1,
+        stop:0 #2e2d2d,
+        stop:1 #212121
+    );
+
+    /* Simulated outer shadow */
+    box-shadow: 0px 2px 6px #41465b;
+
+    padding: 5px;
+}
+
+/* Hover */
+QPushButton:hover {
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:1,
+        stop:0 #353535,
+        stop:1 #262626
+    );
+    color: #d6d6d6;
+
+    box-shadow: 0px 2px 10px #20232e;
+}
+
+/* Pressed */
+QPushButton:pressed {
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:1,
+        stop:0 #262626,
+        stop:1 #1a1a1a
+    );
+    color: #e0e0e0;
+
+    /* Slight inset effect */
+    padding-top: 7px;
+    padding-bottom: 3px;
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Login</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>270</y>
+      <width>201</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Consolas,Courier New,monospace</family>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+}</string>
+    </property>
+    <property name="text">
+     <string>University ID</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>360</y>
+      <width>131</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Consolas,Courier New,monospace</family>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+}</string>
+    </property>
+    <property name="text">
+     <string>Password</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="IDlineEdit">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>260</y>
+      <width>191</width>
+      <height>51</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="PasslineEdit">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>350</y>
+      <width>191</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="echoMode">
+     <enum>QLineEdit::Password</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>50</y>
+      <width>151</width>
+      <height>151</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>../../../Downloads/login-user-name-1.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_show">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>420</y>
+      <width>131</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QCheckBox
+{
+	color: #b1b1b1;
+    background-color: #00111d;
+    width: 12px;
+    height: 12px;
+
+}
+
+</string>
+    </property>
+    <property name="text">
+     <string>Show Password</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>490</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources>
+  <include location="icon/check.qrc"/>
+ </resources>
+ <connections/>
+</ui>
