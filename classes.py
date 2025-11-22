@@ -118,14 +118,14 @@ class section(subject):
            
 #__________________________________________________________________________________________________________________________________________________________
 
-existing_ids = set()
+# existing_ids = set()
 
-db = sqlite3.connect("Users.db")
-cr = db.cursor()
-cr.execute("SELECT email from students")
-emails = cr.fetchall()
-db.commit()
-db.close()
+# db = sqlite3.connect("Users.db")
+# cr = db.cursor()
+# cr.execute("SELECT email from students")
+# emails = cr.fetchall()
+# db.commit()
+# db.close()
 
 
 class student(user):

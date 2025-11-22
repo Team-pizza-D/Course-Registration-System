@@ -41,7 +41,7 @@ class user:
     def __init__(self, username, password=None, email=None, status="inactive", Id=None):
         self.username = username
         # self.password = password  ### This is going to be automaticly generated
-        self.Id = int(Id)  ### This is going to be automaticly generated IF it is not exists
+        self.Id = int(Id)  
         self.email = email
         self.status = status
         if password is None:
@@ -107,7 +107,7 @@ class subject:  ### Data base team said that this is currently not needed but i 
 section_db=Database("courses.db") ### since section class will use database a lot i think its better to create database object here
 class section(subject):
     # def __init__(self,section_name=None,section_code=None,capacity = 0,enrolled_students=None, schedule=None, instructor=None, prerequisites=None, status="closed"):
-    def __init__(self,section_name,subject_name,subject_code,schedule=None,capacity=0,enrolled_students=None,instructor=None,prerequisites=None,status="closed",):
+    def __init__(self,section_name,subject_name=None,subject_code=None,schedule=None,capacity=0,instructor=None,prerequisites=None,status="closed",):
         ### this constructor version is the one we will use, we have to discuss it and compare it with main (the line above)
         super().__init__(subject_name, subject_code, prerequisites)
         self.schedule = schedule
@@ -116,9 +116,11 @@ class section(subject):
         # self.enrolled_students = enrolled_students if enrolled_students is not None else [] ### I dont think we need this
         self.section_name = section_name
         self.student_in_section_db = Database("i dont what is the file name")  ### as menshed I dont know what is the file name one i know it and know the database design i will implement it to be completely functional
-        row = self.student_in_section_db.execute("SELECT student_id, student_name FROM students_in_section WHERE section_code = ?", (self.section_code,), fetchall=True)
+        row = self.student_in_section_db.execute("SELECT student_id, student_name FROM students_in_section WHERE section_code = ?", (self.section_name,), fetchall=True)
         if not row:
             self.enrolled_students = []
+            self.student_id_in_section = []
+            self.student_name_in_section = []
         else:
             # Build lists from query rows without overwriting the Database object
             self.enrolled_students = [f"{r[0]} - {r[1]}" for r in row]
@@ -126,11 +128,10 @@ class section(subject):
             self.student_name_in_section = [r[1] for r in row]
         self.status = status
 
-    def sectioon_info_student(self,section_code):  # to display section information
-        self.section_code = section_code
-        row= section_db.execute("SELECT cours_code, cours_name, sections, capacity, times FROM sections WHERE section_code = ?",(self.section_code,),fetchone=True)
+    def sectioon_info_student(self):  # to display section information
+        row= section_db.execute("SELECT course_code, course_name, sections, capacity, times FROM sections WHERE sections = ?",(self.section_name,),fetchone=True) ### database design must be abdated to include instructor name and creat a table name sections
         if row==None:
-            return f"{self.section_code}, Section not found"
+            return f"{self.section_name}, Section not found"
         self.section_code=row[0]
         self.subject_name=row[1]   
         self.section_name=row[2]
@@ -145,12 +146,18 @@ class section(subject):
     def open_section(self):  # to open section for enrollment
         ### status can be changed to open if capacity not zero
         pass
-
-    def is_full(self, section_code):  # to check if section is full
-        self.section_code = section_code
-        row= section_db.execute("SELECT capacity FROM sections WHERE section_code = ?",(self.section_code,),fetchone=True)
+    def section_is_existing(self):  # to check if section exists
+        row= section_db.execute("SELECT sections FROM sections WHERE sections = ?",(self.section_name,),fetchone=True)
         if row==None:
-            return f"{self.section_code}, Section not found"
+            return False
+        else:
+            return True
+
+    def is_full(self):  # to check if section is full
+        ### allways use the function section_is_existing before using this function to avoid errors
+        row= section_db.execute("SELECT capacity FROM sections WHERE sections = ?",(self.section_name,),fetchone=True)
+        if row==None:
+            return True
         if len(self.enrolled_students)>=row[0]: ### since there is no data base fore enrolled student i'm going to write it like this (temporary)
             return True
         else:
@@ -158,16 +165,16 @@ class section(subject):
         ### this can compare len(enrolled_students) with capacity
         
 
-    def view_enrolled_students(self,):  # to view all enrolled students
+    def view_enrolled_students(self):  # to view all enrolled students
         print(self.enrolled_students)
         ### in the future can return/print list of all enrolled students
         pass
 
-    def has_time_conflict(self, student_id, section_code):  # to check time conflict with student's schedule
+    def has_time_conflict(self, student_id):  # to check time conflict with student's schedule
         ### I will need to inrolle some students in some sections to be able to check time conflict fartheremore Data base has to add more sections 
         pass
 
-    def prerequisites_met(self, completed_subjects):  # to check if student meets prerequisites
+    def prerequisites_met(self, student_id,):  # to check if student meets prerequisites
         ### must compare subject prerequisites with completed_subjects list
         pass
     def student_is_existing(self, student_id):  # to check if student is already enrolled in the section
@@ -180,12 +187,25 @@ class section(subject):
         else:
             return False
 
-    def all_conditions_met(self): # to check if all conditions are met for enrollment
-        if self.is_full():
+    def all_conditions_met(self,student_id): # to check if all conditions are met for enrollment
+        ### notce this is very very very important this function returns tuple of (bool,str) the right why to use it in if conditions is like this:
+        ### conditions_met, message = section.all_conditions_met(student_id)
+        ### if not conditions_met: print(message)
+        ### else: proceed with enrollment
+        try:
+            student_id = int(student_id)
+        except: 
+            return False , "Student ID must be an integer."
+        if self.student_is_existing(student_id):
+            return False , f"student with ID {student_id} is already enrolled in section {self.section_name}"
+        if not self.section_is_existing():
+            return False , f"section {self.section_name} does not exist"
+        if self.is_full(student_id):
             return False , f"the section {self.section_name} is full"
-        if not self.prerequisites_met():
-            return False
-        if self.has_time_conflict():
+        okay , message =  self.prerequisites_met(student_id) ### this function must return tuple (bool,str)
+        if not okay:
+            return False , message
+        if self.has_time_conflict(student_id):
             return False
     def enroll_student_in_section(self, student_id):  # to enroll a student in the section for data only (admin use only)
          ### I will need to inrolle some students in some sections to be able to do this 
@@ -206,7 +226,7 @@ class section(subject):
         if new_capacity < len(self.student_id_in_section):
             return "New capacity cannot be less than the number of enrolled students."
         self.capacity = new_capacity
-        section_db.execute("UPDATE sections SET capacity = ? WHERE section_code = ?", (self.capacity, self.section_code), commit=True)
+        section_db.execute("UPDATE sections SET capacity = ? WHERE sections = ?", (self.capacity, self.section_name), commit=True)
          ### it's very very very very importanat to abdate line 213 when database design is apdeted and add sereal number for each section
         return f"Section {self.section_name} capacity updated to {self.capacity}."
 
@@ -281,7 +301,20 @@ class student(user):
 
 
 # _______________________________________________________________________________________________________________
+class instructor(user):
+    def __init__(self, username, password, email, subject, sections=None,status="inactive", Id=None):
+        super().__init__(username, password, email, status, Id)
+        self.subject = subject  # subject assigned to the instructor
+        self.sections = sections if sections is not None else []  ### will be abdated later when database design is complete to take sections from database directly
+    def display_info(self):
+        return super().display_info() + f", Subject: {self.subject}"     
+    def __add_grade(self, student_id, section_code, grade):  # to add grade for a student in a section
+        pass
+    def show_students(self,section_code):  # to show all students in a section
+        self.section= section(section_name=section_code)
+        self.section.view_enrolled_students()
 
+# _______________________________________________________________________________________________________________
 
 class admin(user):
     def __init__(self, username, password, email, status="inactive", Id=None):
@@ -336,4 +369,8 @@ class admin(user):
 # s1 = student(username='tariq', password='Electrical communication and electronics',
 #              email='tariq@stu.kau.edu.sa', Id='2430020')
 # print(s1.display_info())
-
+# instructor1 = instructor(username='dr.ahmed', password='instructorpass',email="ahmad@gmail.com",subject="computer science",Id=3001)
+# print(instructor1.display_info())
+# instructor1.show_students("CS101")
+# b=section("4f")
+# print(b.sectioon_info_student())
