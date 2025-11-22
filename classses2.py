@@ -40,8 +40,18 @@ class user:
     user_count = 0  # class variable to keep track of user IDs
     def __init__(self, username, password=None, email=None, status="inactive", Id=None):
         self.username = username
-        # self.password = password  ### This is going to be automaticly generated
-        self.Id = int(Id)  ### This is going to be automaticly generated IF it is not exists
+
+        db = sqlite3.connect("Users.db")
+        cr = db.cursor()
+        cr.execute("SELECT Id FROM admins")
+        existing_a_Ids = [b[0] for b in cr.fetchall()]
+        cr.execute("SELECT Id FROM instructors")
+        existing_i_Ids = [b[0] for b in cr.fetchall()]
+        existing_Ids = set(existing_a_Ids + existing_i_Ids)
+        self.Id = random.randint(1000000000,9999999999)
+        while self.Id in existing_Ids:
+            self.Id = random.randint(1000000000,9999999999)
+        
         self.email = email
         self.status = status
         if password is None:
@@ -284,8 +294,21 @@ class student(user):
 
 
 class admin(user):
-    def __init__(self, username, password, email, status="inactive", Id=None):
+    def __init__(self, username, password=None, email=None, status="inactive", Id=None):
         super().__init__(username, password, email, status, Id)
+        self.password = chr(random.randint(97,97+25)) + str(random.randint(1000000,9999999))
+        db = sqlite3.connect("Users.db")
+        cr = db.cursor()
+        cr.execute("SELECT email FROM admins")
+        existing_emails = {row[0] for row in cr.fetchall()} 
+        self.email = f"{self.username}@kau.edu.sa"
+        while self.email in existing_emails:
+            rr = random.randint(1000000, 9999999)
+            self.email = f"{self.username}{rr}@kau.edu.sa"
+
+            
+        
+
 
     def add_subject(self, section_code, student_id):  # to add a subject to a student
         ### later this will probably call student.enroll_subject with correct ID and section_code

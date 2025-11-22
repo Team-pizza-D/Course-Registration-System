@@ -17,7 +17,6 @@ db.close()
 def add_random_students(x):
     db = sqlite3.connect("Users.db")
     cr = db.cursor()
-    cr.execute("CREATE TABLE IF NOT EXISTS students (id INT, username TEXT, email TEXT, major TEXT, password TEXT)")
     cr.execute("INSERT INTO students (id, username, email, major, password) VALUES (?, ?, ?, ?, ?)", x.return_info())
     db.commit()
     db.close()
