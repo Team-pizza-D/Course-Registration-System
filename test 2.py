@@ -83,36 +83,37 @@ import sqlite3
 # db.commit()
 # db.close()
 # print(times)
-print(3923)
-i = "2430020"
-db = sqlite3.connect("Users.db")
-cr = db.cursor()
-cr.execute(f"SELECT course FROM grades WHERE student_id = {i}")
-courses_taken = cr.fetchall()
-courses_taken = [i[0] for i in courses_taken]
-db.commit()
-db.close()
-print(courses_taken)
+print(1 // 26)
+print(1 % 26)
+# i = "2430020"
+# db = sqlite3.connect("Users.db")
+# cr = db.cursor()
+# cr.execute(f"SELECT course FROM grades WHERE student_id = {i}")
+# courses_taken = cr.fetchall()
+# courses_taken = [i[0] for i in courses_taken]
+# db.commit()
+# db.close()
+# print(courses_taken)
 
-db = sqlite3.connect("courses.db")
-cr = db.cursor()
-terms_taken=[]
-for i in range(len(courses_taken)):
-    cr.execute(f"SELECT terms FROM power WHERE course_code = ?", (courses_taken[i],))
-    terms_taken.append(cr.fetchall())
-b = max(terms_taken)
-b = b[0][0]
-print(b)
-cr.execute(f"SELECT capacity FROM power WHERE terms = ?", (b,))
-row = cr.fetchall()
-db.commit()
-db.close()
-print(b)
-print(row)
+# db = sqlite3.connect("courses.db")
+# cr = db.cursor()
+# terms_taken=[]
+# for i in range(len(courses_taken)):
+#     cr.execute(f"SELECT terms FROM power WHERE course_code = ?", (courses_taken[i],))
+#     terms_taken.append(cr.fetchall())
+# b = max(terms_taken)
+# b = b[0][0]
+# print(b)
+# cr.execute(f"SELECT capacity FROM power WHERE terms = ?", (b,))
+# row = cr.fetchall()
+# db.commit()
+# db.close()
+# print(b)
+# print(row)
 
-tt = [1,0,50,33,44]
-for p in tt:
-    if p > 0:
-        print("class available")
-    else:
-        print("class is full")        
+# tt = [1,0,50,33,44]
+# for p in tt:
+#     if p > 0:
+#         print("class available")
+#     else:
+#         print("class is full")        

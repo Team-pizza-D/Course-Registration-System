@@ -358,7 +358,4 @@ class admin(user):
         pass 
 
 
-st1 = student('ABDULAZIZ', 1234, 'Electrical communication and electronics engineering', Id = 2490248)
-print(st1.display_info())
-# s1 = student(username='tariq', password='Electrical communication and electronics', email='tariq@stu.kau.edu.sa', Id='2430020')
-# print(s1.display_info())
+
