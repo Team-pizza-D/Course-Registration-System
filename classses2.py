@@ -231,16 +231,20 @@ class section(subject):
 
 # _______________________________________________________________________________________________________________
 
-
+users_db = Database("Users.db")  ### since student class will use database a lot i think its better to create database object here
 class student(user):
-    def __init__(self,Id,username,email,major,password=None,enrolled_subjects=None,completed_subjects=None,status="inactive",GPA=None,):
+    def __init__(self,Id,username=None,email=None,major=None,password=None,enrolled_subjects=None,completed_subjects=None,status="inactive",GPA=None,):
         super().__init__(username, password, email, status, Id)
         self.GPA = GPA
         self.enrolled_subjects = enrolled_subjects if enrolled_subjects is not None else [] # list of section codes the student is currently enrolled in
         self.completed_subjects = completed_subjects if completed_subjects is not None else []  # list of subject codes the student has completed
         self.current_credits = 0 ### total credits of current enrolled subjects for checking max credits allowed per semester not current total subjects
         self.email = f"{self.username}@stu.kau.edu.sa" if email is None else email
-        self.major = major
+        majors_row=users_db.execute("SELECT major fROM students WHERE Id = ?", (self.Id,), fetchone=True)
+        if majors_row==None:
+            self.major=major
+        self.major=majors_row[0]
+        
 
     # def generate_unique_id(self): # generates random id for each student
     #     while True:
@@ -280,6 +284,21 @@ class student(user):
         pass
 
     def calculate_GPA(self):  # to calculate GPA based on completed subjects and their grades
+        if self.Id != int(self.Id):
+            return "Student ID must be an integer."
+        row=users_db.execute("SELECT major fROM students WHERE Id = ?", (self.Id,), fetchone=True)
+        if row==None:
+            return f"{self.Id}, Student not found"
+        if self.major=="Electrical communication and electronics engineering":
+            ### GPA calculation logic for this major
+            pass
+        if self.major=="Electrical computer engineering":
+            ### GPA calculation logic for this major
+            pass
+        if self.major=="Electrical power and machines engineering":
+            pass
+        if self.major=="Electrical biomedical engineering":
+            pass
         ### must use completed_subjects and grades (when database design is complete)
         pass
 
