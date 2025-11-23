@@ -2,6 +2,7 @@ import random
 import sqlite3
 
 
+
 class Database:
     """
     Simple helper class to interact with a SQLite database.
@@ -35,31 +36,19 @@ class Database:
         conn.close()
         return result
 
+# _______________________________________________________________________________________________________________
+### open database connection
+users_db = Database("Users.db")
+courses_db = Database("courses.db")
+programs_db = Database("programs.db")
+# _______________________________________________________________________________________________________________
 
 class user:
     user_count = 0  # class variable to keep track of user IDs
     def __init__(self, username, password=None, email=None, status="inactive", Id=None):
         self.username = username
+        self.Id, self.email, self.password = self.generate_admin_instructor()
 
-        db = sqlite3.connect("Users.db")
-        cr = db.cursor()
-        cr.execute("SELECT Id FROM admins")
-        existing_a_Ids = [b[0] for b in cr.fetchall()]
-        cr.execute("SELECT Id FROM instructors")
-        existing_i_Ids = [b[0] for b in cr.fetchall()]
-        existing_Ids = set(existing_a_Ids + existing_i_Ids)
-        self.Id = random.randint(1000000000,9999999999)
-        while self.Id in existing_Ids:
-            self.Id = random.randint(1000000000,9999999999)
-        self.email = f"{self.username}{self.Id}@kau.edu.sa"
-        self.status = status
-        if password is None:
-            self.password = self.username + str(random.randint(100000, 999999))  ### I did this (Abdulaziz)
-        else:
-            self.password = password
-        cr.execute("INSERT INTO admins (Id, username, password, email, status) VALUES (?, ?, ?, ?, ?)", [self.Id, self.username, self.password, self.email, self.status])
-        db.commit()
-        db.close()
     def display_info(self):  # to display user information
         return f"Username: {self.username}, Email: {self.email}, Status: {self.status}, ID: {self.Id}"
 
@@ -85,6 +74,21 @@ class user:
         # This will later be known by which table is the information in (student or admin)
         return True if isinstance(self, student) else False
 
+    def generate_admin_instructor(self):  # generates instructor/admin account
+        existing_a_Ids = users_db.execute("SELECT Id FROM admins", fetchall=True)
+        existing_i_Ids = users_db.execute("SELECT Id FROM instructors", fetchall=True)
+        existing_Ids = set(existing_a_Ids + existing_i_Ids)
+        Id = random.randint(1000000000,9999999999)
+        while Id in existing_Ids:
+            Id = random.randint(1000000000,9999999999) 
+        email = f"{self.username}{Id}@kau.edu.sa"
+        if password is None:
+            password = self.username + str(random.randint(100000, 999999))
+        else:
+            password = password
+        return Id, email, password
+        
+    
 
 class subject:  ### Data base team said that this is currently not needed but i think its better to have it for future use
     def __init__(self, subject_name, subject_code, prerequisites=None):
