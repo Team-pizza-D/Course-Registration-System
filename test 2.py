@@ -1,14 +1,17 @@
 import sqlite3
-from classses2 import admin
+from classses2 import admin, student
 
 
-random = admin("azoz")
-random_admin2 = admin("ali")
-random_admin3 = admin("ali")
 
-print(random.display_info())
-print(random_admin2.display_info())
-print(random_admin3.display_info())
+# random = admin("azoz")
+# random_admin2 = admin("ali")
+# random_admin3 = admin("ali", Id=9911991199)
+# random_admin4 = admin("ali")
+
+# print(random.display_info())
+# print(random_admin2.display_info())
+# print(random_admin3.display_info())
+# print(random_admin4.display_info())
 
 
 # def connect_db():

@@ -51,14 +51,15 @@ class user:
         self.Id = random.randint(1000000000,9999999999)
         while self.Id in existing_Ids:
             self.Id = random.randint(1000000000,9999999999)
-        
-        self.email = email
+        self.email = f"{self.username}{self.Id}@kau.edu.sa"
         self.status = status
         if password is None:
             self.password = self.username + str(random.randint(100000, 999999))  ### I did this (Abdulaziz)
         else:
             self.password = password
-
+        cr.execute("INSERT INTO admins (Id, username, password, email, status) VALUES (?, ?, ?, ?, ?)", [self.Id, self.username, self.password, self.email, self.status])
+        db.commit()
+        db.close()
     def display_info(self):  # to display user information
         return f"Username: {self.username}, Email: {self.email}, Status: {self.status}, ID: {self.Id}"
 
@@ -239,7 +240,7 @@ class student(user):
         self.enrolled_subjects = enrolled_subjects if enrolled_subjects is not None else [] # list of section codes the student is currently enrolled in
         self.completed_subjects = completed_subjects if completed_subjects is not None else []  # list of subject codes the student has completed
         self.current_credits = 0 ### total credits of current enrolled subjects for checking max credits allowed per semester not current total subjects
-        self.email = f"{self.username}@stu.kau.edu.sa" if email is None else email
+        self.email = f"{self.username}{self.Id}@kau.edu.sa" if email is None else email
         majors_row=users_db.execute("SELECT major fROM students WHERE Id = ?", (self.Id,), fetchone=True)
         if majors_row==None:
             self.major=major
@@ -316,14 +317,7 @@ class admin(user):
     def __init__(self, username, password=None, email=None, status="inactive", Id=None):
         super().__init__(username, password, email, status, Id)
         self.password = chr(random.randint(97,97+25)) + str(random.randint(1000000,9999999))
-        db = sqlite3.connect("Users.db")
-        cr = db.cursor()
-        cr.execute("SELECT email FROM admins")
-        existing_emails = {row[0] for row in cr.fetchall()} 
-        self.email = f"{self.username}@kau.edu.sa"
-        while self.email in existing_emails:
-            rr = random.randint(1000000, 9999999)
-            self.email = f"{self.username}{rr}@kau.edu.sa"
+        
 
             
         
