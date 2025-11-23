@@ -1,6 +1,6 @@
 import sqlite3
 import Programs
-from classes import student,user
+from classes import student, user
 # This file is a random generated students
 db = sqlite3.connect("Users.db")
 cr = db.cursor()

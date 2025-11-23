@@ -1,5 +1,5 @@
 import sqlite3
-from classses2 import admin, student
+from classses2 import user, admin, student, Database
 
  
 # random = admin("azoz")
@@ -96,8 +96,8 @@ from classses2 import admin, student
 # db.commit()
 # db.close()
 # print(times)
-print(1 // 26)
-print(1 % 26)
+# print(1 // 26)
+# print(1 % 26)
 # i = "2430020"
 # db = sqlite3.connect("Users.db")
 # cr = db.cursor()
@@ -130,3 +130,6 @@ print(1 % 26)
 #         print("class available")
 #     else:
 #         print("class is full")        
+users_db = Database("Users.db") 
+rwo = users_db.execute("SELECT major , username FROM students WHERE Id = ?", (2404449), fetchone=True)
+print(rwo)
