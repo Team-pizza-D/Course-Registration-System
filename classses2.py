@@ -244,7 +244,7 @@ class student(user):
         majors_row=users_db.execute("SELECT major fROM students WHERE Id = ?", (self.Id,), fetchone=True)
         if majors_row==None:
             self.major=major
-        self.major=majors_row[0]
+        self.major=majors_row
         
 
     # def generate_unique_id(self): # generates random id for each student
