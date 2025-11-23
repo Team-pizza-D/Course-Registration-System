@@ -8,7 +8,7 @@ cr.execute("DROP TABLE IF EXISTS students")
 cr.execute("DROP TABLE IF EXISTS student")
 cr.execute("DROP TABLE IF EXISTS grades")
 cr.execute("DROP TABLE IF EXISTS test")
-cr.execute("CREATE TABLE IF NOT EXISTS students (id TEXT PRIMARY KEY, username TEXT, email TEXT, major TEXT, CurrentCourses TEXT, password TEXT)") 
+cr.execute("CREATE TABLE IF NOT EXISTS students (id TEXT PRIMARY KEY, username TEXT, email TEXT, major TEXT, password TEXT)") 
 cr.execute("CREATE TABLE IF NOT EXISTS grades (id INTEGER PRIMARY KEY AUTOINCREMENT, student_id TEXT, course TEXT, letter_grade TEXT, numeric_grade INTEGER, FOREIGN KEY(student_id) REFERENCES students(student_id))")
 db.commit()
 db.close()
@@ -17,63 +17,11 @@ db.close()
 def add_random_students(x):
     db = sqlite3.connect("Users.db")
     cr = db.cursor()
-    cr.execute("CREATE TABLE IF NOT EXISTS students (id INT, username TEXT, email TEXT, major TEXT, password TEXT)")
     cr.execute("INSERT INTO students (id, username, email, major, password) VALUES (?, ?, ?, ?, ?)", x.return_info())
     db.commit()
     db.close()
 #---------------------------------------------------------------------------------------------
 
-st1 = student('ABDULAZIZ', 1234, 'Electrical communication and electronics engineering', Id = 2490248)
-add_random_students('2430020', 'tariq', 'tariq@stu.kau.edu.sa', 'Electrical communication and electronics')
-add_random_students('2495918', 'zubair', 'zubair@stu.kau.edu.sa', 'Electrical communication and electronics')
-add_random_students('2422666', 'fahad', 'fahad@stu.kau.edu.sa', 'Electrical biomedical engineering')
-add_random_students('2404449', 'hazem', 'hazem@stu.kau.edu.sa', 'Electrical power and machines engineering')
-add_random_students('2478624', 'faris', 'faris@stu.kau.edu.sa', 'Electrical computer engineering')
-add_random_students('2469538', 'anas', 'anas@stu.kau.edu.sa', 'Electrical biomedical engineering')
-add_random_students('2499079', 'nasser', 'nasser@stu.kau.edu.sa', 'Electrical biomedical engineering')
-add_random_students('2423582', 'malek', 'malek@stu.kau.edu.sa', 'Electrical computer engineering')
-add_random_students('2427374', 'faris', 'faris@stu.kau.edu.sa', 'Electrical power and machines engineering')
-add_random_students('2440953', 'kamel', 'kamel@stu.kau.edu.sa', 'Electrical computer engineering')
-add_random_students('2453089', 'luay', 'luay@stu.kau.edu.sa', 'Electrical power and machines engineering')
-add_random_students('2442707', 'kamel', 'kamel@stu.kau.edu.sa', 'Electrical biomedical engineering')
-add_random_students('2409415', 'mishal', 'mishal@stu.kau.edu.sa', 'Electrical computer engineering')
-add_random_students('2480110', 'muath', 'muath@stu.kau.edu.sa', 'Electrical biomedical engineering')
-add_random_students('2411336', 'malek', 'malek@stu.kau.edu.sa', 'Electrical communication and electronics')
-add_random_students('2479368', 'mishal', 'mishal@stu.kau.edu.sa', 'Electrical computer engineering')
-add_random_students('2413193', 'luay', 'luay@stu.kau.edu.sa', 'Electrical power and machines engineering')
-add_random_students('2491066', 'munir', 'munir@stu.kau.edu.sa', 'Electrical biomedical engineering')
-add_random_students('2460758', 'malek', 'malek@stu.kau.edu.sa', 'Electrical computer engineering')
-add_random_students('2485155', 'saad', 'saad@stu.kau.edu.sa', 'Electrical communication and electronics')
-add_random_students('2487598', 'hadi', 'hadi@stu.kau.edu.sa', 'Electrical computer engineering'),
-add_random_students('2436969', 'luay', 'luay@stu.kau.edu.sa', 'Electrical communication and electronics'),
-add_random_students('2448994', 'omar', 'omar@stu.kau.edu.sa', 'Electrical communication and electronics'),
-add_random_students('2494429', 'thamer', 'thamer@stu.kau.edu.sa', 'Electrical biomedical engineering'),
-add_random_students('2499950', 'mohammed', 'mohammed@stu.kau.edu.sa', 'Electrical computer engineering'),
-add_random_students('2487715', 'muath', 'muath@stu.kau.edu.sa', 'Electrical computer engineering'),
-add_random_students('2446915', 'bassam', 'bassam@stu.kau.edu.sa', 'Electrical computer engineering'),
-add_random_students('2431025', 'luay', 'luay@stu.kau.edu.sa', 'Electrical biomedical engineering'),
-add_random_students('2429372', 'nayef', 'nayef@stu.kau.edu.sa', 'Electrical communication and electronics'),
-add_random_students('2447741', 'yousef', 'yousef@stu.kau.edu.sa', 'Electrical biomedical engineering'),
-add_random_students('2435576', 'majed', 'majed@stu.kau.edu.sa', 'Electrical biomedical engineering'),
-add_random_students('2438271', 'faisal', 'faisal@stu.kau.edu.sa', 'Electrical biomedical engineering'),
-add_random_students('2465966', 'jad', 'jad@stu.kau.edu.sa', 'Electrical computer engineering'),
-add_random_students('2429143', 'jad', 'jad@stu.kau.edu.sa', 'Electrical computer engineering'),
-add_random_students('2463233', 'mishal', 'mishal@stu.kau.edu.sa', 'Electrical communication and electronics'),
-add_random_students('2419089', 'luay', 'luay@stu.kau.edu.sa', 'Electrical communication and electronics'),
-add_random_students('2404442', 'khalid', 'khalid@stu.kau.edu.sa', 'Electrical computer engineering'),
-add_random_students('2493682', 'tariq', 'tariq@stu.kau.edu.sa', 'Electrical biomedical engineering'),
-add_random_students('2427990', 'luay', 'luay@stu.kau.edu.sa', 'Electrical biomedical engineering'),
-add_random_students('2419570', 'mishal', 'mishal@stu.kau.edu.sa', 'Electrical communication and electronics'),
-add_random_students('2452416', 'saad', 'saad@stu.kau.edu.sa', 'Electrical computer engineering'),
-add_random_students('2461588', 'mishal', 'mishal@stu.kau.edu.sa', 'Electrical computer engineering'),
-add_random_students('2425423', 'thamer', 'thamer@stu.kau.edu.sa', 'Electrical communication and electronics'),
-add_random_students('2449457', 'rakan', 'rakan@stu.kau.edu.sa', 'Electrical communication and electronics'),
-add_random_students('2407656', 'nayef', 'nayef@stu.kau.edu.sa', 'Electrical computer engineering'),
-add_random_students('2490363', 'ibrahim', 'ibrahim@stu.kau.edu.sa', 'Electrical computer engineering'),
-add_random_students('2446501', 'bassam', 'bassam@stu.kau.edu.sa', 'Electrical communication and electronics'),
-add_random_students('2431805', 'mohammed', 'mohammed@stu.kau.edu.sa', 'Electrical communication and electronics'),
-add_random_students('2478657', 'hussain', 'hussain@stu.kau.edu.sa', 'Electrical communication and electronics'),
-add_random_students('2474598', 'hamad', 'hamad@stu.kau.edu.sa', 'Electrical computer engineering')
 st1 = student('2430020', 'tariq', 'tariq@stu.kau.edu.sa', 'Electrical communication and electronics engineering')
 st2 = student('2495918', 'zubair', 'zubair@stu.kau.edu.sa', 'Electrical communication and electronics engineering')
 st3 = student('2422666', 'fahad', 'fahad@stu.kau.edu.sa', 'Electrical biomedical engineering')
@@ -1147,8 +1095,3 @@ def calculate_gpa():
     return final_GPAs
 
 B = calculate_gpa()
-# print(Programs.loop_dict_value(B))
-# print(Programs.loop_dict_key(B))
-print(B)
-# print(Programs.loop_dict_key(B))
- 

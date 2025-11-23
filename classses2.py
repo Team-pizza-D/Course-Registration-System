@@ -40,15 +40,26 @@ class user:
     user_count = 0  # class variable to keep track of user IDs
     def __init__(self, username, password=None, email=None, status="inactive", Id=None):
         self.username = username
-        # self.password = password  ### This is going to be automaticly generated
-        self.Id = int(Id)  
-        self.email = email
+
+        db = sqlite3.connect("Users.db")
+        cr = db.cursor()
+        cr.execute("SELECT Id FROM admins")
+        existing_a_Ids = [b[0] for b in cr.fetchall()]
+        cr.execute("SELECT Id FROM instructors")
+        existing_i_Ids = [b[0] for b in cr.fetchall()]
+        existing_Ids = set(existing_a_Ids + existing_i_Ids)
+        self.Id = random.randint(1000000000,9999999999)
+        while self.Id in existing_Ids:
+            self.Id = random.randint(1000000000,9999999999)
+        self.email = f"{self.username}{self.Id}@kau.edu.sa"
         self.status = status
         if password is None:
             self.password = self.username + str(random.randint(100000, 999999))  ### I did this (Abdulaziz)
         else:
             self.password = password
-
+        cr.execute("INSERT INTO admins (Id, username, password, email, status) VALUES (?, ?, ?, ?, ?)", [self.Id, self.username, self.password, self.email, self.status])
+        db.commit()
+        db.close()
     def display_info(self):  # to display user information
         return f"Username: {self.username}, Email: {self.email}, Status: {self.status}, ID: {self.Id}"
 
@@ -241,16 +252,20 @@ class section(subject):
 
 # _______________________________________________________________________________________________________________
 
-
+users_db = Database("Users.db")  ### since student class will use database a lot i think its better to create database object here
 class student(user):
-    def __init__(self,Id,username,email,major,password=None,enrolled_subjects=None,completed_subjects=None,status="inactive",GPA=None,):
+    def __init__(self,Id,username=None,email=None,major=None,password=None,enrolled_subjects=None,completed_subjects=None,status="inactive",GPA=None,):
         super().__init__(username, password, email, status, Id)
         self.GPA = GPA
         self.enrolled_subjects = enrolled_subjects if enrolled_subjects is not None else [] # list of section codes the student is currently enrolled in
         self.completed_subjects = completed_subjects if completed_subjects is not None else []  # list of subject codes the student has completed
         self.current_credits = 0 ### total credits of current enrolled subjects for checking max credits allowed per semester not current total subjects
-        self.email = f"{self.username}@stu.kau.edu.sa" if email is None else email
-        self.major = major
+        self.email = f"{self.username}{self.Id}@kau.edu.sa" if email is None else email
+        majors_row=users_db.execute("SELECT major fROM students WHERE Id = ?", (self.Id,), fetchone=True)
+        if majors_row==None:
+            self.major=major
+        self.major=majors_row[0]
+        
 
     # def generate_unique_id(self): # generates random id for each student
     #     while True:
@@ -290,6 +305,21 @@ class student(user):
         pass
 
     def calculate_GPA(self):  # to calculate GPA based on completed subjects and their grades
+        if self.Id != int(self.Id):
+            return "Student ID must be an integer."
+        row=users_db.execute("SELECT major fROM students WHERE Id = ?", (self.Id,), fetchone=True)
+        if row==None:
+            return f"{self.Id}, Student not found"
+        if self.major=="Electrical communication and electronics engineering":
+            ### GPA calculation logic for this major
+            pass
+        if self.major=="Electrical computer engineering":
+            ### GPA calculation logic for this major
+            pass
+        if self.major=="Electrical power and machines engineering":
+            pass
+        if self.major=="Electrical biomedical engineering":
+            pass
         ### must use completed_subjects and grades (when database design is complete)
         pass
 
@@ -317,8 +347,14 @@ class instructor(user):
 # _______________________________________________________________________________________________________________
 
 class admin(user):
-    def __init__(self, username, password, email, status="inactive", Id=None):
+    def __init__(self, username, password=None, email=None, status="inactive", Id=None):
         super().__init__(username, password, email, status, Id)
+        self.password = chr(random.randint(97,97+25)) + str(random.randint(1000000,9999999))
+        
+
+            
+        
+
 
     def add_subject(self, section_code, student_id):  # to add a subject to a student
         ### later this will probably call student.enroll_subject with correct ID and section_code

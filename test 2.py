@@ -1,4 +1,18 @@
 import sqlite3
+from classses2 import admin, student
+
+
+
+# random = admin("azoz")
+# random_admin2 = admin("ali")
+# random_admin3 = admin("ali", Id=9911991199)
+# random_admin4 = admin("ali")
+
+# print(random.display_info())
+# print(random_admin2.display_info())
+# print(random_admin3.display_info())
+# print(random_admin4.display_info())
+
 
 # def connect_db():
 #     return sqlite3.connect("students.db")
@@ -83,7 +97,8 @@ import sqlite3
 # db.commit()
 # db.close()
 # print(times)
-# print(3923)
+print(1 // 26)
+print(1 % 26)
 # i = "2430020"
 # db = sqlite3.connect("Users.db")
 # cr = db.cursor()
@@ -116,8 +131,3 @@ import sqlite3
 #         print("class available")
 #     else:
 #         print("class is full")        
-# db = sqlite3.connect("Users.db")
-# cr = db.cursor()
-# cr.execute("CREATE TABLE student_info (student_id, course_code, course_name, instructor, section ,time)")
-# db.commit()
-# db.close()

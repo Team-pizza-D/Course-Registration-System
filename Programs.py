@@ -382,23 +382,33 @@ All_Names = All_Courses_Names | Semi_Shared_Courses_Names | power_coursesName | 
 All_Credits = PP | Semi_Shared_C | power_courses_C | computer_courses_C | communication_courses_C | biomedical_courses_C
 All_Prerequisites = All_Courses_PR | Semi_Shared_PR | power_courses_PR | computer_courses_PR | communication_courses_PR | biomedical_courses_PR
 
-# B = {}
+B = {}
 
-# letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-# count = 0
 
-# for course in All_Courses:
-#     first = letters[count // 26]       
-#     second = letters[count % 26]        
-#     B[course] = first + second
-#     count += 1
+letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+count = 0
+SPC = 2   # how many sections there are for each course
+for course in All_Courses:
+    course_sections = []
+    for j in range(SPC):
+        first = letters[(count // 26) % 26]
+        second = letters[count % 26]
+        course_sections.append(first + second)
+        count += 1
+
+    B[course] = course_sections
+A = loop_dict_value(B)
+L = []
+for k in A:
+    r = " , ".join(k)
+    L.append(r)
 
 db = sqlite3.connect('courses.db')
 cr = db.cursor()
 cr.execute('DROP TABLE IF EXISTS Courses')
-# cr.execute('CREATE TABLE IF NOT EXISTS Courses (course_code TEXT, course_name TEXT, section TEXT)')
-# for i in range (len(All_Courses)):
-#     cr.execute('INSERT INTO Courses (course_code, course_name, section) VALUES (?, ?, ?)',
-#                (All_Courses[i] , All_Names[All_Courses[i]], B[All_Courses[i]]))
+cr.execute('CREATE TABLE IF NOT EXISTS Courses (course_code TEXT, course_name TEXT, section TEXT)')
+for i in range (len(All_Courses)):
+    cr.execute('INSERT INTO Courses (course_code, course_name, section) VALUES (?, ?, ?)',
+               (All_Courses[i] , All_Names[All_Courses[i]], L[i]))
 db.commit()
 db.close()
