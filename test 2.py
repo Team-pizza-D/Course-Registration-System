@@ -1,9 +1,8 @@
 import sqlite3
 from classses2 import admin, student
-import random
 
 
-
+ 
 # random = admin("azoz")
 # random_admin2 = admin("ali")
 # random_admin3 = admin("ali", Id=9911991199)
@@ -110,8 +109,8 @@ import random
 # db.commit()
 # db.close()
 # print(times)
-print(1 // 26)
-print(1 % 26)
+# print(1 // 26)
+# print(1 % 26)
 # i = "2430020"
 # db = sqlite3.connect("Users.db")
 # cr = db.cursor()
@@ -144,17 +143,3 @@ print(1 % 26)
 #         print("class available")
 #     else:
 #         print("class is full")        
-
-
-
-# ----------------------------
-# Grade scale
-# ----------------------------
-# A+ : 95–100
-# A  : 90–94
-# B+ : 85–89
-# B  : 80–84
-# C+ : 75–79
-# C  : 70–74
-# D+ : 65–69
-# D  : 60–64
