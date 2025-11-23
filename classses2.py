@@ -2,6 +2,7 @@ import random
 import sqlite3
 
 
+
 class Database:
 
     """
@@ -35,11 +36,25 @@ class Database:
 
         conn.close()
         return result
+<<<<<<< HEAD
+
+# _______________________________________________________________________________________________________________
+### open database connection
+users_db = Database("Users.db")
+courses_db = Database("courses.db")
+programs_db = Database("programs.db")
+# _______________________________________________________________________________________________________________
+
+=======
 users_db=Database("Users.db")
+>>>>>>> 46252e35b0e5da0cd9ec67c96557a3db75c49e0e
 class user:
     user_count = 0  # class variable to keep track of user IDs
-    def __init__(self, username, password=None, email=None, status="inactive", Id=None):
+    def __init__(self, username, password=None, email=None, status="inactive", Id=None,major=None):
         self.username = username
+<<<<<<< HEAD
+        self.major = major
+=======
         db = sqlite3.connect("Users.db")
         cr = db.cursor()
         cr.execute("SELECT Id FROM admins")
@@ -51,14 +66,46 @@ class user:
         while self.Id in existing_Ids:
             self.Id = random.randint(1000000000,9999999999)
         self.email = f"{self.username}{self.Id}@kau.edu.sa"
+>>>>>>> 46252e35b0e5da0cd9ec67c96557a3db75c49e0e
         self.status = status
+
+
+        if Id is None:
+            self.Id = self.generate_unique_id()
+        else:
+            self.Id = Id
+
+        if email is None:
+            self.email = self.generate_email()
+        else:
+            self.email = email
+
         if password is None:
-            self.password = self.username + str(random.randint(100000, 999999))  ### I did this (Abdulaziz)
+            self.password = self.generate_password()
         else:
             self.password = password
-        cr.execute("INSERT INTO admins (Id, username, password, email, status) VALUES (?, ?, ?, ?, ?)", [self.Id, self.username, self.password, self.email, self.status])
-        db.commit()
-        db.close()
+        
+        self.status = status
+
+        if self.is_admin():
+            users_db.execute(
+                "INSERT INTO admins (username, password, email, Id,status) VALUES (?, ?, ?, ?, ?)",
+                (self.username, self.password, self.email,self.Id,self.status),
+                commit=True,
+            )
+        elif self.is_student():
+            users_db.execute(
+                "INSERT INTO students (username, password, email, Id) VALUES (?, ?, ?, ?)",
+                (self.username, self.password, self.email, self.Id),
+                commit=True,
+            )
+        elif self.is_instructor():
+            users_db.execute(
+                "INSERT INTO instructors (username, password, email, Id,status) VALUES (?, ?, ?, ?, ?)",
+                (self.username, self.password, self.email, self.Id,self.status),
+                commit=True,
+            )
+
     def display_info(self):  # to display user information
         return f"Username: {self.username}, Email: {self.email}, Status: {self.status}, ID: {self.Id}"
 
@@ -83,7 +130,51 @@ class user:
     def is_student(self):  # to check if user is student
         # This will later be known by which table is the information in (student or admin)
         return True if isinstance(self, student) else False
+    
+    def is_instructor(self):  # to check if user is instructor
+        #This will later be known by which table is the information in (student or admin)
+        return True if isinstance(self, instructor) else False
+    
+    def generate_unique_id(self):  # generates unique user ID
+        existing_ids_row = users_db.execute("SELECT Id FROM admins UNION SELECT Id FROM instructors UNION SELECT Id FROM students", fetchall=True)
+        existing_ids = {row[0] for row in existing_ids_row}
+        Id = random.randint(1000000000, 9999999999)
+        while Id in existing_ids:
+            Id = random.randint(1000000000, 9999999999)
+        return Id
+    
+    def generate_email(self):  # generates email based on username and ID
+        if self.is_student():
+            email = f"{self.username}{self.Id}@stu.kau.edu.sa"
+        else:
+            email = f"{self.username}{self.Id}@kau.edu.sa"
+        return email
+    
+    def generate_password(self):  # generates random password
+        password = str(self.username) + str(random.randint(100000, 999999))
+        return password
+    
 
+
+    # def generate_admin_instructor(self):  # generates instructor/admin account
+        existing_a_Ids = users_db.execute("SELECT Id FROM admins", fetchall=True)
+        existing_i_Ids = users_db.execute("SELECT Id FROM instructors", fetchall=True)
+        existing_Ids = set(existing_a_Ids + existing_i_Ids)
+        Id = random.randint(1000000000,9999999999)
+        while Id in existing_Ids:
+            Id = random.randint(1000000000,9999999999) 
+            if self.is_student():
+                email = f"{self.username}{Id}@stu.kau.edu.sa"
+            else:
+                email = f"{self.username}{Id}@kau.edu.sa"
+                
+        if password is None:
+            password = self.username + str(random.randint(100000, 999999))
+        else:
+            password = password
+        return Id, email, password
+        
+    
 
 class subject:  ### Data base team said that this is currently not needed but i think its better to have it for future use
     def __init__(self, subject_name, subject_code, prerequisites=None):
@@ -274,27 +365,18 @@ class section(subject):
 
  ### since student class will use database a lot i think its better to create database object here
 class student(user):
-    def __init__(self,Id,username=None,email=None,major=None,password=None,enrolled_subjects=None,completed_subjects=None,status="inactive",GPA=None,):
-        super().__init__(username, password, email, status, Id)
+    def __init__(self,username,id = None,email=None,major=None,password=None,enrolled_subjects=None,completed_subjects=None,status="inactive",GPA=None,):
+        super().__init__(username, password, email, status, id)
         self.GPA = GPA
         self.enrolled_subjects = enrolled_subjects if enrolled_subjects is not None else [] # list of section codes the student is currently enrolled in
         self.completed_subjects = completed_subjects if completed_subjects is not None else []  # list of subject codes the student has completed
         self.current_credits = 0 ### total credits of current enrolled subjects for checking max credits allowed per semester not current total subjects
-        self.email = f"{self.username}{self.Id}@kau.edu.sa" if email is None else email
+        # self.email = f"{self.username}{self.Id}@kau.edu.sa" if email is None else email
         majors_row=users_db.execute("SELECT major fROM students WHERE Id = ?", (self.Id,), fetchone=True)
         if majors_row==None:
             self.major=major
-        self.major=majors_row[0]
+        self.major=majors_row
         
-
-    # def generate_unique_id(self): # generates random id for each student
-    #     while True:
-    #         Id = random.randint(100000, 999999)  # Generate a random 6-digit ID
-    #         if Id not in existing_ids and Id not in emails:  # Check that the ID is not in emails or existing_ids
-    #             existing_ids.add(Id)  # Add the ID to the set
-    #             return Id  # Return the unique ID
-    # this can be used later if we want automatic ID generation
-
     def test(self):
         ### this function used before for quick testing
         pass
@@ -355,7 +437,7 @@ class instructor(user):
 class admin(user):
     def __init__(self, username, password=None, email=None, status="inactive", Id=None):
         super().__init__(username, password, email, status, Id)
-        self.password = chr(random.randint(97,97+25)) + str(random.randint(1000000,9999999))
+        # self.password = chr(random.randint(97,97+25)) + str(random.randint(1000000,9999999))
         
 
             
