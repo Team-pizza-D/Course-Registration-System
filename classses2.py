@@ -48,6 +48,7 @@ class user:
     user_count = 0  # class variable to keep track of user IDs
     def __init__(self, username, password=None, email=None, status="inactive", Id=None,major=None):
         self.username = username
+<<<<<<< HEAD
         # db = sqlite3.connect("Users.db")
         # cr = db.cursor()
         # cr.execute("SELECT Id FROM admins")
@@ -59,6 +60,9 @@ class user:
         # while self.Id in existing_Ids:
         #     self.Id = random.randint(1000000000,9999999999)
         # self.email = f"{self.username}{self.Id}@kau.edu.sa"
+=======
+        self.major = major
+>>>>>>> beb6fa14d6b89bccfc14be0c07a91518d42264a0
         self.status = status
 
 
@@ -145,7 +149,10 @@ class user:
     def generate_password(self):  # generates random password
         password = str(self.username) + str(random.randint(100000, 999999))
         return password
+<<<<<<< HEAD
     
+=======
+>>>>>>> beb6fa14d6b89bccfc14be0c07a91518d42264a0
         
     
 
@@ -178,7 +185,6 @@ class subject:  ### Data base team said that this is currently not needed but i 
 
 # _______________________________________________________________________________________________________________
 
-section_db=Database("courses.db") ### since section class will use database a lot i think its better to create database object here
 class section(subject):
     # def __init__(self,section_name=None,section_code=None,capacity = 0,enrolled_students=None, schedule=None, instructor=None, prerequisites=None, status="closed"):
     def __init__(self,section_name,subject_name=None,subject_code=None,schedule=None,capacity=0,instructor=None,prerequisites=None,status="closed",):
@@ -358,13 +364,8 @@ class student(user):
         ### i think we will need table for term later in database
         pass
 
-    def return_info(self):  # to return student information
-        ### similar to display_info but can return in different format
-        pass
-
     def display_info(self):  # to display student information
-        ### can extend parent display_info to include GPA, major, etc.
-        pass
+        return super().display_info() + f", Major: {self.major}, GPA: {self.GPA}"
 
     def enroll_subject(self, section_code):  # to enroll student in a subject section
         ### must check prerequisites, time conflict, section capacity, max credit hours etc.
@@ -381,7 +382,6 @@ class student(user):
 
 
     def calculate_GPA(self):  # to calculate GPA based on completed subjects and their grades
-        pass
 
     ### not sure if these all the methods needed for student class
 

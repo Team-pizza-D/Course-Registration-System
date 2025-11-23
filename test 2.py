@@ -2,7 +2,6 @@ import sqlite3
 from classses2 import admin, student
 
 
- 
 # random = admin("azoz")
 # random_admin2 = admin("ali")
 # random_admin3 = admin("ali", Id=9911991199)
@@ -143,3 +142,7 @@ from classses2 import admin, student
 #         print("class available")
 #     else:
 #         print("class is full")        
+<<<<<<< HEAD
+#
+=======
+>>>>>>> f5bca023cb93d799a8b2ba06a4b4b7a4d1b81ab8
