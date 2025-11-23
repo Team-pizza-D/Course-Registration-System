@@ -3,6 +3,7 @@ import sqlite3
 
 
 class Database:
+
     """
     Simple helper class to interact with a SQLite database.
 
@@ -34,13 +35,11 @@ class Database:
 
         conn.close()
         return result
-
-
+users_db=Database("Users.db")
 class user:
     user_count = 0  # class variable to keep track of user IDs
     def __init__(self, username, password=None, email=None, status="inactive", Id=None):
         self.username = username
-
         db = sqlite3.connect("Users.db")
         cr = db.cursor()
         cr.execute("SELECT Id FROM admins")
@@ -186,7 +185,27 @@ class section(subject):
         pass
 
     def prerequisites_met(self, student_id,):  # to check if student meets prerequisites
-        ### must compare subject prerequisites with completed_subjects list
+        
+        try:
+            student_id = int(student_id)
+        except: 
+            return False , "Student ID must be an integer."
+        The_id= student(student_id)
+        row=users_db.execute("SELECT major fROM students WHERE Id = ?", (The_id,), fetchone=True)
+        if row==None:
+            return f"{self.Id}, Student not found"
+        if self.major=="Electrical communication and electronics engineering":
+            ### GPA calculation logic for this major
+            pass
+        if self.major=="Electrical computer engineering":
+            ### GPA calculation logic for this major
+            pass
+        if self.major=="Electrical power and machines engineering":
+            pass
+        if self.major=="Electrical biomedical engineering":
+            pass
+        ### must use completed_subjects and grades (when database design is complete)
+        pass
         pass
     def student_is_existing(self, student_id):  # to check if student is already enrolled in the section
         try:
@@ -218,6 +237,7 @@ class section(subject):
             return False , message
         if self.has_time_conflict(student_id):
             return False
+        return True , f"All conditions met for enrollment."
     def enroll_student_in_section(self, student_id):  # to enroll a student in the section for data only (admin use only)
          ### I will need to inrolle some students in some sections to be able to do this 
         ### just for data tracking, actual enrollment logic is handled in student class
@@ -252,7 +272,7 @@ class section(subject):
 
 # _______________________________________________________________________________________________________________
 
-users_db = Database("Users.db")  ### since student class will use database a lot i think its better to create database object here
+ ### since student class will use database a lot i think its better to create database object here
 class student(user):
     def __init__(self,Id,username=None,email=None,major=None,password=None,enrolled_subjects=None,completed_subjects=None,status="inactive",GPA=None,):
         super().__init__(username, password, email, status, Id)
@@ -304,23 +324,8 @@ class student(user):
         ### this should show all current sections that student enrolled in
         pass
 
+
     def calculate_GPA(self):  # to calculate GPA based on completed subjects and their grades
-        if self.Id != int(self.Id):
-            return "Student ID must be an integer."
-        row=users_db.execute("SELECT major fROM students WHERE Id = ?", (self.Id,), fetchone=True)
-        if row==None:
-            return f"{self.Id}, Student not found"
-        if self.major=="Electrical communication and electronics engineering":
-            ### GPA calculation logic for this major
-            pass
-        if self.major=="Electrical computer engineering":
-            ### GPA calculation logic for this major
-            pass
-        if self.major=="Electrical power and machines engineering":
-            pass
-        if self.major=="Electrical biomedical engineering":
-            pass
-        ### must use completed_subjects and grades (when database design is complete)
         pass
 
     ### not sure if these all the methods needed for student class
@@ -328,11 +333,12 @@ class student(user):
     def transcript(self):  # to generate a transcript of completed subjects and grades
         ### will be used later to print full academic record
         pass
+        
 
 
 # _______________________________________________________________________________________________________________
 class instructor(user):
-    def __init__(self, username, password, email, subject, sections=None,status="inactive", Id=None):
+    def __init__(self, username, subject, sections ,password=None, email=None, status="inactive", Id=None):
         super().__init__(username, password, email, status, Id)
         self.subject = subject  # subject assigned to the instructor
         self.sections = sections if sections is not None else []  ### will be abdated later when database design is complete to take sections from database directly
