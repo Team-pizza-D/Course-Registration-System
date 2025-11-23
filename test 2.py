@@ -1,8 +1,7 @@
 import sqlite3
 from classses2 import admin, student
 
-
-
+ 
 # random = admin("azoz")
 # random_admin2 = admin("ali")
 # random_admin3 = admin("ali", Id=9911991199)
