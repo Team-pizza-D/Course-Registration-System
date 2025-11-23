@@ -1,5 +1,6 @@
 import sqlite3
-from classses2 import user, admin, student, Database
+from classses2 import admin, student
+
 
 # random = admin("azoz")
 # random_admin2 = admin("ali")
@@ -88,9 +89,21 @@ from classses2 import user, admin, student, Database
 
 # db = sqlite3.connect("courses.db")
 # cr = db.cursor()
-# cr.execute("SELECT times,credit,course_code,terms FROM computer where terms <= 4")
-# azoz = cr.fetchall()
-# print(azoz)
+# cr.execute("SELECT course_code,terms FROM computer")
+# computer = cr.fetchall()
+# print(computer)
+# cr.execute("SELECT course_code,terms FROM power")
+# power = cr.fetchall()
+# print(power)
+# cr.execute("SELECT course_code,terms FROM communication")
+# communication = cr.fetchall()
+# print(communication)
+# cr.execute("SELECT course_code,terms FROM biomedical")
+# biomedical = cr.fetchall()
+# print(biomedical)
+
+
+
 # times = [item[0].split(',')[1].strip() for item in azoz]
 # db.commit()
 # db.close()
@@ -129,4 +142,7 @@ from classses2 import user, admin, student, Database
 #         print("class available")
 #     else:
 #         print("class is full")        
+<<<<<<< HEAD
 #
+=======
+>>>>>>> f5bca023cb93d799a8b2ba06a4b4b7a4d1b81ab8

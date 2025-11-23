@@ -245,16 +245,16 @@ class section(subject):
         The_id= student(student_id)
         row=users_db.execute("SELECT major fROM students WHERE Id = ?", (The_id,), fetchone=True)
         if row==None:
-            return f"{self.Id}, Student not found"
-        if self.major=="Electrical communication and electronics engineering":
+            return f"{The_id.Id}, Student not found"
+        if The_id.major=="Electrical communication and electronics engineering":
             ### GPA calculation logic for this major
             pass
-        if self.major=="Electrical computer engineering":
+        if The_id.major=="Electrical computer engineering":
             ### GPA calculation logic for this major
             pass
-        if self.major=="Electrical power and machines engineering":
+        if The_id.major=="Electrical power and machines engineering":
             pass
-        if self.major=="Electrical biomedical engineering":
+        if The_id.major=="Electrical biomedical engineering":
             pass
         ### must use completed_subjects and grades (when database design is complete)
         pass
@@ -336,7 +336,7 @@ class student(user):
         majors_row=users_db.execute("SELECT major fROM students WHERE Id = ?", (self.Id,), fetchone=True)
         if majors_row==None:
             self.major=major
-        self.major=majors_row[0]
+        self.major=majors_row
         
     def test(self):
         ### this function used before for quick testing
