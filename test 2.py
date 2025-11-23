@@ -1,7 +1,6 @@
 import sqlite3
 from classses2 import user, admin, student, Database
 
- 
 # random = admin("azoz")
 # random_admin2 = admin("ali")
 # random_admin3 = admin("ali", Id=9911991199)
@@ -130,6 +129,4 @@ from classses2 import user, admin, student, Database
 #         print("class available")
 #     else:
 #         print("class is full")        
-users_db = Database("Users.db") 
-rwo = users_db.execute("SELECT major , username FROM students WHERE Id = ?", (2404449), fetchone=True)
-print(rwo)
+#
