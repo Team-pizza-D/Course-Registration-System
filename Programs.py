@@ -309,7 +309,8 @@ power_times = power_courseClasesTimes | Semi_Shared_Power_CouresTimes |First_Yea
 for key in power_terms:
     if key =="EE366":
         power_terms[key]=9
-        break
+    if key == "EE311":
+        power_terms[key] = 6
 power_adding((power_codes), (build_course_dict(power_codes, power_names)), (build_course_dict(power_codes, power_credits)), (build_course_dict(power_codes, power_prerequisites)), build_course_dict(power_codes, power_terms), build_course_dict(power_codes, power_sections), build_course_dict(power_codes, power_capacity), build_course_dict(power_codes, power_times))
 
 
@@ -364,17 +365,17 @@ biomedical_adding((biomedical_codes), (build_course_dict(biomedical_codes, biome
 
 ######################################
 # All courses:
-def all_courses(x1, y1, z1, p1, m1, a1, a2):
+def all_courses(x1, y1, z1, p1, a1, a2):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS courses')
-    cr.execute('CREATE TABLE IF NOT EXISTS Courses (course_code TEXT, course_name TEXT, credit INTEGER, section TEXT, instructor INTEGER, capacity TEXT, time TEXT, terms TEXT, prerequisites TEXT)')
+    cr.execute('CREATE TABLE IF NOT EXISTS Courses (course_code TEXT, course_name TEXT, credit INTEGER, section TEXT, instructor INTEGER, capacity TEXT, time TEXT, prerequisites TEXT)')
     for i in range(len(x1)):
-        cr.execute('INSERT INTO Courses (course_code, course_name, credit, prerequisites, terms, section, capacity) VALUES (?, ?, ?, ?, ?, ?, ?)',
-               (x1[i] , y1[i], z1[i], p1[i], m1[i], a1[i], 25))
+        cr.execute('INSERT INTO Courses (course_code, course_name, credit, prerequisites, section, capacity) VALUES (?, ?, ?, ?, ?, ?)',
+               (x1[i] , y1[i], z1[i], p1[i], a1[i], 25))
     for i in range(len(x1)):
-        cr.execute('INSERT INTO Courses (course_code, course_name, credit, prerequisites, terms, section, capacity) VALUES (?, ?, ?, ?, ?, ?, ?)',
-               (x1[i] , y1[i], z1[i], p1[i], m1[i], a2[i], 25))
+        cr.execute('INSERT INTO Courses (course_code, course_name, credit, prerequisites, section, capacity) VALUES (?, ?, ?, ?, ?, ?)',
+               (x1[i] , y1[i], z1[i], p1[i], a2[i], 25))
     db.commit()
     db.close()
 
@@ -385,11 +386,10 @@ All_Credits = PP | Semi_Shared_C | power_courses_C | computer_courses_C | commun
 All_Prerequisites = All_Courses_PR | Semi_Shared_PR | power_courses_PR | computer_courses_PR | communication_courses_PR | biomedical_courses_PR
 All_terms = All_Terms | Semi_Shared_Terms_Biomedical | Semi_Shared_Terms_Communication | Semi_Shared_Terms_Computer | Semi_Shared_Terms_Power | computer_terms | power_terms | biomedical_terms | communication_terms
 
-
+#=====================Classes-Times=========================#
 
 B = {}
 
-All_Courses2 = All_Courses * 2
 letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 count = 0
 SPC = 2   # how many sections there are for each course
@@ -418,6 +418,58 @@ all_courses(All_Courses,
             loop_dict_value(All_Names),
             loop_dict_value(All_Credits),
             loop_dict_value(All_Prerequisites), 
-            loop_dict_value(All_terms),
             L1, L2)
 
+Times = {}
+Times2 = {}
+db = sqlite3.connect("courses.db")
+cr = db.cursor()
+cr.execute("SELECT course_code, section FROM Courses")
+sections = cr.fetchall()
+for i in sections:
+    if i[0] not in Times:
+        Times[i[0]] = i[1]
+    Times2[i[0]] = i[1]
+X = loop_dict_value(Times)
+Y = loop_dict_value(Times2)
+sections_per_course = []
+for i in range(len(Times2)):
+    sections_per_course.append(X[i])
+    sections_per_course.append(Y[i])
+print(Times)
+print(sections_per_course)
+db.commit()
+db.close()
+
+
+Classes_Times = ["9:00-9:50 , S T U", "8:00-9:15 , M W",  #MATH110
+                 "10:00-10:50 , S T U", "9:30-10:45 , M W", # PHYS110
+                 "11:00-11:50 , S T U", "11:00-12:45 , M W", # CHEM110
+                 "9:00-9:50 , S T U", "8:00-9:15 , M W",     # CPIT110
+                 "11:00-11:50 , S T U", "11:00-12:15 , M W",  # BIO110
+                 "10:00-10:50 , S T U", "9:30-10:45 , M W", # STAT110
+                 "1:00-2:30 , S M T W U", "1:30-3:00 , S M T W U", # ELIS110
+                 "1:00-2:30 , S M T W U", "1:30-3:00 , S M T W U", # ELIS120
+                 "1:00-2:15 , M W", "10:00-10:50, S T U", # MATH206
+                 "9:00-10:50 , S M T W U", "11:00-12:50 , S M T W U", # IE200
+                 "11:00-11:50 , S T U" , "1:00-1:50 , M W", # PHYS202
+                 "2:00-4:50 , S" , "2:00-4:50 , T", # CHEM281
+                 "11:00-12:15 , M W", "9:30-10:45 , M W", # EE201
+                 "5:00-5:50 , S T" , "5:00-5:50 , M W", # ISLS101 
+                 "6:00-6:50 , S T" , "6:00-6:50 , M W", # ARAB101
+                 "9:00-10:50 , S T U" , "11:00-12:50 , S T U", # IE201
+                 "9:30-10:45 , M W" , "10:00-10:50 , S T U", # IE255
+                 "11:00-1:50 , T" , "11:00-1:50 , M" # MENG102
+                 "1:00-2:15 , M W" , "1:00-1:50 , S T U", # MATH207
+                 "2:00-4:50 , S" , "2:00-4:50 , M", # PHYS281
+                 "7:00-7:50 , S T" , "6:00-6:50 , M W", # ARAB201
+                 "9:30-10:45 , M W" , "11:00-12:15 , M W", # EE202
+                 "9:00-9:50 , S T U" , "9:30-10:45 , M W", # EE250
+                 "1:00-2:15 , M W" , "10:00-10:50 , S T U", # MATH204
+                 "7:00-7:50 , S T" , "6:00-6:00 , M W", # ISLS201
+                 "9:00-9:50 , S T U" , "9:00-9:15 , M W", # EE300
+                 "10:00-10:50 , S T U" , "10:30-11:45 , M W", # EE301
+                 "11:00-12:50 , S T U" , "12:00-1:50 , S T U", #IE202
+                 "11:00-11:50 , S T U" , "1:00-1:50 , S T U", # EE321
+                 "" #EE311 -- i Will finish the rest tomorrow inshallah beacause this needs planning well before getting into it.
+                ]  

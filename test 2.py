@@ -1,6 +1,7 @@
 import sqlite3
 from classses2 import admin, student, Database, instructor
-nn = instructor("Azoz")
+nn = instructor("Azoz", "EE250", "AW", database=True)
+print(nn.display_info())
 # users_db = Database("Users.db")
 
 # row = users_db.execute("SELECT id,username,major FROM students WHERE id = ?", (2478624,), fetchone=True)
