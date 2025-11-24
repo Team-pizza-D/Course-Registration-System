@@ -1,5 +1,6 @@
 import random
 import sqlite3
+import os
 
 
 
@@ -46,11 +47,15 @@ programs_db = Database("programs.db")
 
 class user:
     user_count = 0  # class variable to keep track of user IDs
-    def __init__(self, username, password=None, email=None, status="inactive", Id=None,major=None):
+    def __init__(self, username=None, password=None, email=None, status="inactive", Id=None,major=None):
         self.username = username
         self.major = major
         self.status = status
 
+        if username is None:
+            row = users_db.execute("SELECT username FROM admins WHERE Id = ? UNION SELECT username FROM instructors WHERE Id = ? UNION SELECT username FROM students WHERE Id = ?", (Id, Id, Id), fetchone=True
+            )
+            self.username = row [0] if row else "user"
 
         if Id is None:
             self.Id = self.generate_unique_id()
@@ -67,26 +72,8 @@ class user:
         else:
             self.password = password
         
-        self.status = status
 
-        if self.is_admin():
-            users_db.execute(
-                "INSERT INTO admins (username, password, email, Id,status) VALUES (?, ?, ?, ?, ?)",
-                (self.username, self.password, self.email,self.Id,self.status),
-                commit=True,
-            )
-        elif self.is_student():
-            users_db.execute(
-                "INSERT INTO students (username, password, email, Id) VALUES (?, ?, ?, ?)",
-                (self.username, self.password, self.email, self.Id),
-                commit=True,
-            )
-        elif self.is_instructor():
-            users_db.execute(
-                "INSERT INTO instructors (username, password, email, Id,status) VALUES (?, ?, ?, ?, ?)",
-                (self.username, self.password, self.email, self.Id,self.status),
-                commit=True,
-            )
+        
 
     def display_info(self):  # to display user information
         return f"Username: {self.username}, Email: {self.email}, Status: {self.status}, ID: {self.Id}"
@@ -324,11 +311,9 @@ class section(subject):
 
 # _______________________________________________________________________________________________________________
 
- ### since student class will use database a lot i think its better to create database object here
 class student(user):
-    def __init__(self,username,id = None,email=None,major=None,password=None,enrolled_subjects=None,completed_subjects=None,status="inactive",GPA=None,):
+    def __init__(self,username=None,id = None,email=None,major=None,password=None,enrolled_subjects=None,completed_subjects=None,status="inactive",GPA=None,database=False):
         super().__init__(username, password, email, status, id)
-        self.GPA = GPA
         self.enrolled_subjects = enrolled_subjects if enrolled_subjects is not None else [] # list of section codes the student is currently enrolled in
         self.completed_subjects = completed_subjects if completed_subjects is not None else []  # list of subject codes the student has completed
         self.current_credits = 0 ### total credits of current enrolled subjects for checking max credits allowed per semester not current total subjects
@@ -337,6 +322,20 @@ class student(user):
         if majors_row==None:
             self.major=major
         self.major=majors_row
+        if GPA is None:
+            self.GPA = self.calculate_GPA()
+
+        self.database = database
+        ### set database to true if you want to insert this student into database upon creation
+        ### eg. student = student("azad", major="Electrical communication and electronics engineering", database=True)
+
+        if self.database == True:
+            
+            users_db.execute(
+                "INSERT INTO students (username, password, email, Id,major) VALUES (?, ?, ?, ?, ?)",
+                (self.username, self.password, self.email, self.Id,self.major),
+                commit=True,
+            )
         
     def test(self):
         ### this function used before for quick testing
@@ -364,6 +363,65 @@ class student(user):
 
 
     def calculate_GPA(self):  # to calculate GPA based on completed subjects and their grades
+        
+
+        #map letter grades to grade points
+        grade_map = {
+            'A+':5.0, 'A': 4.75, 'B+': 4.5, 'B': 4.0, 'C+': 3.5,
+            'C': 3.0, 'D+': 2.5, 'D': 2.0, 'F': 1.0
+        }
+        
+        Major_table_map = {
+                           'Electrical communication and electronics engineering': "Communication",
+                            'Electrical computer engineering' : "Computer",
+                            'Electrical biomedical engineering' : "Biomedical",
+                            'Electrical power and machines engineering' : "Power"
+        }
+            
+        #find the students major to determine used table
+        major_row = users_db.execute("SELECT major FROM students WHERE Id = ?", (self.Id,), fetchone=True)
+        
+        if major_row is None:
+            return f"Student with ID {self.Id} not found."
+        major = major_row[0]
+        subjects_table = Major_table_map.get(major)
+        if subjects_table is None:
+            return f"Major '{major}' not recognized."
+        
+        #correct table found, now fetch completed subjects and grades
+
+        conn = sqlite3.connect("Users.db")
+        cur = conn.cursor()
+        courses_db_path = os.path.join(os.getcwd(), 'courses.db')
+        cur.execute(f"ATTACH DATABASE '{courses_db_path}' AS courses_db")
+
+        query = f"""
+                       SELECT g.course , g.Letter_grade , s.credit
+                       FROM grades AS g
+                       JOIN courses_db."{subjects_table}" AS s ON g.course = s.course_code
+                       WHERE g.student_id = ?
+                       """
+        cur.execute(query, (self.Id,))
+        rows = cur.fetchall()
+
+        if not rows:
+            conn.close()
+            return f"No completed subjects found for student ID {self.Id}."
+        total_credits = 0
+        total_points = 0
+        for course, letter_grade, credit in rows:
+            grade_point = grade_map.get(letter_grade, 0)
+            total_credits += credit
+            total_points += grade_point * credit
+            
+        if total_credits == 0:
+            conn.close()
+            return "No credits found for GPA calculation."
+        
+        gpa = total_points / total_credits
+        conn.close()
+        
+        return round(gpa, 2)
 
     ### not sure if these all the methods needed for student class
 
@@ -375,10 +433,19 @@ class student(user):
 
 # _______________________________________________________________________________________________________________
 class instructor(user):
-    def __init__(self, username, subject, sections ,password=None, email=None, status="inactive", Id=None):
+    def __init__(self, username, subject, sections ,password=None, email=None, status="inactive", Id=None, database=False):
         super().__init__(username, password, email, status, Id)
         self.subject = subject  # subject assigned to the instructor
         self.sections = sections if sections is not None else []  ### will be abdated later when database design is complete to take sections from database directly
+        self.database = database
+
+        if self.database:
+
+            users_db.execute(
+                "INSERT INTO instructors (username, password, email, Id,status) VALUES (?, ?, ?, ?, ?)",
+                (self.username, self.password, self.email,self.Id,self.status),
+                commit=True,
+            )
     def display_info(self):
         return super().display_info() + f", Subject: {self.subject}"     
     def __add_grade(self, student_id, section_code, grade):  # to add grade for a student in a section
@@ -390,9 +457,20 @@ class instructor(user):
 # _______________________________________________________________________________________________________________
 
 class admin(user):
-    def __init__(self, username, password=None, email=None, status="inactive", Id=None):
+    def __init__(self, username=None, password=None, email=None, status="inactive", Id=None, database=False):
         super().__init__(username, password, email, status, Id)
         # self.password = chr(random.randint(97,97+25)) + str(random.randint(1000000,9999999))
+        self.database= database
+        ### set database to true if you want to insert this admin into database upon creation
+        ### eg. admin = admin("azad", database=True)
+
+        if self.database == True:
+            
+            users_db.execute(
+                "INSERT INTO admins (username, password, email, Id,status) VALUES (?, ?, ?, ?, ?)",
+                (self.username, self.password, self.email,self.Id,self.status),
+                commit=True,
+            )
         
 
             
@@ -453,3 +531,4 @@ class admin(user):
 # instructor1.show_students("CS101")
 # b=section("4f")
 # print(b.sectioon_info_student())
+
