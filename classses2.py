@@ -49,21 +49,7 @@ class user:
     user_count = 0  # class variable to keep track of user IDs
     def __init__(self, username=None, password=None, email=None, status="inactive", Id=None,major=None):
         self.username = username
-<<<<<<< HEAD
-        # db = sqlite3.connect("Users.db")
-        # cr = db.cursor()
-        # cr.execute("SELECT Id FROM admins")
-        # existing_a_Ids = [b[0] for b in cr.fetchall()]
-        # cr.execute("SELECT Id FROM instructors")
-        # existing_i_Ids = [b[0] for b in cr.fetchall()]
-        # existing_Ids = set(existing_a_Ids + existing_i_Ids)
-        # self.Id = random.randint(1000000000,9999999999)
-        # while self.Id in existing_Ids:
-        #     self.Id = random.randint(1000000000,9999999999)
-        # self.email = f"{self.username}{self.Id}@kau.edu.sa"
-=======
         self.major = major
->>>>>>> beb6fa14d6b89bccfc14be0c07a91518d42264a0
         self.status = status
 
         if username is None:
@@ -136,10 +122,7 @@ class user:
     def generate_password(self):  # generates random password
         password = str(self.username) + str(random.randint(100000, 999999))
         return password
-<<<<<<< HEAD
     
-=======
->>>>>>> beb6fa14d6b89bccfc14be0c07a91518d42264a0
         
     
 
