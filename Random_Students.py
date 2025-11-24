@@ -1,6 +1,6 @@
 import sqlite3
 import Programs
-from classes import student, user
+from classes import student, user, section
 # This file is a random generated students
 db = sqlite3.connect("Users.db")
 cr = db.cursor()
@@ -72,6 +72,7 @@ st47 = student('2446501', 'bassam', 'bassam@stu.kau.edu.sa', 'Electrical communi
 st48 = student('2431805', 'mohammed', 'mohammed@stu.kau.edu.sa', 'Electrical communication and electronics engineering')
 st49 = student('2478657', 'hussain', 'hussain@stu.kau.edu.sa', 'Electrical communication and electronics engineering')
 st50 = student('2474598', 'hamad', 'hamad@stu.kau.edu.sa', 'Electrical computer engineering')
+
 
 
 print(st4.test())

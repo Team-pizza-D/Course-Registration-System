@@ -1,11 +1,17 @@
 import sqlite3
-from classses2 import admin, student
+from classses2 import admin, student,section,subject 
 
-
+section1= section("CU , CV")
+okay,mass= section1.prerequisites_met("2430020")
+print(okay)
+# s1= student(id="2404449",major="computer")
+# print(s1.display_info())
+print(mass)
 # random = admin("azoz")
 # random_admin2 = admin("ali")
 # random_admin3 = admin("ali", Id=9911991199)
 # random_admin4 = admin("ali")
+
 
 # print(random.display_info())
 # print(random_admin2.display_info())
@@ -142,7 +148,4 @@ from classses2 import admin, student
 #         print("class available")
 #     else:
 #         print("class is full")        
-<<<<<<< HEAD
 #
-=======
->>>>>>> f5bca023cb93d799a8b2ba06a4b4b7a4d1b81ab8

@@ -41,15 +41,13 @@ class Database:
 ### open database connection
 users_db = Database("Users.db")
 courses_db = Database("courses.db")
-programs_db = Database("programs.db")
 # _______________________________________________________________________________________________________________
 
 class user:
     user_count = 0  # class variable to keep track of user IDs
-    def __init__(self, username, password=None, email=None, status="inactive", Id=None,major=None):
+    def __init__(self, username=None, password=None, email=None, status="inactive", Id=None):
         self.username = username
-<<<<<<< HEAD
-        # db = sqlite3.connect("Users.db")
+        # db = sqlite3.connect("Users.db")s
         # cr = db.cursor()
         # cr.execute("SELECT Id FROM admins")
         # existing_a_Ids = [b[0] for b in cr.fetchall()]
@@ -60,9 +58,6 @@ class user:
         # while self.Id in existing_Ids:
         #     self.Id = random.randint(1000000000,9999999999)
         # self.email = f"{self.username}{self.Id}@kau.edu.sa"
-=======
-        self.major = major
->>>>>>> beb6fa14d6b89bccfc14be0c07a91518d42264a0
         self.status = status
 
 
@@ -83,24 +78,24 @@ class user:
         
         self.status = status
 
-        if self.is_admin():
-            users_db.execute(
-                "INSERT INTO admins (username, password, email, Id,status) VALUES (?, ?, ?, ?, ?)",
-                (self.username, self.password, self.email,self.Id,self.status),
-                commit=True,
-            )
-        elif self.is_student():
-            users_db.execute(
-                "INSERT INTO students (username, password, email, Id) VALUES (?, ?, ?, ?)",
-                (self.username, self.password, self.email, self.Id),
-                commit=True,
-            )
-        elif self.is_instructor():
-            users_db.execute(
-                "INSERT INTO instructors (username, password, email, Id,status) VALUES (?, ?, ?, ?, ?)",
-                (self.username, self.password, self.email, self.Id,self.status),
-                commit=True,
-            )
+        # if self.is_admin():
+        #     users_db.execute(
+        #         "INSERT INTO admins (username, password, email, Id,status) VALUES (?, ?, ?, ?, ?)",
+        #         (self.username, self.password, self.email,self.Id,self.status),
+        #         commit=True,
+        #     )
+        # elif self.is_student():
+        #     users_db.execute(
+        #         "INSERT INTO students (username, password, email, Id) VALUES (?, ?, ?, ?)",
+        #         (self.username, self.password, self.email, self.Id),
+        #         commit=True,
+        #     )
+        # elif self.is_instructor():
+        #     users_db.execute(
+        #         "INSERT INTO instructors (username, password, email, Id,status) VALUES (?, ?, ?, ?, ?)",
+        #         (self.username, self.password, self.email, self.Id,self.status),
+        #         commit=True,
+        #     )
 
     def display_info(self):  # to display user information
         return f"Username: {self.username}, Email: {self.email}, Status: {self.status}, ID: {self.Id}"
@@ -131,6 +126,7 @@ class user:
         #This will later be known by which table is the information in (student or admin)
         return True if isinstance(self, instructor) else False
     
+    
     def generate_unique_id(self):  # generates unique user ID
         existing_ids_row = users_db.execute("SELECT Id FROM admins UNION SELECT Id FROM instructors UNION SELECT Id FROM students", fetchall=True)
         existing_ids = {row[0] for row in existing_ids_row}
@@ -149,54 +145,55 @@ class user:
     def generate_password(self):  # generates random password
         password = str(self.username) + str(random.randint(100000, 999999))
         return password
-<<<<<<< HEAD
     
-=======
->>>>>>> beb6fa14d6b89bccfc14be0c07a91518d42264a0
         
-    
-
 class subject:  ### Data base team said that this is currently not needed but i think its better to have it for future use
-    def __init__(self, subject_name, subject_code, prerequisites=None):
+    def __init__(self,subject_code, subject_name=None,subject_term=None, prerequisites=None):
         self.subject_code = subject_code
         self.subject_name = subject_name
         self.enrolled_students = []
         self.prerequisites = prerequisites if prerequisites is not None else []
+        while True:
+            subject_term= courses_db.execute("SELECT terms FROM computer WHERE course_code = ?", (self.subject_code,), fetchone=True)
+            if subject_term == None:
+                subject_term= courses_db.execute("SELECT terms FROM communication WHERE course_code = ?", (self.subject_code,), fetchone=True)
+                if subject_term == None:
+                    subject_term= courses_db.execute("SELECT terms FROM power WHERE course_code = ?", (self.subject_code,), fetchone=True)
+                    if subject_term == None:
+                        subject_term= courses_db.execute("SELECT terms FROM biomedical WHERE course_code = ?", (self.subject_code,), fetchone=True)
+                        if subject_term == None:
+                            self.subject_term= subject_term
+                            break
+                        else:
+                            self.subject_term= subject_term[0]
+                            break
+                else:
+                    self.subject_term= subject_term[0]
+                    break
 
-    def is_full(self):  # to check if subject is full
-        # in the future this can depend on subject capacity if needed
-        pass
 
-    def view_enrolled_students(self):  # to view all enrolled students
-        # later this can return / print all enrolled students for this subject
-        pass
+            else: 
+                self.subject_term= subject_term[0]
+                break
+        
 
-    def inroll_student_in_subject(self, student_id):  # to enroll a student in the subject for data only (admin use only)
-        ### just for data tracking, actual enrollment is handled in student class
-        ### notce that when considering database design, function will have to update the database instead of just appending to list
-        pass
-
-    def drop_student_from_subject(self, student_id):  # to drop a student from the subject for data only (admin use only)
-        pass
-
-### notce that when considering database design, function will have to update the database instead of just removing from list
-        pass
+    def subject_info(self):  # to display subject information
+        return f"Subject Code: {self.subject_code}, Subject Name: {self.subject_name}, Subject Term: {self.subject_term}, Prerequisites: {', '.join(self.prerequisites)}"
 
 
 # _______________________________________________________________________________________________________________
 
-class section(subject):
+class section():
     # def __init__(self,section_name=None,section_code=None,capacity = 0,enrolled_students=None, schedule=None, instructor=None, prerequisites=None, status="closed"):
     def __init__(self,section_name,subject_name=None,subject_code=None,schedule=None,capacity=0,instructor=None,prerequisites=None,status="closed",):
         ### this constructor version is the one we will use, we have to discuss it and compare it with main (the line above)
-        super().__init__(subject_name, subject_code, prerequisites)
+        # super().__init__(subject_name=None, subject_code=None, prerequisites=None)
         self.schedule = schedule
         self.instructor = instructor
         self.capacity = capacity
-        # self.enrolled_students = enrolled_students if enrolled_students is not None else [] ### I dont think we need this
         self.section_name = section_name
-        self.student_in_section_db = Database("i dont what is the file name")  ### as menshed I dont know what is the file name one i know it and know the database design i will implement it to be completely functional
-        row = self.student_in_section_db.execute("SELECT student_id, student_name FROM students_in_section WHERE section_code = ?", (self.section_name,), fetchall=True)
+        self.student_in_section_db = Database("users.db")  ### as menshed I dont know what is the file name one i know it and know the database design i will implement it to be completely functional
+        row = self.student_in_section_db.execute("SELECT student_id, student_name FROM enrollments WHERE section = ?", (self.section_name,), fetchall=True)
         if not row:
             self.enrolled_students = []
             self.student_id_in_section = []
@@ -207,27 +204,36 @@ class section(subject):
             self.student_id_in_section = [r[0] for r in row]
             self.student_name_in_section = [r[1] for r in row]
         self.status = status
+        find_subject_list=courses_db.execute("SELECT course_code FROM courses WHERE section= ?",(self.section_name,),fetchone=True)
+        if find_subject_list==None:
+            return None
+        find_subject= find_subject_list[0]
+        
+        find_subject= subject(find_subject)
+        self.section_term= find_subject.subject_term
 
+
+
+        
     def sectioon_info_student(self):  # to display section information
-        row= section_db.execute("SELECT course_code, course_name, sections, capacity, times FROM sections WHERE sections = ?",(self.section_name,),fetchone=True) ### database design must be abdated to include instructor name and creat a table name sections
+        row= courses_db.execute("SELECT course_code, section, capacity, times FROM Courses WHERE section = ?",(self.section_name,),fetchone=True) ### database design must be abdated to include instructor name and creat a table name sections
         if row==None:
             return f"{self.section_name}, Section not found"
-        self.section_code=row[0]
-        self.subject_name=row[1]   
-        self.section_name=row[2]
-        self.capacity=row[3]
-        self.schedule=row[4]
+        self.section_code=row[0]  
+        self.section_name=row[1]
+        self.capacity=row[2]
+        self.schedule=row[3]
         return f"Section Code: {self.section_code}, Subject Name: {self.subject_name}, Section Name: {self.section_name}, Capacity: {self.capacity}, Schedule: {self.schedule}"
         ###we still need structors name in the database to return it here
 
         ### return section name, subject name, instructor, schedule (will be used by student)
        
 
-    def open_section(self):  # to open section for enrollment
+    def open_section(self,cours_code,instructor,capacity,time):  # to open section for enrollment
         ### status can be changed to open if capacity not zero
         pass
     def section_is_existing(self):  # to check if section exists
-        row= section_db.execute("SELECT sections FROM sections WHERE sections = ?",(self.section_name,),fetchone=True)
+        row= courses_db.execute("SELECT section FROM Courses WHERE section = ?",(self.section_name,),fetchone=True)
         if row==None:
             return False
         else:
@@ -235,7 +241,7 @@ class section(subject):
 
     def is_full(self):  # to check if section is full
         ### allways use the function section_is_existing before using this function to avoid errors
-        row= section_db.execute("SELECT capacity FROM sections WHERE sections = ?",(self.section_name,),fetchone=True)
+        row= courses_db.execute("SELECT capacity FROM Courses WHERE section = ?",(self.section_name,),fetchone=True)
         if row==None:
             return True
         if len(self.enrolled_students)>=row[0]: ### since there is no data base fore enrolled student i'm going to write it like this (temporary)
@@ -260,23 +266,101 @@ class section(subject):
             student_id = int(student_id)
         except: 
             return False , "Student ID must be an integer."
-        The_id= student(student_id)
-        row=users_db.execute("SELECT major fROM students WHERE Id = ?", (The_id,), fetchone=True)
-        if row==None:
-            return f"{The_id.Id}, Student not found"
-        if The_id.major=="Electrical communication and electronics engineering":
-            ### GPA calculation logic for this major
-            pass
-        if The_id.major=="Electrical computer engineering":
-            ### GPA calculation logic for this major
-            pass
-        if The_id.major=="Electrical power and machines engineering":
-            pass
-        if The_id.major=="Electrical biomedical engineering":
-            pass
+        The_id= student(id=student_id)
+        row1=users_db.execute("SELECT course , letter_grade FROM grades WHERE student_id = ?", (The_id.Id,), fetchall=True)
+        students_taken_subject_with_grades={}
+        for cours,letter_grade in row1:
+            students_taken_subject_with_grades[cours]=letter_grade
+        student_completed_subjects=list(students_taken_subject_with_grades.keys()) 
+        
+
+        row=users_db.execute("SELECT major , term FROM students WHERE Id = ?", (The_id.Id,), fetchone=True)
+        student_term=row[1]
+        if row[0]==None:
+            return  False , f"{The_id.Id}, Student not found"
+        
+        section_subject_row=courses_db.execute("SELECT course_code FROM Courses WHERE section = ?", (self.section_name,), fetchone=True)
+        if section_subject_row==None:
+            return False , f"Section {self.section_name} not found"
+        section_subject_code= section_subject_row[0].strip()
+        
+
+        if The_id.major.strip()=="Electrical communication and electronics engineering":
+            subject_db=courses_db.execute("SELECT prerequisites FROM communication WHERE course_code = ?", (section_subject_code,), fetchone=True)
+            if subject_db==None:
+                prerequisites=None
+            else:
+                prereq_str=subject_db[0]
+                if prereq_str is None or prereq_str.strip()=="":
+                    return True , f"The subject has no prerequisites."
+                else:
+                    prerequisites=prereq_str.split(",")
+            
+
+            
+        
+        if The_id.major.strip()=="Electrical computer engineering":
+            subject_db=courses_db.execute("SELECT prerequisites FROM computer WHERE course_code = ?", (section_subject_code,), fetchone=True)
+            if subject_db==None:
+                prerequisites=None
+            else:
+                prereq_str=subject_db[0]
+                if prereq_str is None or prereq_str.strip()=="":
+                    return True , f"The subject has no prerequisites."
+                else:
+                    prerequisites=prereq_str.split(",")
+
+
+        if The_id.major.strip()=="Electrical power and machines engineering":
+            subject_db=courses_db.execute("SELECT prerequisites FROM power WHERE course_code = ?", (section_subject_code,), fetchone=True)
+            if subject_db==None:
+                prerequisites=None
+            else:
+                prereq_str=subject_db[0]
+                if prereq_str is None or prereq_str.strip()=="":
+                    return True , f"The subject has no prerequisites."
+                else:
+                    prerequisites=prereq_str.split(",")
+
+
+        if The_id.major.strip()=="Electrical biomedical engineering":
+            subject_db=courses_db.execute("SELECT prerequisites FROM biomedical WHERE course_code = ?", (section_subject_code,), fetchone=True)
+            if subject_db==None:
+                prerequisites=None
+            else:
+                prereq_str=subject_db[0]
+                if prereq_str is None or prereq_str.strip()=="":
+                    return True , f"The subject has no prerequisites."
+                else:
+                    prerequisites=prereq_str.split(",")
+
+        if prerequisites==None:
+            return False , f"Section {self.section_name} not in study plan of {The_id.major}" 
+        elif str(prerequisites).strip()=="":
+            return True , "No prerequisites for this section."
+        for prereq in prerequisites:
+            preq= prereq.strip()
+            grade= students_taken_subject_with_grades.get(preq)
+            if grade== None:
+                return False , f"Prerequisite {preq} not completed."
+            if  grade == "F":
+                return False , f"Prerequisite {preq} not passed."
+        for prereq in prerequisites:
+            if prereq not in student_completed_subjects:
+                return False , f"Prerequisite {prereq} not completed."
+        for prereq in prerequisites:
+            pp= subject(prereq)
+            if pp.subject_term > student_term:
+                return False , f"{prereq} is not in the plane fore the term number {student_term}."
+            else:
+                continue
+        return True , "All prerequisites met."    
+
+
+
+
         ### must use completed_subjects and grades (when database design is complete)
-        pass
-        pass
+        
     def student_is_existing(self, student_id):  # to check if student is already enrolled in the section
         try:
             student_id = int(student_id)
@@ -327,7 +411,7 @@ class section(subject):
         if new_capacity < len(self.student_id_in_section):
             return "New capacity cannot be less than the number of enrolled students."
         self.capacity = new_capacity
-        section_db.execute("UPDATE sections SET capacity = ? WHERE sections = ?", (self.capacity, self.section_name), commit=True)
+        courses_db.execute("UPDATE Courses SET capacity = ? WHERE section = ?", (self.capacity, self.section_name), commit=True)
          ### it's very very very very importanat to abdate line 213 when database design is apdeted and add sereal number for each section
         return f"Section {self.section_name} capacity updated to {self.capacity}."
 
@@ -344,21 +428,25 @@ class section(subject):
 
  ### since student class will use database a lot i think its better to create database object here
 class student(user):
-    def __init__(self,username,id = None,email=None,major=None,password=None,enrolled_subjects=None,completed_subjects=None,status="inactive",GPA=None,):
+    def __init__(self,username=None,id = None,email=None,major=None,password=None,enrolled_subjects=None,completed_subjects=None,status="inactive",GPA=None,):
         super().__init__(username, password, email, status, id)
         self.GPA = GPA
         self.enrolled_subjects = enrolled_subjects if enrolled_subjects is not None else [] # list of section codes the student is currently enrolled in
         self.completed_subjects = completed_subjects if completed_subjects is not None else []  # list of subject codes the student has completed
         self.current_credits = 0 ### total credits of current enrolled subjects for checking max credits allowed per semester not current total subjects
         # self.email = f"{self.username}{self.Id}@kau.edu.sa" if email is None else email
-        majors_row=users_db.execute("SELECT major fROM students WHERE Id = ?", (self.Id,), fetchone=True)
-        if majors_row==None:
-            self.major=major
-        self.major=majors_row
+        if major == None or self.is_exusting_student_id():
+            majors_row=users_db.execute("SELECT major fROM students WHERE Id = ?", (self.Id,), fetchone=True)
+            self.major=majors_row[0]
+        else:
+            self.major=major    
         
-    def test(self):
-        ### this function used before for quick testing
-        pass
+    def is_exusting_student_id(self):
+        row= users_db.execute("SELECT id FROM students WHERE id = ?", (self.Id,), fetchone=True)
+        if row==None:
+            return False
+        else:
+            return True
 
     def add_term(self):  # to add or define new term
         ### i think we will need table for term later in database
@@ -382,7 +470,7 @@ class student(user):
 
 
     def calculate_GPA(self):  # to calculate GPA based on completed subjects and their grades
-
+        pass
     ### not sure if these all the methods needed for student class
 
     def transcript(self):  # to generate a transcript of completed subjects and grades
