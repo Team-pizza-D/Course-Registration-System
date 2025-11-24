@@ -364,27 +364,32 @@ biomedical_adding((biomedical_codes), (build_course_dict(biomedical_codes, biome
 
 ######################################
 # All courses:
-def all_courses(x1, y1, z1, p1, m1):
+def all_courses(x1, y1, z1, p1, m1, a1, a2):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS courses')
-    cr.execute('CREATE TABLE IF NOT EXISTS Courses (course_name TEXT, course_code TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER)')
+    cr.execute('CREATE TABLE IF NOT EXISTS Courses (course_code TEXT, course_name TEXT, credit INTEGER, section TEXT, instructor INTEGER, capacity TEXT, time TEXT, terms TEXT, prerequisites TEXT)')
     for i in range(len(x1)):
-        cr.execute('INSERT INTO Courses (course_name, course_code, credit, prerequisites, terms) VALUES (?, ?, ?, ?, ?)',
-               (x1[i] , y1[i], z1[i], p1[i], m1[i]))
+        cr.execute('INSERT INTO Courses (course_code, course_name, credit, prerequisites, terms, section, capacity) VALUES (?, ?, ?, ?, ?, ?, ?)',
+               (x1[i] , y1[i], z1[i], p1[i], m1[i], a1[i], 25))
+    for i in range(len(x1)):
+        cr.execute('INSERT INTO Courses (course_code, course_name, credit, prerequisites, terms, section, capacity) VALUES (?, ?, ?, ?, ?, ?, ?)',
+               (x1[i] , y1[i], z1[i], p1[i], m1[i], a2[i], 25))
     db.commit()
     db.close()
-
 
 
 All_Courses = All + Semi_Shared_Courses + power + computer + communication + biomedical
 All_Names = All_Courses_Names | Semi_Shared_Courses_Names | power_coursesName | computer_coursesName | communication_coursesName | biomedical_coursesName
 All_Credits = PP | Semi_Shared_C | power_courses_C | computer_courses_C | communication_courses_C | biomedical_courses_C
 All_Prerequisites = All_Courses_PR | Semi_Shared_PR | power_courses_PR | computer_courses_PR | communication_courses_PR | biomedical_courses_PR
+All_terms = All_Terms | Semi_Shared_Terms_Biomedical | Semi_Shared_Terms_Communication | Semi_Shared_Terms_Computer | Semi_Shared_Terms_Power | computer_terms | power_terms | biomedical_terms | communication_terms
+
+
 
 B = {}
 
-
+All_Courses2 = All_Courses * 2
 letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 count = 0
 SPC = 2   # how many sections there are for each course
@@ -399,16 +404,20 @@ for course in All_Courses:
     B[course] = course_sections
 A = loop_dict_value(B)
 L = []
-for k in A:
-    r = " , ".join(k)
-    L.append(r)
+for i in A:
+    L.append(i[0])
+    L.append(i[1])
+L1 = []
+L2 = []
+for j in range(74):
+    L1.append(L[j])
+    L2.append(L[j+74])
 
-db = sqlite3.connect('courses.db')
-cr = db.cursor()
-cr.execute('DROP TABLE IF EXISTS Courses')
-cr.execute('CREATE TABLE IF NOT EXISTS Courses (course_code TEXT, course_name TEXT, section TEXT)')
-for i in range (len(All_Courses)):
-    cr.execute('INSERT INTO Courses (course_code, course_name, section) VALUES (?, ?, ?)',
-               (All_Courses[i] , All_Names[All_Courses[i]], L[i]))
-db.commit()
-db.close()
+
+all_courses(All_Courses,
+            loop_dict_value(All_Names),
+            loop_dict_value(All_Credits),
+            loop_dict_value(All_Prerequisites), 
+            loop_dict_value(All_terms),
+            L1, L2)
+
