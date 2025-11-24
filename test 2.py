@@ -1,5 +1,4 @@
 import sqlite3
-<<<<<<< HEAD
 from classses2 import admin, student,section,subject 
 
 section1= section("CU , CV")
@@ -8,7 +7,6 @@ print(okay)
 # s1= student(id="2404449",major="computer")
 # print(s1.display_info())
 print(mass)
-=======
 from classses2 import admin, student, Database
 # users_db = Database("Users.db")
 
@@ -25,7 +23,6 @@ from classses2 import admin, student, Database
 s1 = admin(Id=2430020)
 # print(s1.calculate_GPA())
 print(s1.display_info())
->>>>>>> 03ec990e3f05d5e034968403dc798298da64f403
 # random = admin("azoz")
 # random_admin2 = admin("ali")
 # random_admin3 = admin("ali", Id=9911991199)
