@@ -2,6 +2,9 @@ import sys
 import os
 from PyQt5 import uic, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtGui import QKeySequence
+from PyQt5.QtWidgets import QShortcut
+
 
 class LoginWindow(QMainWindow): # Open login window
     def __init__(self):
@@ -11,9 +14,11 @@ class LoginWindow(QMainWindow): # Open login window
         self.setFixedWidth(552)
         self.setFixedHeight(650)
         self.loginButton.clicked.connect(self.loginfunction)
-        self.checkBox_show.stateChanged.connect(self.toggle_password)
-        self.PasslineEdit.returnPressed.connect(self.loginButton.click)
 
+        # Make ENTER work globally
+        QShortcut(QKeySequence("Return"), self, self.loginButton.click)
+        QShortcut(QKeySequence("Enter"), self, self.loginButton.click)
+        
     def toggle_password(self): # Function to show/hide password
         if self.checkBox_show.isChecked():
             self.PasslineEdit.setEchoMode(QtWidgets.QLineEdit.Normal)
