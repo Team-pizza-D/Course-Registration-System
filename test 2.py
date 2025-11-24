@@ -1,13 +1,16 @@
 import sqlite3
-from classses2 import admin, student,section,subject 
+from classses2 import admin, student,section,subject,instructor 
 
-section1= section("CU , CV")
-okay,mass= section1.prerequisites_met("2430020")
-print(okay)
-# s1= student(id="2404449",major="computer")
-# print(s1.display_info())
-print(mass)
+# section1= section("CU , CV")
+# okay,mass= section1.prerequisites_met("2430020")
+# print(okay)
+# # s1= student(id="2404449",major="computer")
+# # print(s1.display_info())
+# print(mass)
 from classses2 import admin, student, Database
+from classses2 import admin, student, Database, instructor
+nn = instructor("Azoz", "EE250", "AW", database=True)
+print(nn.display_info())
 # users_db = Database("Users.db")
 
 # row = users_db.execute("SELECT id,username,major FROM students WHERE id = ?", (2478624,), fetchone=True)
@@ -20,9 +23,9 @@ from classses2 import admin, student, Database
 # print(messi.display_info())
 # ronaldo = student("ronaldo",major="computer")
 # print(ronaldo.display_info())
-s1 = admin(Id=2430020)
+# s1 = admin(Id=2430020)
 # print(s1.calculate_GPA())
-print(s1.display_info())
+# print(s1.display_info())
 # random = admin("azoz")
 # random_admin2 = admin("ali")
 # random_admin3 = admin("ali", Id=9911991199)

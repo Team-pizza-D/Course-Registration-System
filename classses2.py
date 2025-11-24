@@ -548,15 +548,17 @@ class student(user):
 class instructor(user):
     def __init__(self, username, subject, sections ,password=None, email=None, status="inactive", Id=None, database=False):
         super().__init__(username, password, email, status, Id)
-        self.subject = subject  # subject assigned to the instructor
-        self.sections = sections if sections is not None else []  ### will be abdated later when database design is complete to take sections from database directly
+        
+        self.subject = subject  
+        self.sections = sections 
         self.database = database
+
 
         if self.database:
 
             users_db.execute(
-                "INSERT INTO instructors (username, password, email, Id,status) VALUES (?, ?, ?, ?, ?)",
-                (self.username, self.password, self.email,self.Id,self.status),
+                "INSERT INTO instructors (username, password, email, id,status, course_code,section) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (self.username, self.password, self.email,self.Id,self.status, subject, self.sections),
                 commit=True,
             )
     def display_info(self):
