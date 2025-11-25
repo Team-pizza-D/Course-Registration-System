@@ -370,10 +370,6 @@ class section():
         ### must use completed_subjects and grades (when database design is complete)
         
     def student_is_existing(self, student_id):  # to check if student is already enrolled in the section
-        try:
-            student_id = int(student_id)
-        except: 
-            return "Student ID must be an integer."
         if student_id in self.student_id_in_section:
             return True
         else:
@@ -467,6 +463,13 @@ class student(user,section):
             except sqlite3.IntegrityError:
                 print(f"Student with ID {self.Id} already exists in the database.")
         else:
+            row=users_db.execute(
+                "SELECT username, password, email, Id, major FROM students WHERE Id = ?", (self.Id,), fetchone=True
+            )
+            self.username = row[0]
+            self.password = row[1]
+            self.email = row[2]
+            self.major = row[4]
             pass ### I will do this later to select student data from database if database is false         
         
     def is_existing_student_id(self):
@@ -511,6 +514,8 @@ class student(user,section):
         else:
             return f"Cannot enroll in section {section_code}. Conditions not met."
         pass
+        sec=section(section_name=section_code)
+        sec.enroll_student_in_section(self.Id)
 
     def drop_subject(self, section_code):  # to drop a subject section for the student
         ### must update enrolled_subjects list and database
@@ -649,8 +654,6 @@ class admin(user):
         ### later this will probably call student.enroll_subject with correct ID and section_code
         sect=section(section_name=section_code)
         sect.enroll_student_in_section(student_id)
-
-        pass
 
     def remove_subject(self, section_code, student_id):  # to remove a subject from a student
         sect=section(section_name=section_code)
