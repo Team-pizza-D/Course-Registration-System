@@ -13,14 +13,176 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">/*Copyright (c) DevSec Studio. All rights reserved.
+
+MIT License
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+/*-----QWidget-----*/
+QWidget
+{
+	background-color: #00111d;
+	color: #000000;
+	border-color: #000000;
+
+}
+
+QPushButton {
+    height: 50px;
+    width: 120px;
+    background-color: #333;
+    border: 1px solid #404c5d;
+    color: rgb(232, 232, 232);
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+    font-size: 14px;
+    border-radius: 5px;
+
+    /* Gradient background /
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:1,
+        stop:0 #2e2d2d,
+        stop:1 #212121
+    );
+
+    padding: 5px;
+}
+
+/ Hover /
+QPushButton:hover {
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:1,
+        stop:0 #353535,
+        stop:1 #262626
+    );
+    color: #d6d6d6;
+}
+
+/ Pressed /
+QPushButton:pressed {
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:1,
+        stop:0 #262626,
+        stop:1 #1a1a1a
+    );
+    color: #e0e0e0;
+
+    / Slight inset effect */
+    padding-top: 7px;
+    padding-bottom: 3px;
+}
+/*-----QLabel-----*/
+QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+    color: rgb(232, 232, 232);
+}
+
+
+
+
+/*-----QToolButton-----*/
+QToolButton
+{
+	background-color: #00111d;
+	color: #000000;
+	border-style: solid;
+	border-color: #000000;
+	padding: 5px;
+
+}
+
+
+QToolButton::hover
+{
+	background-color: #00111d;
+	color: #000000;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #01dcff;
+
+}
+
+
+QToolButton::pressed
+{
+	background-color: #01dcff;
+	color: #000000;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #01dcff;
+
+}
+
+
+/*-----QLineEdit-----*/
+QLineEdit
+{
+	background-color: #082336;
+	color: #3e93ff;
+	border-style: solid;
+	border-width: 2px;
+	border-color: #1e4b6d;
+	padding: 10px;
+
+}
+
+
+QLineEdit::hover
+{
+	background-color: #082336;
+	color: #3e93ca;
+	border-style: solid;
+	border-width: 2px;
+	border-color: #01dcff;
+	padding: 10px;
+
+}
+
+
+QLineEdit::focus
+{
+	
+	color: #3e93ca;
+	border-style: solid;
+	border-width: 2px;
+	border-color: #01dcff;
+	padding: 10px;
+
+}
+
+
+
+
+
+
+
+</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>80</y>
+      <y>50</y>
       <width>1261</width>
-      <height>761</height>
+      <height>791</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -86,18 +248,24 @@
          <height>21</height>
         </rect>
        </property>
+       <property name="styleSheet">
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
        <property name="text">
-        <string>Last Name</string>
+        <string>Section</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_6">
        <property name="geometry">
         <rect>
-         <x>660</x>
+         <x>650</x>
          <y>70</y>
          <width>111</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
         <string>Email Address</string>
@@ -106,10 +274,10 @@
       <widget class="QLineEdit" name="Tab1_LastName">
        <property name="geometry">
         <rect>
-         <x>770</x>
-         <y>20</y>
+         <x>110</x>
+         <y>120</y>
          <width>261</width>
-         <height>31</height>
+         <height>41</height>
         </rect>
        </property>
       </widget>
@@ -119,7 +287,7 @@
          <x>770</x>
          <y>70</y>
          <width>261</width>
-         <height>31</height>
+         <height>41</height>
         </rect>
        </property>
       </widget>
@@ -131,6 +299,9 @@
          <width>101</width>
          <height>21</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
         <string>Student ID</string>
@@ -145,6 +316,9 @@
          <height>21</height>
         </rect>
        </property>
+       <property name="styleSheet">
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
        <property name="text">
         <string>First Name</string>
        </property>
@@ -153,13 +327,16 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>120</y>
-         <width>101</width>
+         <y>130</y>
+         <width>91</width>
          <height>21</height>
         </rect>
        </property>
+       <property name="styleSheet">
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
        <property name="text">
-        <string>Section</string>
+        <string>Last Name</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="Tab1_StudentID">
@@ -168,7 +345,7 @@
          <x>110</x>
          <y>20</y>
          <width>261</width>
-         <height>31</height>
+         <height>41</height>
         </rect>
        </property>
       </widget>
@@ -176,9 +353,9 @@
        <property name="geometry">
         <rect>
          <x>110</x>
-         <y>60</y>
+         <y>70</y>
          <width>261</width>
-         <height>31</height>
+         <height>41</height>
         </rect>
        </property>
       </widget>
@@ -204,6 +381,9 @@
          <height>22</height>
         </rect>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
        <item>
         <property name="text">
          <string>Inactive</string>
@@ -218,10 +398,10 @@
       <widget class="QLineEdit" name="Tab1_Section">
        <property name="geometry">
         <rect>
-         <x>110</x>
-         <y>120</y>
+         <x>770</x>
+         <y>10</y>
          <width>261</width>
-         <height>31</height>
+         <height>41</height>
         </rect>
        </property>
       </widget>
@@ -249,6 +429,9 @@
          <width>131</width>
          <height>41</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
        </property>
        <property name="text">
         <string>Add</string>
@@ -452,7 +635,7 @@
          <x>210</x>
          <y>70</y>
          <width>211</width>
-         <height>31</height>
+         <height>41</height>
         </rect>
        </property>
       </widget>
@@ -462,7 +645,7 @@
          <x>210</x>
          <y>130</y>
          <width>211</width>
-         <height>31</height>
+         <height>41</height>
         </rect>
        </property>
       </widget>
@@ -488,7 +671,7 @@
          <x>900</x>
          <y>80</y>
          <width>211</width>
-         <height>31</height>
+         <height>41</height>
         </rect>
        </property>
       </widget>
@@ -498,7 +681,7 @@
          <x>900</x>
          <y>130</y>
          <width>211</width>
-         <height>31</height>
+         <height>41</height>
         </rect>
        </property>
       </widget>
@@ -507,7 +690,7 @@
         <rect>
          <x>750</x>
          <y>120</y>
-         <width>171</width>
+         <width>141</width>
          <height>41</height>
         </rect>
        </property>
@@ -566,7 +749,7 @@
          <x>570</x>
          <y>180</y>
          <width>211</width>
-         <height>31</height>
+         <height>41</height>
         </rect>
        </property>
       </widget>
@@ -586,10 +769,10 @@
       <widget class="QTableWidget" name="StudentCourseTable">
        <property name="geometry">
         <rect>
-         <x>270</x>
+         <x>60</x>
          <y>300</y>
-         <width>721</width>
-         <height>341</height>
+         <width>771</width>
+         <height>401</height>
         </rect>
        </property>
        <column>
@@ -618,12 +801,78 @@
         </property>
        </column>
       </widget>
+      <widget class="QScrollArea" name="Avalible_Subjects">
+       <property name="geometry">
+        <rect>
+         <x>890</x>
+         <y>300</y>
+         <width>341</width>
+         <height>401</height>
+        </rect>
+       </property>
+       <property name="widgetResizable">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="scrollAreaWidgetContents">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>339</width>
+          <height>399</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
-      <string>Tab 2</string>
+      <string>Grading System</string>
      </attribute>
+     <widget class="QTableWidget" name="StudentCourseTable_2">
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>330</y>
+        <width>721</width>
+        <height>341</height>
+       </rect>
+      </property>
+      <column>
+       <property name="text">
+        <string>Course Name</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Course ID</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Grade</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+     </widget>
     </widget>
    </widget>
   </widget>
