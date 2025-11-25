@@ -1,10 +1,31 @@
-from classses2 import admin
+from classses2 import admin, instructor
+from Programs import All_Courses, L, L1, L2
 
 #------------5 Admins-----------------
-# admin5 = admin("Ahmed")
-# admin1 = admin("Mohammed")
-# admin2 = admin("Ayman")
-# admin3 = admin("Abdullah")
-# admin4 = admin("Ali")
-#-------------------------------------
+# admin5 = admin("Ahmed", database=True)
+# admin1 = admin("Mohammed", database=True)
+# admin2 = admin("Ayman", database=True)
+# admin3 = admin("Abdullah", database=True)
+# admin4 = admin("Ali", database=True)
+#------------74 Teachers--------------
+Teachers = ["Ahmed Alqahtani" , "Ali alqarni" , "Ayman Alharbi", "Khalid Hassan", "Mohammed Ajour",
+            "Raad Alqarni", "Mohammed Alghamdi", "Salem Alotaibi", "Faisal Alzahrani", "Fahad Alharthi",
+            "Turki Alqarni", "Yasser Alamri", "Hazem Alshamrani", "Habeeb Khan", "Abdulateef Noor",
+            "Khalid Alharbi", "Mohanned Alkhaldi", "Ayman Madbouly", "Abdulrahman Hakami", "Waseem Saeed",
+            "Alaa Alghamdi", "Nawaf Algthmi", "Abdullah Alghamdi", "Nawab Hussain", "Hassan Ali",
+            "Maher Bahaddad", "Mohammed Alnoqaiti", "Ameen Alshekh", "Abdulaziz Tefouti", "Ahmed Albargi",
+            "Azzam Ahmed", "Azad Khan", "Ammar Alamri", "Mohammed Babkeer", "Abdulrahman Banawass",
+            "Elyas Felfelan", "Roger Junior", "Mustafa Alharbi", "Rakan Althahri", "Eyad Fouad",
+            "Anas Aljahmi", "Abdullah Bokhari", "Yazeed Althagafi", "Hammam Alqarni", "Mishary Asery",
+            "Moath Alshareef", "Ibraheem Ahmed", "Tariq Rashad", "Osama Alyamani",  "Nayef Alqahtani",
+            "Omar Alqahtani", "Rayan Almasmomi", "Zaher Kamel", "Baraa Alaamodi", "Jamal Alaa",
+            "Ziyad Aljahmi", "Nizar Abdo", "Moayad Osama", "Jehad Alfarran", "Qasim Abdulaleem",
+            "Aseel bahatheg", "Hamed Alklbani", "Kamil Alamri", "Saad Alzahrani", "Saeed Alghamdi",
+            "Thamer Alshmrani", "Emad Alzahrani", "Shaker Alshamrani", "Basel Alqarni", "Yousef Alhashmi",
+            "Taher Alshahrani", "Faris Awad", "Essam Alshawali", "Khalil Albloushi"]
+
+# T = []
+# for i in range(len(Teachers)):
+#     T.append(instructor(Teachers[i], All_Courses[i], L1[i], database=True))
+#     T.append(instructor(Teachers[i], All_Courses[i], L2[i], database=True))
 

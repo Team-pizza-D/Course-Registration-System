@@ -291,6 +291,6 @@ all_terms = [
     (10, term10_students),
 ]
 
-for term_number, students_in_term in all_terms:
-    for s in students_in_term:
-        insert_grades_for_student(s.Id, s.major, term_number)
+# for term_number, students_in_term in all_terms:
+#     for s in students_in_term:
+#         insert_grades_for_student(s.Id, s.major, term_number)

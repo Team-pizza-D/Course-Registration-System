@@ -75,7 +75,6 @@ st50 = student('2474598', 'hamad', 'hamad@stu.kau.edu.sa', 'Electrical computer 
 
 
 
-print(st4.test())
 
 st = [st1, st2, st3, st4, st5, st6, st7, st8, st9, st10,
       st11, st12, st13, st14, st15, st16, st17, st18, st19, st20,

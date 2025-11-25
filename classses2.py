@@ -138,20 +138,20 @@ class user:
     def generate_unique_id(self):  # generates unique user ID
         existing_ids_row = users_db.execute("SELECT Id FROM admins UNION SELECT Id FROM instructors UNION SELECT Id FROM students", fetchall=True)
         existing_ids = {row[0] for row in existing_ids_row}
-        Id = random.randint(1000000000, 9999999999)
+        Id = random.randint(10000,99999)
         while Id in existing_ids:
-            Id = random.randint(1000000000, 9999999999)
+            Id = random.randint(10000,99999)
         return Id
     
     def generate_email(self):  # generates email based on username and ID
         if self.is_student():
-            email = f"{self.username}{self.Id}@stu.kau.edu.sa"
+            email = f"{(self.username).replace(" ","")}{self.Id}@stu.kau.edu.sa"
         else:
-            email = f"{self.username}{self.Id}@kau.edu.sa"
+            email = f"{(self.username).replace(" ","")}{self.Id}@kau.edu.sa"
         return email
     
     def generate_password(self):  # generates random password
-        password = str(self.username) + str(random.randint(100000, 999999))
+        password = str((self.username).replace(" ","")) + str(random.randint(100000, 999999))
         return password
     
         
