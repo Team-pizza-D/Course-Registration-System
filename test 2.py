@@ -1,6 +1,11 @@
 import sqlite3
-from classses2 import admin, student,section,subject,instructor 
-
+from classses2 import admin, student,section,subject,instructor,Database
+# courses_db = Database("courses.db")
+# ronaldo = student("ronaldo",database=True)
+tariq = student(username="tariq", id=2430020)
+tariq.enroll_subject("BG")
+# print(tariq.all_conditions_met("BG"))
+# print(ronaldo.display_info())
 # section1= section("CU , CV")
 # okay,mass= section1.prerequisites_met("2430020")
 # print(okay)
@@ -122,7 +127,8 @@ cr = db.cursor()
 # cr.execute("DELETE FROM admins")
 # computer = cr.fetchall()
 # print(computer)
-# cr.execute("SELECT course_code,terms FROM power")
+# cr.execute("DROP TABLE IF EXISTS instructors")
+# cr.execute("CREATE TABLE IF NOT EXISTS instructors (id INTEGER,username TEXT, password TEXT, email TEXT, status TEXT, course_code TEXT, section TEXT)")
 # power = cr.fetchall()
 # print(power)
 # cr.execute("SELECT course_code,terms FROM communication")

@@ -370,10 +370,6 @@ class section():
         ### must use completed_subjects and grades (when database design is complete)
         
     def student_is_existing(self, student_id):  # to check if student is already enrolled in the section
-        try:
-            student_id = int(student_id)
-        except: 
-            return "Student ID must be an integer."
         if student_id in self.student_id_in_section:
             return True
         else:
@@ -401,10 +397,14 @@ class section():
             return False
         return True , f"All conditions met for enrollment."
     def enroll_student_in_section(self, student_id):  # to enroll a student in the section for data only (admin use only)
+
+        if self.all_conditions_met(student_id):
+            
+           
          ### I will need to inrolle some students in some sections to be able to do this 
         ### just for data tracking, actual enrollment logic is handled in student class
         ### notce that when considering database design, function will have to update the database instead of just appending to list
-        pass
+            pass
 
     def drop_student_from_section(self, student_id):  # to drop a student from the section for data only (admin use only)
          ### I will need to inrolle some students in some sections to be able to do this
@@ -434,18 +434,19 @@ class section():
 
 # _______________________________________________________________________________________________________________
 
-class student(user):
+class student(user,section):
     def __init__(self,username=None,id = None,email=None,major=None,password=None,enrolled_subjects=None,completed_subjects=None,status="inactive",GPA=None,database=False):
         super().__init__(username, password, email, status, id)
         self.enrolled_subjects = enrolled_subjects if enrolled_subjects is not None else [] # list of section codes the student is currently enrolled in
         self.completed_subjects = completed_subjects if completed_subjects is not None else []  # list of subject codes the student has completed
         self.current_credits = 0 ### total credits of current enrolled subjects for checking max credits allowed per semester not current total subjects
         # self.email = f"{self.username}{self.Id}@kau.edu.sa" if email is None else email
-        if major == None or self.is_exusting_student_id():
-            majors_row=users_db.execute("SELECT major fROM students WHERE Id = ?", (self.Id,), fetchone=True)
-            self.major=majors_row[0]
+        if major == None and self.is_existing_student_id():
+                majors_row=users_db.execute("SELECT major fROM students WHERE Id = ?", (self.Id,), fetchone=True)
+                self.major=majors_row[0]
         else:
-            self.major=major    
+            self.major=major  
+        self.GPA=self.calculate_GPA()    
 
         self.GPA = GPA if GPA is not None else self.calculate_GPA()  # student's GPA
         self.database = database
@@ -453,21 +454,25 @@ class student(user):
         ### set database to true if you want to insert this student into database upon creation
         ### eg. student = student("azad", database=True)
         if self.database:
-
-            users_db.execute(
-                "INSERT INTO students (username, password, email, Id,major) VALUES (?, ?, ?, ?, ?)",
-                (self.username, self.password, self.email, self.Id,self.major),
-                commit=True,
-                )
-
-
-            users_db.execute(
-                "INSERT INTO students (username, password, email, Id, major, status) VALUES (?, ?, ?, ?, ?, ?)",
-                (self.username, self.password, self.email,self.Id,self.major,self.status),
-                commit=True,
+            try:
+                users_db.execute(
+                    "INSERT INTO students (username, password, email, Id,major) VALUES (?, ?, ?, ?, ?)",
+                    (self.username, self.password, self.email, self.Id,self.major),
+                    commit=True,
+                    )
+            except sqlite3.IntegrityError:
+                print(f"Student with ID {self.Id} already exists in the database.")
+        else:
+            row=users_db.execute(
+                "SELECT username, password, email, Id, major FROM students WHERE Id = ?", (self.Id,), fetchone=True
             )
+            self.username = row[0]
+            self.password = row[1]
+            self.email = row[2]
+            self.major = row[4]
+            pass ### I will do this later to select student data from database if database is false         
         
-    def is_exusting_student_id(self):
+    def is_existing_student_id(self):
         row= users_db.execute("SELECT id FROM students WHERE id = ?", (self.Id,), fetchone=True)
         if row==None:
             return False
@@ -477,14 +482,40 @@ class student(user):
     def add_term(self):  # to add or define new term
         ### i think we will need table for term later in database
         pass
+    ### agreed that we wont need add_term function for (if abdulkareem approves then delete it)
 
     def display_info(self):  # to display student information
         return super().display_info() + f", Major: {self.major}, GPA: {self.GPA}"
 
     def enroll_subject(self, section_code):  # to enroll student in a subject section
-        ### must check prerequisites, time conflict, section capacity, max credit hours etc.
-        ### this function will be main function for student enrollment logic
+        if self.all_conditions_met(section_code):
+            try:
+                instructor = courses_db.execute("SELECT instructor FROM Courses WHERE section = ?", (section_code,), fetchone=True)
+                if instructor is None:
+                    return f"Section {section_code} not found."
+                instructor_name = instructor[0]
+            except sqlite3.Error as e:
+                return f"An error occurred while retrieving instructor: {e}"
+            
+            try:
+                course_row = courses_db.execute("SELECT course_code FROM Courses WHERE section = ?", (section_code,), fetchone=True)
+            except sqlite3.Error as e: 
+                return f"An error occurred while retrieving course code: {e}"
+            if course_row is None:
+                return f"Section {section_code} not found."
+            else:
+                course = course_row[0]
+            try:
+                users_db.execute("INSERT INTO enrollments (student_id, student_name, section,instructor,course) VALUES (?, ?, ?, ?,?)", (self.Id, self.username, section_code, instructor_name,course), commit=True)
+            except sqlite3.IntegrityError:
+                print(f"Enrollment in section {section_code} failed. Possible duplicate entry.")
+            except sqlite3.Error as e:
+                print(f"An error occurred during enrollment: {e}")
+        else:
+            return f"Cannot enroll in section {section_code}. Conditions not met."
         pass
+        sec=section(section_name=section_code)
+        sec.enroll_student_in_section(self.Id)
 
     def drop_subject(self, section_code):  # to drop a subject section for the student
         ### must update enrolled_subjects list and database
@@ -581,6 +612,13 @@ class instructor(user):
                 (self.username, self.password, self.email,self.Id,self.status, subject, self.sections),
                 commit=True,
             )
+    def add_section(self, c, s):
+        users_db.execute(
+            "INSERT INTO instructors (id, username, password, email, status, course_code, section) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (self.Id, self.username, self.password, self.email, self.status, c, s),
+            commit=True,
+        )
+
     def display_info(self):
         return super().display_info() + f", Subject: {self.subject}"     
     def __add_grade(self, student_id, section_code, grade):  # to add grade for a student in a section
@@ -614,14 +652,20 @@ class admin(user):
 
     def add_subject(self, section_code, student_id):  # to add a subject to a student
         ### later this will probably call student.enroll_subject with correct ID and section_code
-        pass
+        sect=section(section_name=section_code)
+        sect.enroll_student_in_section(student_id)
 
     def remove_subject(self, section_code, student_id):  # to remove a subject from a student
+        sect=section(section_name=section_code)
+        sect.drop_student_from_section(student_id)
+
         ### later this will probably call student.drop_subject with correct ID and section_code
         ### we might create student object from database data here
         pass
 
     def display_student_in_section(self, section_code):  # to display students in a section
+        sect= section(section_name=section_code)
+        sect.view_enrolled_students()
         ### can create section object then call section.display_student_in_section
         pass
 
@@ -630,6 +674,8 @@ class admin(user):
     #     pass
 
     def find_student(self, student_id):  # to find student by id
+        stu= student(Id=student_id)
+        return stu.display_info()
         ### must search in database for student_id and return student info
         pass
 
