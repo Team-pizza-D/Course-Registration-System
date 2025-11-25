@@ -446,6 +446,26 @@ class student(user):
             self.major=majors_row[0]
         else:
             self.major=major    
+
+        self.GPA = GPA if GPA is not None else self.calculate_GPA()  # student's GPA
+        self.database = database
+
+        ### set database to true if you want to insert this student into database upon creation
+        ### eg. student = student("azad", database=True)
+        if self.database:
+
+            users_db.execute(
+                "INSERT INTO students (username, password, email, Id,major) VALUES (?, ?, ?, ?, ?)",
+                (self.username, self.password, self.email, self.Id,self.major),
+                commit=True,
+                )
+
+
+            users_db.execute(
+                "INSERT INTO students (username, password, email, Id, major, status) VALUES (?, ?, ?, ?, ?, ?)",
+                (self.username, self.password, self.email,self.Id,self.major,self.status),
+                commit=True,
+            )
         
     def is_exusting_student_id(self):
         row= users_db.execute("SELECT id FROM students WHERE id = ?", (self.Id,), fetchone=True)
