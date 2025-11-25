@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>552</width>
-    <height>650</height>
+    <height>653</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -195,10 +195,13 @@ QLineEdit::focus
     <property name="font">
      <font>
       <family>Consolas,Courier New,monospace</family>
-      <pointsize>-1</pointsize>
+      <pointsize>10</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
+    </property>
+    <property name="mouseTracking">
+     <bool>false</bool>
     </property>
     <property name="acceptDrops">
      <bool>false</bool>
@@ -211,18 +214,15 @@ QLineEdit::focus
     border: 1px solid #404c5d;
     color: rgb(232, 232, 232);
     font-family: Consolas, &quot;Courier New&quot;, monospace;
-    font-size: 16px;
+    font-size: 14px;
     border-radius: 5px;
 
-    /* Gradient background similar to original */
+    /* Gradient background */
     background: qlineargradient(
         x1:0, y1:0, x2:1, y2:1,
         stop:0 #2e2d2d,
         stop:1 #212121
     );
-
-    /* Simulated outer shadow */
-    box-shadow: 0px 2px 6px #41465b;
 
     padding: 5px;
 }
@@ -235,8 +235,6 @@ QPushButton:hover {
         stop:1 #262626
     );
     color: #d6d6d6;
-
-    box-shadow: 0px 2px 10px #20232e;
 }
 
 /* Pressed */
@@ -277,6 +275,7 @@ QPushButton:pressed {
      <string notr="true">QLabel{
     font-family: Consolas, &quot;Courier New&quot;, monospace;
 	color: rgb(232, 232, 232);
+	font: 20pt;
 }</string>
     </property>
     <property name="text">
@@ -302,6 +301,7 @@ QPushButton:pressed {
      <string notr="true">QLabel{
     font-family: Consolas, &quot;Courier New&quot;, monospace;
 	color: rgb(232, 232, 232);
+	font: 20pt;
 }</string>
     </property>
     <property name="text">
@@ -382,7 +382,7 @@ QPushButton:pressed {
      <x>0</x>
      <y>0</y>
      <width>552</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

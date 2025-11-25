@@ -249,10 +249,6 @@ class section(subject):
         pass
         pass
     def student_is_existing(self, student_id):  # to check if student is already enrolled in the section
-        try:
-            student_id = int(student_id)
-        except: 
-            return "Student ID must be an integer."
         if student_id in self.student_id_in_section:
             return True
         else:
@@ -329,15 +325,25 @@ class student(user):
 
         self.database = database
         ### set database to true if you want to insert this student into database upon creation
-        ### eg. student = student("azad", major="Electrical communication and electronics engineering", database=True)
-
-        if self.database == True:
-            
-            users_db.execute(
-                "INSERT INTO students (username, password, email, id, major) VALUES (?, ?, ?, ?, ?)",
-                (self.username, self.password, self.email, self.id, self.major),
-                commit=True,
+        ### eg. student = student("azad", database=True)
+        if self.database:
+            try:
+                users_db.execute(
+                    "INSERT INTO students (username, password, email, Id,major) VALUES (?, ?, ?, ?, ?)",
+                    (self.username, self.password, self.email, self.Id,self.major),
+                    commit=True,
+                    )
+            except sqlite3.IntegrityError:
+                print(f"Student with ID {self.Id} already exists in the database.")
+        else:
+            row=users_db.execute(
+                "SELECT username, password, email, Id, major FROM students WHERE Id = ?", (self.Id,), fetchone=True
             )
+            self.username = row[0]
+            self.password = row[1]
+            self.email = row[2]
+            self.major = row[4]
+            pass ### I will do this later to select student data from database if database is false         
         
     def test(self):
         ### this function used before for quick testing
@@ -354,6 +360,8 @@ class student(user):
         ### must check prerequisites, time conflict, section capacity, max credit hours etc.
         ### this function will be main function for student enrollment logic
         pass
+        sec=section(section_name=section_code)
+        sec.enroll_student_in_section(self.Id)
 
     def drop_subject(self, section_code):  # to drop a subject section for the student
         ### must update enrolled_subjects list and database
@@ -481,7 +489,8 @@ class admin(user):
 
     def add_subject(self, section_code, student_id):  # to add a subject to a student
         ### later this will probably call student.enroll_subject with correct ID and section_code
-        pass
+        sect=section(section_name=section_code)
+        sect.enroll_student_in_section(student_id)
 
     def remove_subject(self, section_code, student_id):  # to remove a subject from a student
         ### later this will probably call student.drop_subject with correct ID and section_code
