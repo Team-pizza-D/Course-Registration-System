@@ -5,7 +5,7 @@ from PyQt5 import uic, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtGui import QKeySequence
 from PyQt5.QtWidgets import QShortcut
-
+from classses2 import Student, Admin
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "Users.db")
 
@@ -67,7 +67,7 @@ class LoginWindow(QMainWindow):  # Open login window
         except Exception as e:
             QtWidgets.QMessageBox.critical(self, "Database Error", str(e))
             return False
-
+    
     # Login logic
     def loginfunction(self):
         UniID = self.IDlineEdit.text()
@@ -100,7 +100,7 @@ class StudentWindow(QtWidgets.QMainWindow):  # Open window for student
         super().__init__()
         ui_path = os.path.join(os.path.dirname(__file__), "Student_Window.ui")
         uic.loadUi(ui_path, self)
-        self.welcomeLabel.setText(f"Hello, {student_name}")
+        self.welcomeLabel.setText(f"Welcome, {student_name}")
 
 
 

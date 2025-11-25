@@ -195,7 +195,7 @@ QLineEdit::focus
     <property name="font">
      <font>
       <family>Consolas,Courier New,monospace</family>
-      <pointsize>-1</pointsize>
+      <pointsize>10</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
