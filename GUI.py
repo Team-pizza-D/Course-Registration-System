@@ -20,7 +20,7 @@ class LoginWindow(QMainWindow):  # Open login window
 
         self.loginButton.clicked.connect(self.loginfunction)
 
-        # ENTER triggers login
+        # ENTER triggers globally
         QShortcut(QKeySequence("Return"), self, self.loginButton.click)
         QShortcut(QKeySequence("Enter"), self, self.loginButton.click)
 
@@ -35,21 +35,24 @@ class LoginWindow(QMainWindow):  # Open login window
             self.PasslineEdit.setEchoMode(QtWidgets.QLineEdit.Password)
 
     # --- DB Authentication ---
+    # Check student credentials
     def check_student(self, uni_id, password):
         try:
             conn = sqlite3.connect(DB_PATH)
             cur = conn.cursor()
+
             cur.execute(
-                "SELECT id FROM students WHERE id=? AND password=?",
+                "SELECT id, username FROM students WHERE id=? AND password=?",
                 (uni_id, password)
             )
             result = cur.fetchone()
             conn.close()
-            return result is not None
+            return result  # tuple → (id, username) OR None
         except Exception as e:
             QtWidgets.QMessageBox.critical(self, "Database Error", str(e))
-            return False
+            return None
 
+    # Check admin credentials
     def check_admin(self, uni_id, password):
         try:
             conn = sqlite3.connect(DB_PATH)
@@ -70,35 +73,35 @@ class LoginWindow(QMainWindow):  # Open login window
         UniID = self.IDlineEdit.text()
         password = self.PasslineEdit.text()
 
-        # Check admin first
-        if self.check_admin(UniID, password):
+        admin = self.check_admin(UniID, password)
+        student = self.check_student(UniID, password)
+
+        if admin:
             self.openAdminWindow()
             return
 
-        # Check student
-        if self.check_student(UniID, password):
-            self.openStudentWindow()
+        if student:
+            student_id, student_name = student
+            self.openStudentWindow(student_name)
             return
 
-        # If neither matched
         QtWidgets.QMessageBox.warning(self, "Login Failed", "Invalid ID or Password.")
-
-    def openStudentWindow(self):
+        
+    def openStudentWindow(self, student_name):
         self.hide()
-        self.main_window = StudentWindow()
+        self.main_window = StudentWindow(student_name)
         self.main_window.show()
 
-    def openAdminWindow(self):
-        self.hide()
-        self.main_window = AdminWindow()
-        self.main_window.show()
+
 
 
 class StudentWindow(QtWidgets.QMainWindow):  # Open window for student
-    def __init__(self):
+    def __init__(self, student_name):
         super().__init__()
         ui_path = os.path.join(os.path.dirname(__file__), "Student_Window.ui")
         uic.loadUi(ui_path, self)
+        self.welcomeLabel.setText(f"Hello, {student_name}")
+
 
 
 class AdminWindow(QtWidgets.QMainWindow):  # Open window for admin

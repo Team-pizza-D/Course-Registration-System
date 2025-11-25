@@ -150,12 +150,12 @@ QPushButton:pressed {
      </attribute>
     </widget>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="welcomeLabel">
     <property name="geometry">
      <rect>
       <x>20</x>
       <y>20</y>
-      <width>401</width>
+      <width>431</width>
       <height>71</height>
      </rect>
     </property>
