@@ -435,7 +435,7 @@ class section():
 # _______________________________________________________________________________________________________________
 
 class student(user):
-    def __init__(self,username=None,id = None,email=None,major=None,password=None,enrolled_subjects=None,completed_subjects=None,status="inactive",GPA=None,database=False):
+    def __init__(self,username=None,id = None,email=None,major=None,password=None,enrolled_subjects=None,completed_subjects=None,status="inactive",database=False):
         super().__init__(username, password, email, status, id)
         self.enrolled_subjects = enrolled_subjects if enrolled_subjects is not None else [] # list of section codes the student is currently enrolled in
         self.completed_subjects = completed_subjects if completed_subjects is not None else []  # list of subject codes the student has completed
@@ -445,7 +445,15 @@ class student(user):
             majors_row=users_db.execute("SELECT major fROM students WHERE Id = ?", (self.Id,), fetchone=True)
             self.major=majors_row[0]
         else:
-            self.major=major    
+            self.major=major  
+        self.GPA=self.calculate_GPA()
+        if database==True:
+            users_db.execute(
+                "INSERT INTO students (username, password, email, major, id,status) VALUES (?, ?, ?, ?, ?, ?)",
+                (self.username, self.password, self.email,self.major,self.Id,self.status),
+                commit=True,)
+        else:
+            pass ### I will do this later to select student data from database if database is false    
         
     def is_exusting_student_id(self):
         row= users_db.execute("SELECT id FROM students WHERE id = ?", (self.Id,), fetchone=True)
@@ -594,14 +602,22 @@ class admin(user):
 
     def add_subject(self, section_code, student_id):  # to add a subject to a student
         ### later this will probably call student.enroll_subject with correct ID and section_code
+        sect=section(section_name=section_code)
+        sect.enroll_student_in_section(student_id)
+
         pass
 
     def remove_subject(self, section_code, student_id):  # to remove a subject from a student
+        sect=section(section_name=section_code)
+        sect.drop_student_from_section(student_id)
+
         ### later this will probably call student.drop_subject with correct ID and section_code
         ### we might create student object from database data here
         pass
 
     def display_student_in_section(self, section_code):  # to display students in a section
+        sect= section(section_name=section_code)
+        sect.view_enrolled_students()
         ### can create section object then call section.display_student_in_section
         pass
 
@@ -610,6 +626,8 @@ class admin(user):
     #     pass
 
     def find_student(self, student_id):  # to find student by id
+        stu= student(Id=student_id)
+        return stu.display_info()
         ### must search in database for student_id and return student info
         pass
 
