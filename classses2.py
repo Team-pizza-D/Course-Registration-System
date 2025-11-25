@@ -335,23 +335,15 @@ class student(user):
                     )
             except sqlite3.IntegrityError:
                 print(f"Student with ID {self.Id} already exists in the database.")
-        else:
-            row=users_db.execute(
-                "SELECT username, password, email, Id, major FROM students WHERE Id = ?", (self.Id,), fetchone=True
-            )
-            self.username = row[0]
-            self.password = row[1]
-            self.email = row[2]
-            self.major = row[4]
+        # else:
+        #     row=users_db.execute(
+        #         "SELECT username, password, email, Id, major FROM students WHERE Id = ?", (self.id,), fetchone=True
+        #     )
+        #     self.username = row[0]
+        #     self.password = row[1]
+        #     self.email = row[2]
+        #     self.major = row[4]
             pass ### I will do this later to select student data from database if database is false         
-        
-    def test(self):
-        ### this function used before for quick testing
-        pass
-
-    def add_term(self):  # to add or define new term
-        ### i think we will need table for term later in database
-        pass
 
     def display_info(self):  # to display student information
         return super().display_info() + f", Major: {self.major}, GPA: {self.GPA}"
@@ -368,6 +360,11 @@ class student(user):
         pass
 
     def view_enrolled_subjects(self):  # to view all enrolled subjects for the student
+        row = users_db.execute("SELECT section FROM enrollments WHERE student_id = ?", (self.id,), fetchall=True)
+        print(row)
+        enrolled_sections = [r[0] for r in row]
+        return enrolled_sections
+
         ### this should show all current sections that student enrolled in
         pass
 
