@@ -581,6 +581,13 @@ class instructor(user):
                 (self.username, self.password, self.email,self.Id,self.status, subject, self.sections),
                 commit=True,
             )
+    def add_section(self, c, s):
+        users_db.execute(
+            "INSERT INTO instructors (id, username, password, email, status, course_code, section) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (self.Id, self.username, self.password, self.email, self.status, c, s),
+            commit=True,
+        )
+
     def display_info(self):
         return super().display_info() + f", Subject: {self.subject}"     
     def __add_grade(self, student_id, section_code, grade):  # to add grade for a student in a section

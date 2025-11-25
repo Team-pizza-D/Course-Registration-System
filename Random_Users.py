@@ -1,3 +1,4 @@
+import sqlite3
 from classses2 import admin, instructor
 from Programs import All_Courses, L, L1, L2
 
@@ -24,8 +25,14 @@ Teachers = ["Ahmed Alqahtani" , "Ali alqarni" , "Ayman Alharbi", "Khalid Hassan"
             "Thamer Alshmrani", "Emad Alzahrani", "Shaker Alshamrani", "Basel Alqarni", "Yousef Alhashmi",
             "Taher Alshahrani", "Faris Awad", "Essam Alshawali", "Khalil Albloushi"]
 
+
+# db = sqlite3.connect("Users.db")
+# cr = db.cursor()
+# cr.execute("DELETE FROM instructors")
+# db.commit()
+# db.close()
 # T = []
 # for i in range(len(Teachers)):
-#     T.append(instructor(Teachers[i], All_Courses[i], L1[i], database=True))
-#     T.append(instructor(Teachers[i], All_Courses[i], L2[i], database=True))
-
+#     inst = instructor(Teachers[i], All_Courses[i], L1[i], database=True)
+#     inst.add_section(All_Courses[i], L2[i])
+#     T.append(inst)  

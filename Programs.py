@@ -248,22 +248,22 @@ def loop_dict_value(d):
     return y
 
 
-def computer_adding(x1, y1, z1, p1, m1):
+def computer_adding(x1, y1, z1, p1, m1,):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS Computer')
-    cr.execute('CREATE TABLE IF NOT EXISTS Computer (course_code TEXT, course_name TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER,sections TEXT, capacity INTEGER, times TEXT)')
+    cr.execute('CREATE TABLE IF NOT EXISTS Computer (course_code TEXT, course_name TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER)')
     for i in range(len(x1)):
         cr.execute('INSERT INTO Computer (course_code, course_name, credit, prerequisites, terms) VALUES (?, ?, ?, ?, ?)',
-               (x1[i] , y1[i], z1[i], p1[i], m1[i]))
+               (x1[i] , y1[i], z1[i], p1[i], m1[i],))
     db.commit()
     db.close()
 
-def power_adding(x1, y1, z1, p1, m1):
+def power_adding(x1, y1, z1, p1, m1,):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS Power')
-    cr.execute('CREATE TABLE IF NOT EXISTS Power (course_code TEXT, course_name TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER, sections TEXT, capacity INTEGER, times TEXT)')
+    cr.execute('CREATE TABLE IF NOT EXISTS Power (course_code TEXT, course_name TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER)')
     for i in range(len(x1)):
         cr.execute('INSERT INTO Power (course_code, course_name, credit, prerequisites, terms) VALUES (?, ?, ?, ?, ?)',
                (x1[i] , y1[i], z1[i], p1[i], m1[i]))
@@ -274,7 +274,7 @@ def communication_adding(x1, y1, z1, p1, m1):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS Communication')
-    cr.execute('CREATE TABLE IF NOT EXISTS Communication (course_code TEXT, course_name TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER, sections TEXT, capacity INTEGER, times TEXT)')
+    cr.execute('CREATE TABLE IF NOT EXISTS Communication (course_code TEXT, course_name TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER)')
     for i in range(len(x1)):
         cr.execute('INSERT INTO Communication (course_code, course_name, credit, prerequisites, terms) VALUES (?, ?, ?, ?, ?)',
                (x1[i] , y1[i], z1[i], p1[i], m1[i]))
@@ -285,7 +285,7 @@ def biomedical_adding(x1, y1, z1, p1, m1):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS Biomedical')
-    cr.execute('CREATE TABLE IF NOT EXISTS Biomedical (course_code TEXT, course_name TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER, sections TEXT, capacity INTEGER, times TEXT)')
+    cr.execute('CREATE TABLE IF NOT EXISTS Biomedical (course_code TEXT, course_name TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER)')
     for i in range(len(x1)):
         cr.execute('INSERT INTO Biomedical (course_code, course_name, credit, prerequisites, terms) VALUES (?, ?, ?, ?, ?)',
                (x1[i] , y1[i], z1[i], p1[i], m1[i]))
@@ -302,21 +302,16 @@ power_names = All_Courses_Names | Semi_Shared_Courses_Names | power_coursesName
 power_credits = PP | power_courses_C | Semi_Shared_C
 power_prerequisites = All_Courses_PR | power_courses_PR | Semi_Shared_PR
 power_terms = All_Terms | power_terms | Semi_Shared_Terms_Power
-# power_sections = power_courseClases | Semi_Shared_Power_CoursesClasses|First_Year_sections | Second_Year_sections | Third_Year_sections | Fourth_Year_sections | Fifth_Year_sections
-# power_capacity = power_courseClasesCapacity | Semi_Shared_Power_CouresCapacity |First_Year_capacity | Second_Year_capacity | Third_Year_capacity | Fourth_Year_capacity | Fifth_Year_capacity
-# power_times = power_courseClasesTimes | Semi_Shared_Power_CouresTimes |First_Year_Times | Second_Year_Times | Third_Year_Times | Fourth_Year_Times | Fifth_Year_Times
+power_sections = power_courseClases | Semi_Shared_Power_CoursesClasses|First_Year_sections | Second_Year_sections | Third_Year_sections | Fourth_Year_sections | Fifth_Year_sections
+power_capacity = power_courseClasesCapacity | Semi_Shared_Power_CouresCapacity |First_Year_capacity | Second_Year_capacity | Third_Year_capacity | Fourth_Year_capacity | Fifth_Year_capacity
+power_times = power_courseClasesTimes | Semi_Shared_Power_CouresTimes |First_Year_Times | Second_Year_Times | Third_Year_Times | Fourth_Year_Times | Fifth_Year_Times
 
 for key in power_terms:
     if key =="EE366":
         power_terms[key]=9
     if key == "EE311":
         power_terms[key] = 6
-power_adding((power_codes),
-            (build_course_dict(power_codes, power_names)),
-            (build_course_dict(power_codes, power_credits)),
-            (build_course_dict(power_codes, power_prerequisites)),
-             build_course_dict(power_codes, power_terms),
-             )
+power_adding((power_codes), (build_course_dict(power_codes, power_names)), (build_course_dict(power_codes, power_credits)), (build_course_dict(power_codes, power_prerequisites)), build_course_dict(power_codes, power_terms))
 
 
 computer_codes = list(set(All + all_computer))
@@ -324,9 +319,9 @@ computer_names = All_Courses_Names | Semi_Shared_Courses_Names | computer_course
 computer_credits = PP | computer_courses_C | Semi_Shared_C
 computer_prerequisites = All_Courses_PR | computer_courses_PR | Semi_Shared_PR
 computer_terms = All_Terms | computer_terms | Semi_Shared_Terms_Computer
-# computer_sections = computer_courseClases | Semi_Shared_Computer_CoursesClasses |First_Year_sections | Second_Year_sections | Third_Year_sections | Fourth_Year_sections | Fifth_Year_sections
-# computer_capacity = computer_courseClasesCapacity | Semi_Shared_Computer_CoursesCapacity |First_Year_capacity | Second_Year_capacity | Third_Year_capacity | Fourth_Year_capacity | Fifth_Year_capacity
-# computer_times = computer_courseClasesTimes | Semi_Shared_Computer_CoursesTimes |First_Year_Times | Second_Year_Times | Third_Year_Times | Fourth_Year_Times | Fifth_Year_Times
+computer_sections = computer_courseClases | Semi_Shared_Computer_CoursesClasses |First_Year_sections | Second_Year_sections | Third_Year_sections | Fourth_Year_sections | Fifth_Year_sections
+computer_capacity = computer_courseClasesCapacity | Semi_Shared_Computer_CoursesCapacity |First_Year_capacity | Second_Year_capacity | Third_Year_capacity | Fourth_Year_capacity | Fifth_Year_capacity
+computer_times = computer_courseClasesTimes | Semi_Shared_Computer_CoursesTimes |First_Year_Times | Second_Year_Times | Third_Year_Times | Fourth_Year_Times | Fifth_Year_Times
 computer_adding(
     computer_codes,
     build_course_dict(computer_codes, computer_names),
@@ -341,15 +336,10 @@ communication_names = All_Courses_Names | Semi_Shared_Courses_Names | communicat
 communication_credits = PP | communication_courses_C | Semi_Shared_C
 communication_prerequisites = All_Courses_PR | communication_courses_PR | Semi_Shared_PR
 communication_terms = All_Terms | communication_terms | Semi_Shared_Terms_Communication
-# communication_sections = communication_courseClases | Semi_Shared_Communication_CoursesClasses |First_Year_sections | Second_Year_sections | Third_Year_sections | Fourth_Year_sections | Fifth_Year_sections
-# communication_capacity = communication_courseClasesCapacity | Semi_Shared_Communication_CoursesCapacity |First_Year_capacity | Second_Year_capacity | Third_Year_capacity | Fourth_Year_capacity | Fifth_Year_capacity
-# communication_times = communication_courseClasesTimes | Semi_Shared_Communication_CoursesTimes |First_Year_Times | Second_Year_Times | Third_Year_Times | Fourth_Year_Times | Fifth_Year_Times
-communication_adding((communication_codes),
-                    (build_course_dict(communication_codes, communication_names)), 
-                    (build_course_dict(communication_codes, communication_credits)), 
-                    (build_course_dict(communication_codes, communication_prerequisites)), 
-                    build_course_dict(communication_codes, communication_terms), 
-                    )
+communication_sections = communication_courseClases | Semi_Shared_Communication_CoursesClasses |First_Year_sections | Second_Year_sections | Third_Year_sections | Fourth_Year_sections | Fifth_Year_sections
+communication_capacity = communication_courseClasesCapacity | Semi_Shared_Communication_CoursesCapacity |First_Year_capacity | Second_Year_capacity | Third_Year_capacity | Fourth_Year_capacity | Fifth_Year_capacity
+communication_times = communication_courseClasesTimes | Semi_Shared_Communication_CoursesTimes |First_Year_Times | Second_Year_Times | Third_Year_Times | Fourth_Year_Times | Fifth_Year_Times
+communication_adding((communication_codes), (build_course_dict(communication_codes, communication_names)), (build_course_dict(communication_codes, communication_credits)), (build_course_dict(communication_codes, communication_prerequisites)), build_course_dict(communication_codes, communication_terms))
 
 
 biomedical_codes = list(set(All + all_biomedical))
@@ -357,8 +347,8 @@ biomedical_names = All_Courses_Names | Semi_Shared_Courses_Names | biomedical_co
 biomedical_credits = PP | biomedical_courses_C | Semi_Shared_C
 biomedical_prerequisites = All_Courses_PR | biomedical_courses_PR | Semi_Shared_PR
 biomedical_terms = All_Terms | biomedical_terms | Semi_Shared_Terms_Biomedical
-# biomedical_sections = biomedical_courseClases | Semi_Shared_Biomedical_CoursesClasses |First_Year_sections | Second_Year_sections | Third_Year_sections | Fourth_Year_sections | Fifth_Year_sections
-# biomedical_capacity = biomedical_courseClasesCapacity | Semi_Shared_Biomedical_CoursesCapacity|First_Year_capacity | Second_Year_capacity | Third_Year_capacity | Fourth_Year_capacity | Fifth_Year_capacity
+biomedical_sections = biomedical_courseClases | Semi_Shared_Biomedical_CoursesClasses |First_Year_sections | Second_Year_sections | Third_Year_sections | Fourth_Year_sections | Fifth_Year_sections
+biomedical_capacity = biomedical_courseClasesCapacity | Semi_Shared_Biomedical_CoursesCapacity|First_Year_capacity | Second_Year_capacity | Third_Year_capacity | Fourth_Year_capacity | Fifth_Year_capacity
 for key in biomedical_terms:
     if key == "IE256":
         biomedical_terms[key] = 8
@@ -367,12 +357,8 @@ for key in biomedical_terms:
     if key == "ISLS301":
         biomedical_terms[key] = 9
 biomedical_times = biomedical_courseClasesTimes | Semi_Shared_Biomedical_CoursesTimes |First_Year_Times | Second_Year_Times | Third_Year_Times | Fourth_Year_Times | Fifth_Year_Times
-biomedical_adding((biomedical_codes), 
-                  (build_course_dict(biomedical_codes, biomedical_names)), 
-                  (build_course_dict(biomedical_codes, biomedical_credits)), 
-                  (build_course_dict(biomedical_codes, biomedical_prerequisites)), 
-                  build_course_dict(biomedical_codes, biomedical_terms), 
-)
+biomedical_adding((biomedical_codes), (build_course_dict(biomedical_codes, biomedical_names)), (build_course_dict(biomedical_codes, biomedical_credits)), (build_course_dict(biomedical_codes, biomedical_prerequisites)), build_course_dict(biomedical_codes, biomedical_terms))
+
 
 ######################################
 # All courses:
@@ -386,7 +372,7 @@ def all_courses(x1, y1, z1, p1, a1, a2, i1):
                (x1[i] , y1[i], z1[i], p1[i], a1[i], 25, i1[i]))
     for i in range(len(x1)):
         cr.execute('INSERT INTO Courses (course_code, course_name, credit, prerequisites, section, capacity, instructor) VALUES (?, ?, ?, ?, ?, ?, ?)',
-               (x1[i] , y1[i], z1[i], p1[i], a2[i], 25, i1[i+74]))
+               (x1[i] , y1[i], z1[i], p1[i], a2[i], 25, i1[i]))
     db.commit()
     db.close()
 
@@ -397,8 +383,10 @@ All_Credits = PP | Semi_Shared_C | power_courses_C | computer_courses_C | commun
 All_Prerequisites = All_Courses_PR | Semi_Shared_PR | power_courses_PR | computer_courses_PR | communication_courses_PR | biomedical_courses_PR
 All_terms = All_Terms | Semi_Shared_Terms_Biomedical | Semi_Shared_Terms_Communication | Semi_Shared_Terms_Computer | Semi_Shared_Terms_Power | computer_terms | power_terms | biomedical_terms | communication_terms
 
-#=========================================================
+#=====================Classes-Times=========================#
+
 B = {}
+
 letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 count = 0
 SPC = 2   # how many sections there are for each course
@@ -409,6 +397,7 @@ for course in All_Courses:
         second = letters[count % 26]
         course_sections.append(first + second)
         count += 1
+
     B[course] = course_sections
 A = loop_dict_value(B)
 L = []
@@ -420,35 +409,32 @@ L2 = []
 for j in range(74):
     L1.append(L[j])
     L2.append(L[j+74])
-#=========================================================
+#============================================================#
+
+
 db = sqlite3.connect("Users.db")
 cr = db.cursor()
-TTT = {}
-for i in range(len(L)):
-    cr.execute("SELECT username, section FROM instructors WHERE section = ?", (L[i],))
-    TTT[L[i]] = cr.fetchone()[0]
-print(TTT)
-# TTT1 = {}
-# TTT2 = {}
+cr.execute("SELECT username, course_code FROM instructors")
+teacher_for_course = (cr.fetchall())
+new_teacher_for_course = []
+for i in teacher_for_course:
+    if i in new_teacher_for_course:
+        continue
+    new_teacher_for_course.append(i)
+last_teacher_for_course = {}
+for i in new_teacher_for_course:
+    last_teacher_for_course[i[1]] = i[0]
+db.commit()
+db.close()
 
-ITEMS = list(TTT)
-TTT1 = dict(ITEMS[:74])
-TTT2 = dict(ITEMS[74:])
-# for key,value in TTT:
-#     num = int(key[1:])
-#     if num <= 74:
-#         TTT1[key]=value
-#     else:
-#         TTT2[key]=value
-print(TTT1)
-print(TTT2)
-#=========================================================
-   
+#============================================================#
+
 all_courses(All_Courses,
             build_course_dict(All_Courses,All_Names),
             loop_dict_value(All_Credits),
             loop_dict_value(All_Prerequisites), 
-            L1, L2, loop_dict_value(TTT))
+            L1, L2, 
+            loop_dict_value(last_teacher_for_course))
 
 Times = {}
 Times2 = {}
