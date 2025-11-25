@@ -45,6 +45,15 @@ QWidget
 
 }
 
+
+/*-----QLabel-----*/
+QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 20pt;
+}
+
+/*-----QPushButton-----*/
 QPushButton {
     height: 50px;
     width: 120px;
@@ -55,7 +64,7 @@ QPushButton {
     font-size: 14px;
     border-radius: 5px;
 
-    /* Gradient background /
+    /* Gradient background */
     background: qlineargradient(
         x1:0, y1:0, x2:1, y2:1,
         stop:0 #2e2d2d,
@@ -65,7 +74,7 @@ QPushButton {
     padding: 5px;
 }
 
-/ Hover /
+/* Hover */
 QPushButton:hover {
     background: qlineargradient(
         x1:0, y1:0, x2:1, y2:1,
@@ -75,7 +84,7 @@ QPushButton:hover {
     color: #d6d6d6;
 }
 
-/ Pressed /
+/* Pressed */
 QPushButton:pressed {
     background: qlineargradient(
         x1:0, y1:0, x2:1, y2:1,
@@ -84,17 +93,10 @@ QPushButton:pressed {
     );
     color: #e0e0e0;
 
-    / Slight inset effect */
+    /* Slight inset effect */
     padding-top: 7px;
     padding-bottom: 3px;
 }
-/*-----QLabel-----*/
-QLabel{
-    font-family: Consolas, &quot;Courier New&quot;, monospace;
-    color: rgb(232, 232, 232);
-}
-
-
 
 
 /*-----QToolButton-----*/
@@ -172,7 +174,6 @@ QLineEdit::focus
 
 
 
-
 </string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -181,7 +182,7 @@ QLineEdit::focus
      <rect>
       <x>0</x>
       <y>50</y>
-      <width>1261</width>
+      <width>1271</width>
       <height>791</height>
      </rect>
     </property>
@@ -242,7 +243,7 @@ QLineEdit::focus
       <widget class="QLabel" name="label_5">
        <property name="geometry">
         <rect>
-         <x>660</x>
+         <x>680</x>
          <y>22</y>
          <width>101</width>
          <height>21</height>
@@ -252,23 +253,23 @@ QLineEdit::focus
         <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>Section</string>
+        <string>Section :</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_6">
        <property name="geometry">
         <rect>
-         <x>650</x>
+         <x>630</x>
          <y>70</y>
-         <width>111</width>
-         <height>21</height>
+         <width>131</width>
+         <height>31</height>
         </rect>
        </property>
        <property name="styleSheet">
         <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>Email Address</string>
+        <string>Email Address :</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="Tab1_LastName">
@@ -294,9 +295,9 @@ QLineEdit::focus
       <widget class="QLabel" name="label_8">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>0</x>
          <y>20</y>
-         <width>101</width>
+         <width>111</width>
          <height>21</height>
         </rect>
        </property>
@@ -304,7 +305,7 @@ QLineEdit::focus
         <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>Student ID</string>
+        <string>Student ID :</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_9">
@@ -313,22 +314,22 @@ QLineEdit::focus
          <x>10</x>
          <y>70</y>
          <width>101</width>
-         <height>21</height>
+         <height>41</height>
         </rect>
        </property>
        <property name="styleSheet">
         <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>First Name</string>
+        <string>First Name:</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_10">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>0</x>
          <y>130</y>
-         <width>91</width>
+         <width>101</width>
          <height>21</height>
         </rect>
        </property>
@@ -336,7 +337,7 @@ QLineEdit::focus
         <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>Last Name</string>
+        <string>Last Name :</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="Tab1_StudentID">
@@ -362,14 +363,17 @@ QLineEdit::focus
       <widget class="QLabel" name="label_7">
        <property name="geometry">
         <rect>
-         <x>660</x>
+         <x>690</x>
          <y>130</y>
          <width>111</width>
          <height>21</height>
         </rect>
        </property>
+       <property name="styleSheet">
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
        <property name="text">
-        <string>Status </string>
+        <string>Status :</string>
        </property>
       </widget>
       <widget class="QComboBox" name="Tab1_Status">
@@ -382,7 +386,17 @@ QLineEdit::focus
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 255, 255);</string>
+        <string notr="true">QComboBox {
+    color: white;
+   background-color: rgb(8, 35, 54);
+    font-size: 14px;
+}
+QComboBox QAbstractItemView {
+    color: white;
+    background-color: #0b1d2c;
+    font-size: 16px;
+}
+</string>
        </property>
        <item>
         <property name="text">
@@ -421,7 +435,7 @@ QLineEdit::focus
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <widget class="QPushButton" name="Btn_Tab1_Add">
+      <widget class="QPushButton" name="Tab1_AddStudent">
        <property name="geometry">
         <rect>
          <x>70</x>
@@ -437,7 +451,7 @@ QLineEdit::focus
         <string>Add</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="Btn_Tab1_Search">
+      <widget class="QPushButton" name="Tab1_SearchStudent">
        <property name="geometry">
         <rect>
          <x>300</x>
@@ -450,7 +464,7 @@ QLineEdit::focus
         <string>Search</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="Btn_Tab1_Select">
+      <widget class="QPushButton" name="Tab1_SelectStudent">
        <property name="geometry">
         <rect>
          <x>600</x>
@@ -463,7 +477,7 @@ QLineEdit::focus
         <string>Select</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="Btn_Tab1_Delete">
+      <widget class="QPushButton" name="Tab1_DeleteStudent">
        <property name="geometry">
         <rect>
          <x>900</x>
@@ -483,7 +497,7 @@ QLineEdit::focus
         <x>50</x>
         <y>410</y>
         <width>1141</width>
-        <height>291</height>
+        <height>331</height>
        </rect>
       </property>
       <property name="frameShape">
@@ -492,14 +506,46 @@ QLineEdit::focus
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <widget class="QTableWidget" name="StudentListTable">
+      <widget class="QTableWidget" name="Tab1_StudentTable">
        <property name="geometry">
         <rect>
-         <x>70</x>
+         <x>60</x>
          <y>0</y>
-         <width>961</width>
-         <height>291</height>
+         <width>1001</width>
+         <height>331</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">    
+    QTableWidget {
+        background-color: #001622;
+        color: white;
+        font-size: 14px;
+        border: 1px solid #4c4c4c;
+    }
+
+    QHeaderView::section {
+        background-color: #0b2e4a;
+        color: white;
+        padding: 5px;
+        border: 1px solid #32414B;
+        font-weight: bold;
+    }
+
+    QTableWidget::item:selected {
+        background-color: #1e90ff;
+        color: black;
+    }
+ </string>
+       </property>
+       <property name="verticalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="cornerButtonEnabled">
+        <bool>false</bool>
        </property>
        <column>
         <property name="text">
@@ -597,28 +643,12 @@ QLineEdit::focus
         <height>711</height>
        </rect>
       </property>
-      <widget class="QLabel" name="label_2">
-       <property name="geometry">
-        <rect>
-         <x>50</x>
-         <y>60</y>
-         <width>171</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 75 16pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>Student Name : </string>
-       </property>
-      </widget>
       <widget class="QLabel" name="label_3">
        <property name="geometry">
         <rect>
-         <x>50</x>
-         <y>130</y>
-         <width>171</width>
+         <x>70</x>
+         <y>70</y>
+         <width>121</width>
          <height>41</height>
         </rect>
        </property>
@@ -629,21 +659,11 @@ QLineEdit::focus
         <string>Student ID : </string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="StudentName">
+      <widget class="QLineEdit" name="Tab2_StudentID">
        <property name="geometry">
         <rect>
          <x>210</x>
          <y>70</y>
-         <width>211</width>
-         <height>41</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="StudentID">
-       <property name="geometry">
-        <rect>
-         <x>210</x>
-         <y>130</y>
          <width>211</width>
          <height>41</height>
         </rect>
@@ -665,7 +685,7 @@ QLineEdit::focus
         <string>Course Name : </string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="CourseName">
+      <widget class="QLineEdit" name="Tab2_CourseName">
        <property name="geometry">
         <rect>
          <x>900</x>
@@ -675,7 +695,7 @@ QLineEdit::focus
         </rect>
        </property>
       </widget>
-      <widget class="QLineEdit" name="CourseID">
+      <widget class="QLineEdit" name="Tab2_CourseCode">
        <property name="geometry">
         <rect>
          <x>900</x>
@@ -688,8 +708,8 @@ QLineEdit::focus
       <widget class="QLabel" name="label_11">
        <property name="geometry">
         <rect>
-         <x>750</x>
-         <y>120</y>
+         <x>760</x>
+         <y>130</y>
          <width>141</width>
          <height>41</height>
         </rect>
@@ -698,10 +718,10 @@ QLineEdit::focus
         <string notr="true">font: 75 16pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>Course ID :</string>
+        <string>Course Code : </string>
        </property>
       </widget>
-      <widget class="QPushButton" name="Add_Subject">
+      <widget class="QPushButton" name="Tab2_AddCourse">
        <property name="geometry">
         <rect>
          <x>440</x>
@@ -714,7 +734,7 @@ QLineEdit::focus
         <string>Add</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="Remove_Subject">
+      <widget class="QPushButton" name="Tab2_DeleteCourse">
        <property name="geometry">
         <rect>
          <x>630</x>
@@ -730,9 +750,9 @@ QLineEdit::focus
       <widget class="QLabel" name="label_12">
        <property name="geometry">
         <rect>
-         <x>450</x>
-         <y>170</y>
-         <width>171</width>
+         <x>770</x>
+         <y>180</y>
+         <width>121</width>
          <height>41</height>
         </rect>
        </property>
@@ -743,10 +763,10 @@ QLineEdit::focus
         <string>Section ID : </string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="SectionID">
+      <widget class="QLineEdit" name="Tab2_SectionID">
        <property name="geometry">
         <rect>
-         <x>570</x>
+         <x>900</x>
          <y>180</y>
          <width>211</width>
          <height>41</height>
@@ -775,6 +795,37 @@ QLineEdit::focus
          <height>401</height>
         </rect>
        </property>
+       <property name="styleSheet">
+        <string notr="true">    
+    QTableWidget {
+        background-color: #001622;
+        color: white;
+        font-size: 14px;
+        border: 1px solid #4c4c4c;
+    }
+
+    QHeaderView::section {
+        background-color: #0b2e4a;
+        color: white;
+        padding: 5px;
+        border: 1px solid #32414B;
+        font-weight: bold;
+    }
+
+    QTableWidget::item:selected {
+        background-color: #1e90ff;
+        color: black;
+    }</string>
+       </property>
+       <property name="verticalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="cornerButtonEnabled">
+        <bool>false</bool>
+       </property>
        <column>
         <property name="text">
          <string>Student ID</string>
@@ -801,30 +852,119 @@ QLineEdit::focus
         </property>
        </column>
       </widget>
-      <widget class="QScrollArea" name="Avalible_Subjects">
+      <widget class="QLabel" name="label_13">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>130</y>
+         <width>121</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 75 16pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>First Name :</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_14">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>180</y>
+         <width>121</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 75 16pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Last Name :</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="Tab2_FirstName">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>130</y>
+         <width>211</width>
+         <height>41</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="Tab2_LastName">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>180</y>
+         <width>211</width>
+         <height>41</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QTableWidget" name="Tab2_SubjectsTable">
        <property name="geometry">
         <rect>
          <x>890</x>
          <y>300</y>
-         <width>341</width>
-         <height>401</height>
+         <width>321</width>
+         <height>391</height>
         </rect>
        </property>
-       <property name="widgetResizable">
-        <bool>true</bool>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
        </property>
-       <widget class="QWidget" name="scrollAreaWidgetContents">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>339</width>
-          <height>399</height>
-         </rect>
+       <property name="showGrid">
+        <bool>false</bool>
+       </property>
+       <property name="columnCount">
+        <number>6</number>
+       </property>
+       <column>
+        <property name="text">
+         <string>Course Code</string>
         </property>
-       </widget>
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Course Name</string>
+        </property>
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Section ID</string>
+        </property>
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+       </column>
+       <column/>
+       <column/>
+       <column/>
       </widget>
      </widget>
+    </widget>
+    <widget class="QWidget" name="tab_4">
+     <attribute name="title">
+      <string>Sections Capacites</string>
+     </attribute>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
