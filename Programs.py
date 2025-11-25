@@ -138,7 +138,6 @@ Third_Year_sections = {"ARAB201":"3A","EE202":"3B","EE250":"3C","MATH204":"3D","
                 "EE300":"3F","EE301":"3G","IE202":"3H"}
 Third_Year_capacity = {"ARAB201":30,"EE202":30,"EE250":30,"MATH204":30,"ISLS201":30,
                 "EE300":30,"EE301":30,"IE202":30}
-
 Third_Year_Times = {"ARAB201":" SunDay , 10-10:50","EE202":"MonDay , 9-9:50","EE250":"TueDay , 10-10:50","MATH204":"WedDay , 11-11:50","ISLS201":"ThuDay , 9-9:50",
                 "EE300":"SunDay , 9-9:50","EE301":"MonDay , 11-11:50","IE202":"TueDay , 9-9:50"}
 
@@ -248,47 +247,47 @@ def loop_dict_value(d):
     return y
 
 
-def computer_adding(x1, y1, z1, p1, m1, n1, o1, q1):
+def computer_adding(x1, y1, z1, p1, m1,):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS Computer')
-    cr.execute('CREATE TABLE IF NOT EXISTS Computer (course_code TEXT, course_name TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER,sections TEXT, capacity INTEGER, times TEXT)')
+    cr.execute('CREATE TABLE IF NOT EXISTS Computer (course_code TEXT, course_name TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER)')
     for i in range(len(x1)):
-        cr.execute('INSERT INTO Computer (course_code, course_name, credit, prerequisites, terms, sections, capacity, times) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-               (x1[i] , y1[i], z1[i], p1[i], m1[i], n1[i], o1[i], q1[i]))
+        cr.execute('INSERT INTO Computer (course_code, course_name, credit, prerequisites, terms) VALUES (?, ?, ?, ?, ?)',
+               (x1[i] , y1[i], z1[i], p1[i], m1[i],))
     db.commit()
     db.close()
 
-def power_adding(x1, y1, z1, p1, m1, n1, o1, q1):
+def power_adding(x1, y1, z1, p1, m1,):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS Power')
-    cr.execute('CREATE TABLE IF NOT EXISTS Power (course_code TEXT, course_name TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER, sections TEXT, capacity INTEGER, times TEXT)')
+    cr.execute('CREATE TABLE IF NOT EXISTS Power (course_code TEXT, course_name TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER)')
     for i in range(len(x1)):
-        cr.execute('INSERT INTO Power (course_code, course_name, credit, prerequisites, terms, sections, capacity, times) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-               (x1[i] , y1[i], z1[i], p1[i], m1[i], n1[i], o1[i], q1[i]))
+        cr.execute('INSERT INTO Power (course_code, course_name, credit, prerequisites, terms) VALUES (?, ?, ?, ?, ?)',
+               (x1[i] , y1[i], z1[i], p1[i], m1[i]))
     db.commit()
     db.close()
 
-def communication_adding(x1, y1, z1, p1, m1, n1, o1, q1):
+def communication_adding(x1, y1, z1, p1, m1):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS Communication')
-    cr.execute('CREATE TABLE IF NOT EXISTS Communication (course_code TEXT, course_name TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER, sections TEXT, capacity INTEGER, times TEXT)')
+    cr.execute('CREATE TABLE IF NOT EXISTS Communication (course_code TEXT, course_name TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER)')
     for i in range(len(x1)):
-        cr.execute('INSERT INTO Communication (course_code, course_name, credit, prerequisites, terms, sections, capacity, times) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-               (x1[i] , y1[i], z1[i], p1[i], m1[i], n1[i], o1[i], q1[i]))
+        cr.execute('INSERT INTO Communication (course_code, course_name, credit, prerequisites, terms) VALUES (?, ?, ?, ?, ?)',
+               (x1[i] , y1[i], z1[i], p1[i], m1[i]))
     db.commit()
     db.close()
 
-def biomedical_adding(x1, y1, z1, p1, m1, n1, o1, q1):
+def biomedical_adding(x1, y1, z1, p1, m1):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS Biomedical')
-    cr.execute('CREATE TABLE IF NOT EXISTS Biomedical (course_code TEXT, course_name TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER, sections TEXT, capacity INTEGER, times TEXT)')
+    cr.execute('CREATE TABLE IF NOT EXISTS Biomedical (course_code TEXT, course_name TEXT, credit INTEGER, prerequisites TEXT, terms INTEGER)')
     for i in range(len(x1)):
-        cr.execute('INSERT INTO Biomedical (course_code, course_name, credit, prerequisites, terms, sections, capacity, times) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-               (x1[i] , y1[i], z1[i], p1[i], m1[i], n1[i], o1[i], q1[i]))
+        cr.execute('INSERT INTO Biomedical (course_code, course_name, credit, prerequisites, terms) VALUES (?, ?, ?, ?, ?)',
+               (x1[i] , y1[i], z1[i], p1[i], m1[i]))
     db.commit()
     db.close()
 
@@ -311,7 +310,7 @@ for key in power_terms:
         power_terms[key]=9
     if key == "EE311":
         power_terms[key] = 6
-power_adding((power_codes), (build_course_dict(power_codes, power_names)), (build_course_dict(power_codes, power_credits)), (build_course_dict(power_codes, power_prerequisites)), build_course_dict(power_codes, power_terms), build_course_dict(power_codes, power_sections), build_course_dict(power_codes, power_capacity), build_course_dict(power_codes, power_times))
+power_adding((power_codes), (build_course_dict(power_codes, power_names)), (build_course_dict(power_codes, power_credits)), (build_course_dict(power_codes, power_prerequisites)), build_course_dict(power_codes, power_terms))
 
 
 computer_codes = list(set(All + all_computer))
@@ -328,9 +327,6 @@ computer_adding(
     build_course_dict(computer_codes, computer_credits),
     build_course_dict(computer_codes, computer_prerequisites),
     build_course_dict(computer_codes, computer_terms),
-    build_course_dict(computer_codes, computer_sections),
-    build_course_dict(computer_codes, computer_capacity)
-    ,build_course_dict(computer_codes, computer_times)
 )
 
 
@@ -342,7 +338,7 @@ communication_terms = All_Terms | communication_terms | Semi_Shared_Terms_Commun
 communication_sections = communication_courseClases | Semi_Shared_Communication_CoursesClasses |First_Year_sections | Second_Year_sections | Third_Year_sections | Fourth_Year_sections | Fifth_Year_sections
 communication_capacity = communication_courseClasesCapacity | Semi_Shared_Communication_CoursesCapacity |First_Year_capacity | Second_Year_capacity | Third_Year_capacity | Fourth_Year_capacity | Fifth_Year_capacity
 communication_times = communication_courseClasesTimes | Semi_Shared_Communication_CoursesTimes |First_Year_Times | Second_Year_Times | Third_Year_Times | Fourth_Year_Times | Fifth_Year_Times
-communication_adding((communication_codes), (build_course_dict(communication_codes, communication_names)), (build_course_dict(communication_codes, communication_credits)), (build_course_dict(communication_codes, communication_prerequisites)), build_course_dict(communication_codes, communication_terms), build_course_dict(communication_codes, communication_sections), build_course_dict(communication_codes, communication_capacity), build_course_dict(communication_codes, communication_times))
+communication_adding((communication_codes), (build_course_dict(communication_codes, communication_names)), (build_course_dict(communication_codes, communication_credits)), (build_course_dict(communication_codes, communication_prerequisites)), build_course_dict(communication_codes, communication_terms))
 
 
 biomedical_codes = list(set(All + all_biomedical))
@@ -360,22 +356,22 @@ for key in biomedical_terms:
     if key == "ISLS301":
         biomedical_terms[key] = 9
 biomedical_times = biomedical_courseClasesTimes | Semi_Shared_Biomedical_CoursesTimes |First_Year_Times | Second_Year_Times | Third_Year_Times | Fourth_Year_Times | Fifth_Year_Times
-biomedical_adding((biomedical_codes), (build_course_dict(biomedical_codes, biomedical_names)), (build_course_dict(biomedical_codes, biomedical_credits)), (build_course_dict(biomedical_codes, biomedical_prerequisites)), build_course_dict(biomedical_codes, biomedical_terms), build_course_dict(biomedical_codes, biomedical_sections), build_course_dict(biomedical_codes, biomedical_capacity), build_course_dict(biomedical_codes, biomedical_times))
+biomedical_adding((biomedical_codes), (build_course_dict(biomedical_codes, biomedical_names)), (build_course_dict(biomedical_codes, biomedical_credits)), (build_course_dict(biomedical_codes, biomedical_prerequisites)), build_course_dict(biomedical_codes, biomedical_terms))
 
 
 ######################################
 # All courses:
-def all_courses(x1, y1, z1, p1, a1, a2):
+def all_courses(x1, y1, z1, p1, a1, a2, i1):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS courses')
     cr.execute('CREATE TABLE IF NOT EXISTS Courses (course_code TEXT, course_name TEXT, credit INTEGER, section TEXT, instructor INTEGER, capacity TEXT, time TEXT, prerequisites TEXT)')
     for i in range(len(x1)):
-        cr.execute('INSERT INTO Courses (course_code, course_name, credit, prerequisites, section, capacity) VALUES (?, ?, ?, ?, ?, ?)',
-               (x1[i] , y1[i], z1[i], p1[i], a1[i], 25))
+        cr.execute('INSERT INTO Courses (course_code, course_name, credit, prerequisites, section, capacity, instructor) VALUES (?, ?, ?, ?, ?, ?, ?)',
+               (x1[i] , y1[i], z1[i], p1[i], a1[i], 25, i1[i]))
     for i in range(len(x1)):
-        cr.execute('INSERT INTO Courses (course_code, course_name, credit, prerequisites, section, capacity) VALUES (?, ?, ?, ?, ?, ?)',
-               (x1[i] , y1[i], z1[i], p1[i], a2[i], 25))
+        cr.execute('INSERT INTO Courses (course_code, course_name, credit, prerequisites, section, capacity, instructor) VALUES (?, ?, ?, ?, ?, ?, ?)',
+               (x1[i] , y1[i], z1[i], p1[i], a2[i], 25, i1[i]))
     db.commit()
     db.close()
 
@@ -412,13 +408,32 @@ L2 = []
 for j in range(74):
     L1.append(L[j])
     L2.append(L[j+74])
+#============================================================#
 
+
+db = sqlite3.connect("Users.db")
+cr = db.cursor()
+cr.execute("SELECT username, course_code FROM instructors")
+teacher_for_course = (cr.fetchall())
+new_teacher_for_course = []
+for i in teacher_for_course:
+    if i in new_teacher_for_course:
+        continue
+    new_teacher_for_course.append(i)
+last_teacher_for_course = {}
+for i in new_teacher_for_course:
+    last_teacher_for_course[i[1]] = i[0]
+db.commit()
+db.close()
+
+#============================================================#
 
 all_courses(All_Courses,
-            loop_dict_value(All_Names),
+            build_course_dict(All_Courses,All_Names),
             loop_dict_value(All_Credits),
             loop_dict_value(All_Prerequisites), 
-            L1, L2)
+            L1, L2, 
+            loop_dict_value(last_teacher_for_course))
 
 Times = {}
 Times2 = {}
@@ -436,11 +451,9 @@ sections_per_course = []
 for i in range(len(Times2)):
     sections_per_course.append(X[i])
     sections_per_course.append(Y[i])
-print(Times)
-print(sections_per_course)
 db.commit()
 db.close()
-
+print(All_Courses)
 
 Classes_Times = ["9:00-9:50 , S T U", "8:00-9:15 , M W",  #MATH110
                  "10:00-10:50 , S T U", "9:30-10:45 , M W", # PHYS110
@@ -470,6 +483,25 @@ Classes_Times = ["9:00-9:50 , S T U", "8:00-9:15 , M W",  #MATH110
                  "9:00-9:50 , S T U" , "9:00-9:15 , M W", # EE300
                  "10:00-10:50 , S T U" , "10:30-11:45 , M W", # EE301
                  "11:00-12:50 , S T U" , "12:00-1:50 , S T U", #IE202
-                 "11:00-11:50 , S T U" , "1:00-1:50 , S T U", # EE321
-                 "" #EE311 -- i Will finish the rest tomorrow inshallah beacause this needs planning well before getting into it.
+                 "11:00-11:50 , S T U" , "1:00-1:50 , S T U", # EE321 
+                 "1:00-1:50 , S T U" , "1:00-2:15 , M W" # EE311
+                 "11:00-11:50 , S T U" , "11:00-12:15 , M W", # IE256 
+                 "9:30-10:45 , S T U" , " 11:00-12:50 M W", # EE360
+                 "------------------" , "----------------", # EE366 
+                 "5:00-5:50 , S T" , "5:00-5:50 , M W", # ISLS301
+                 "9:00-9:50 , M W" , "9:00-9:50 , S T", # EE499
+                 "5:00-5:50 , S T" , "5:00-5:50 , M W", # ISLS401
+                 "10:00-10:50 , S T U" , "11:00-12:15 , M W", # EE390
+                 "10:00-10:50 , S T U" , "11:00-12:15 , M W", # COMM101
+                 "9:00-9:50 , S T U" , "9:30-10:45 , M W", # EE331
+                 "1:00-1:50 , S T U" , "1:00-2:15 , M W", # EE302 
+                 "11:00-12:15 , S T U" , "11:00-12:50 , M W", # EE306
+                 "10:00-10:50 , S T U" , "9:30-10:45 , M W", # EE332
+                 "1:00-1:50 , S T U" , "1:00-1:15 , M W" # IE331
+                 "10:00-10:50 , S T U" , "9:30-10:45 , M W", # EE312
+                 "11:00-11:50 , S T U" , "11:00-12:15 , M W", # EE351
+                 "1:00-1:50 , S T U" , "1:00-2:15 , M W", # MEP261
+                 "1:00-1:50 , S T U" , "1:00-2:15 , M W", # EE303
+                 "1:00-1:50 , S T U" , "11:00-12:15 , M W", # EE341
+                 ""
                 ]  

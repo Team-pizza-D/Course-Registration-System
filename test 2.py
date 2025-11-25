@@ -1,6 +1,11 @@
 import sqlite3
-from classses2 import admin, student,section,subject,instructor 
-
+from classses2 import admin, student,section,subject,instructor,Database
+# courses_db = Database("courses.db")
+# ronaldo = student("ronaldo",database=True)
+tariq = student(username="tariq", id=2430020)
+tariq.enroll_subject("BG")
+# print(tariq.all_conditions_met("BG"))
+# print(ronaldo.display_info())
 # section1= section("CU , CV")
 # okay,mass= section1.prerequisites_met("2430020")
 # print(okay)
@@ -9,8 +14,13 @@ from classses2 import admin, student,section,subject,instructor
 # print(mass)
 from classses2 import admin, student, Database
 from classses2 import admin, student, Database, instructor
-nn = instructor("Azoz", "EE250", "AW", database=True)
-print(nn.display_info())
+
+# print(("Aziz AA").strip())
+# nn = admin("Lionel Messi", database=True)
+# nn = instructor("Azoz Alqahtani", "EE250", "AW", database=True)
+# bb = instructor("benzima", "EE331", "BB", database=True)
+# print(bb.display_info())
+# print(nn.display_info())
 # users_db = Database("Users.db")
 
 # row = users_db.execute("SELECT id,username,major FROM students WHERE id = ?", (2478624,), fetchone=True)
@@ -112,12 +122,13 @@ print(nn.display_info())
 # for row in get_all_students():
 #     print(row)
 
-# db = sqlite3.connect("courses.db")
-# cr = db.cursor()
-# cr.execute("SELECT course_code,terms FROM computer")
+db = sqlite3.connect("Users.db")
+cr = db.cursor()
+# cr.execute("DELETE FROM admins")
 # computer = cr.fetchall()
 # print(computer)
-# cr.execute("SELECT course_code,terms FROM power")
+# cr.execute("DROP TABLE IF EXISTS instructors")
+# cr.execute("CREATE TABLE IF NOT EXISTS instructors (id INTEGER,username TEXT, password TEXT, email TEXT, status TEXT, course_code TEXT, section TEXT)")
 # power = cr.fetchall()
 # print(power)
 # cr.execute("SELECT course_code,terms FROM communication")
@@ -130,8 +141,8 @@ print(nn.display_info())
 
 
 # times = [item[0].split(',')[1].strip() for item in azoz]
-# db.commit()
-# db.close()
+db.commit()
+db.close()
 # print(times)
 # print(1 // 26)
 # print(1 % 26)
