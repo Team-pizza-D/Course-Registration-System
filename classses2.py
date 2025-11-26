@@ -177,10 +177,16 @@ class section(subject):
             self.enrolled_students = [f"{r[0]} - {r[1]}" for r in row]
             self.student_id_in_section = [r[0] for r in row]
             self.student_name_in_section = [r[1] for r in row]
-        self.status = status
+        find_subject_list=courses_db.execute("SELECT course_code FROM courses WHERE section= ?",(self.section_name,),fetchone=True)
+        if find_subject_list==None:
+            return None
+        self.subject= find_subject_list[0]
+        
+        find_subject= subject(self.subject)
+        self.section_term= find_subject.subject_term
 
     def sectioon_info_student(self):  # to display section information
-        row= section_db.execute("SELECT course_code, course_name, sections, capacity, times FROM sections WHERE sections = ?",(self.section_name,),fetchone=True) ### database design must be abdated to include instructor name and creat a table name sections
+        row= courses_db.execute("SELECT course_code, course_name, sections, capacity, times FROM sections WHERE sections = ?",(self.section_name,),fetchone=True) ### database design must be abdated to include instructor name and creat a table name sections
         if row==None:
             return f"{self.section_name}, Section not found"
         self.section_code=row[0]
@@ -198,7 +204,7 @@ class section(subject):
         ### status can be changed to open if capacity not zero
         pass
     def section_is_existing(self):  # to check if section exists
-        row= section_db.execute("SELECT sections FROM sections WHERE sections = ?",(self.section_name,),fetchone=True)
+        row= courses_db.execute("SELECT sections FROM sections WHERE sections = ?",(self.section_name,),fetchone=True)
         if row==None:
             return False
         else:
@@ -206,10 +212,10 @@ class section(subject):
 
     def is_full(self):  # to check if section is full
         ### allways use the function section_is_existing before using this function to avoid errors
-        row= section_db.execute("SELECT capacity FROM sections WHERE sections = ?",(self.section_name,),fetchone=True)
+        row= courses_db.execute("SELECT capacity FROM sections WHERE sections = ?",(self.section_name,),fetchone=True)
         if row==None:
             return True
-        if len(self.enrolled_students)>=row[0]: ### since there is no data base fore enrolled student i'm going to write it like this (temporary)
+        if len(self.enrolled_students)>=int(row[0]): ### since there is no data base fore enrolled student i'm going to write it like this (temporary)
             return True
         else:
             return False
@@ -222,6 +228,18 @@ class section(subject):
         pass
 
     def has_time_conflict(self, student_id):  # to check time conflict with student's schedule
+        self.section_time=courses_db.execute("SELECT time FROM Courses WHERE section = ?",(self.section_name,),fetchone=True)
+        self.section_time=self.section_time[0].strip()
+        student_schedule_rows= self.student_in_section_db.execute("SELECT section FROM enrollments WHERE student_id = ?", (student_id,), fetchall=True)
+        student_schedules = []
+        for row in student_schedule_rows:
+            sec_time = courses_db.execute("SELECT time FROM Courses WHERE section = ?", (row[0],), fetchone=True)
+            if sec_time:
+                student_schedules.append(sec_time[0].strip())
+        for sched in student_schedules:
+            if sched == self.section_time:
+                return True
+        return False
         ### I will need to inrolle some students in some sections to be able to check time conflict fartheremore Data base has to add more sections 
         pass
 
@@ -231,55 +249,180 @@ class section(subject):
             student_id = int(student_id)
         except: 
             return False , "Student ID must be an integer."
-        The_id= student(student_id)
-        row=users_db.execute("SELECT major fROM students WHERE id = ?", (The_id,), fetchone=True)
-        if row==None:
-            return f"{The_id.id}, Student not found"
-        if The_id.major=="Electrical communication and electronics engineering":
-            ### GPA calculation logic for this major
-            pass
-        if The_id.major=="Electrical computer engineering":
-            ### GPA calculation logic for this major
-            pass
-        if The_id.major=="Electrical power and machines engineering":
-            pass
-        if The_id.major=="Electrical biomedical engineering":
-            pass
-        ### must use completed_subjects and grades (when database design is complete)
-        pass
-        pass
+        The_id= student(id=student_id)
+        row1=users_db.execute("SELECT course , letter_grade FROM grades WHERE student_id = ?", (The_id.Id,), fetchall=True)
+        students_taken_subject_with_grades={}
+        for cours,letter_grade in row1:
+            students_taken_subject_with_grades[cours]=letter_grade
+        student_completed_subjects=list(students_taken_subject_with_grades.keys()) 
+        
+        
+
+        row=users_db.execute("SELECT major , term FROM students WHERE Id = ?", (The_id.Id,), fetchone=True)
+        student_term=row[1]
+        print("debag st",student_term)
+        if row[0]==None:
+            return  False , f"{The_id.Id}, Student not found"
+        
+        section_subject_row=courses_db.execute("SELECT course_code FROM Courses WHERE section = ?", (self.section_name,), fetchone=True)
+        if section_subject_row==None:
+            return False , f"Section {self.section_name} not found"
+        section_subject_code= section_subject_row[0].strip()
+        
+
+        if The_id.major.strip()=="Electrical communication and electronics engineering":
+            subject_db=courses_db.execute("SELECT prerequisites FROM communication WHERE course_code = ?", (section_subject_code,), fetchone=True)
+            if subject_db==None:
+                prerequisites=None
+            else:
+                prereq_str=subject_db[0]
+                if prereq_str is None or prereq_str.strip()=="":
+                    return True , f"The subject has no prerequisites."
+                else:
+                    prerequisites=prereq_str.split(",")
+            
+
+            
+        
+        if The_id.major.strip()=="Electrical computer engineering":
+            subject_db=courses_db.execute("SELECT prerequisites FROM computer WHERE course_code = ?", (section_subject_code,), fetchone=True)
+            if subject_db==None:
+                prerequisites=None
+            else:
+                prereq_str=subject_db[0]
+                if prereq_str is None or prereq_str.strip()=="":
+                    return True , f"The subject has no prerequisites."
+                else:
+                    prerequisites=prereq_str.split(",")
+
+
+        if The_id.major.strip()=="Electrical power and machines engineering":
+            subject_db=courses_db.execute("SELECT prerequisites FROM power WHERE course_code = ?", (section_subject_code,), fetchone=True)
+            if subject_db==None:
+                prerequisites=None
+            else:
+                prereq_str=subject_db[0]
+                if prereq_str is None or prereq_str.strip()=="":
+                    return True , f"The subject has no prerequisites."
+                else:
+                    prerequisites=prereq_str.split(",")
+
+
+        if The_id.major.strip()=="Electrical biomedical engineering":
+            subject_db=courses_db.execute("SELECT prerequisites FROM biomedical WHERE course_code = ?", (section_subject_code,), fetchone=True)
+            if subject_db==None:
+                prerequisites=None
+            else:
+                prereq_str=subject_db[0]
+                if prereq_str is None or prereq_str.strip()=="":
+                    return True , f"The subject has no prerequisites."
+                else:
+                    prerequisites=prereq_str.split(",")
+
+        if prerequisites==None:
+            return False , f"Section {self.section_name} not in study plan of {The_id.major}" 
+        elif str(prerequisites).strip()=="":
+            return True , "No prerequisites for this section."
+        for prereq in prerequisites:
+            preq= prereq.strip()
+            grade= students_taken_subject_with_grades.get(preq)
+            if grade== None:
+                return False , f"Prerequisite {preq} not completed."
+            if  grade == "F":
+                return False , f"Prerequisite {preq} not passed."
+        for prereq in prerequisites:
+            prereq= prereq.strip()
+            if prereq not in student_completed_subjects:
+                return False , f"Prerequisite {prereq} not completed."
+            
+        the_subject= subject(section_subject_code)
+        if the_subject.subject_term > student_term:
+            return False , f"{section_subject_code} is not in the plane fore the term number {student_term}."
+        return True , "All prerequisites met."    
+
     def student_is_existing(self, student_id):  # to check if student is already enrolled in the section
         if student_id in self.student_id_in_section:
             return True
         else:
             return False
+    def student_is_real(self, student_id):  # to check if student exists in the database
+        row= users_db.execute("SELECT id FROM students WHERE id = ?", (student_id,), fetchone=True)
+        if row==None:
+            return False
+        else:
+            return True
+
+    def one_section_for_subject(self, student_id):  # to ensure student is enrolled in only one section per subject
+        row= users_db.execute("SELECT section FROM enrollments WHERE student_id = ?", (student_id,), fetchall=True)
+        student_sections = [r[0] for r in row]
+        for sec in student_sections:
+            course_row=courses_db.execute("SELECT course_code FROM Courses WHERE section = ?", (sec,), fetchone=True)
+            if course_row==None:
+                continue
+            course_code= course_row[0]
+            if course_code.strip() == self.subject.strip():
+                return True , f"Student with ID {student_id} is already enrolled in section {sec} for subject {self.subject}."
+        return False , f""
+        ### I will need to inrolle some students in some sections to be able to do this 
+        pass    
 
     def all_conditions_met(self,student_id): # to check if all conditions are met for enrollment
+    
         ### notce this is very very very important this function returns tuple of (bool,str) the right why to use it in if conditions is like this:
         ### conditions_met, message = section.all_conditions_met(student_id)
         ### if not conditions_met: print(message)
         ### else: proceed with enrollment
-        try:
-            student_id = int(student_id)
-        except: 
-            return False , "Student ID must be an integer."
+        # student_id= student_id.strip()
+        # try:
+        #     student_id = int(student_id)
+        # except: 
+        #     return False , "Student ID must be an integer."
+        if not self.student_is_real(student_id):
+            return False , f"student with ID {student_id} does not exist"
         if self.student_is_existing(student_id):
             return False , f"student with ID {student_id} is already enrolled in section {self.section_name}"
         if not self.section_is_existing():
             return False , f"section {self.section_name} does not exist"
-        if self.is_full(student_id):
+        okay,message= self.one_section_for_subject(student_id)
+        if  okay:
+            return False , message
+        if self.is_full():
             return False , f"the section {self.section_name} is full"
         okay , message =  self.prerequisites_met(student_id) ### this function must return tuple (bool,str)
         if not okay:
             return False , message
-        if self.has_time_conflict(student_id):
-            return False
+        # if self.has_time_conflict(student_id):
+        #     return False, f"Time conflict with student's schedule."
         return True , f"All conditions met for enrollment."
+    
     def enroll_student_in_section(self, student_id):  # to enroll a student in the section for data only (admin use only)
+        okay , message = self.all_conditions_met(student_id)
+        if not okay:
+            return False , message
+        row=courses_db.execute("SELECT instructor, course_code FROM Courses WHERE section = ?", (self.section_name,), fetchone=True)
+        self.instructor=row[0]
+        course_code=row[1]
+        student_name_row=users_db.execute("SELECT username FROM students WHERE id = ?", (student_id,), fetchone=True)
+        student_name= student_name_row[0]
+
+        self.student_in_section_db.execute("INSERT INTO enrollments (student_id, student_name, section,instructor,course) VALUES (?, ?, ?, ?,?)", (student_id, student_name, self.section_name, self.instructor,course_code), commit=True)
+        self.enrolled_students.append(f"{student_id} - {student_name}")
+        self.student_id_in_section.append(student_id)
+        self.student_name_in_section.append(student_name)
+        users_db.execute("INSERT INTO grades (student_id, course) VALUES (?, ?)", (student_id, self.subject), commit=True)
+         ### it's very very very very importanat to abdate line 213 when database design is apdeted and add sereal number for each section
+
+        return True , f"Student with ID {student_id} successfully enrolled in section {self.section_name}."
+
+        
+
+        
+            
+           
          ### I will need to inrolle some students in some sections to be able to do this 
         ### just for data tracking, actual enrollment logic is handled in student class
         ### notce that when considering database design, function will have to update the database instead of just appending to list
-        pass
+
 
     def drop_student_from_section(self, student_id):  # to drop a student from the section for data only (admin use only)
          ### I will need to inrolle some students in some sections to be able to do this
@@ -294,8 +437,7 @@ class section(subject):
         if new_capacity < len(self.student_id_in_section):
             return "New capacity cannot be less than the number of enrolled students."
         self.capacity = new_capacity
-        section_db.execute("UPDATE sections SET capacity = ? WHERE sections = ?", (self.capacity, self.section_name), commit=True)
-         ### it's very very very very importanat to abdate line 213 when database design is apdeted and add sereal number for each section
+        courses_db.execute("UPDATE sections SET capacity = ? WHERE sections = ?", (self.capacity, self.section_name), commit=True)
         return f"Section {self.section_name} capacity updated to {self.capacity}."
 
         ### can be used by admin to increase capacity
@@ -346,18 +488,17 @@ class student(user):
             pass ### I will do this later to select student data from database if database is false         
 
     def display_info(self):  # to display student information
-        return super().display_info() + f", Major: {self.major}, GPA: {self.GPA}"
+        return super().display_info() + f", Major: {self.major}, GPA: {self.GPA} "
 
     def enroll_subject(self, section_code):  # to enroll student in a subject section
-        ### must check prerequisites, time conflict, section capacity, max credit hours etc.
-        ### this function will be main function for student enrollment logic
-        pass
         sec=section(section_name=section_code)
-        sec.enroll_student_in_section(self.id)
+        okay,massege =sec.enroll_student_in_section(self.Id)
+        return print(okay, massege)
 
     def drop_subject(self, section_code):  # to drop a subject section for the student
-        ### must update enrolled_subjects list and database
-        pass
+        sect=section(section_name=section_code)
+        okay,massege =sect.drop_student_from_section(self.Id)
+        return okay, massege
 
     def view_enrolled_subjects(self):  # to view all enrolled subjects for the student
         row = users_db.execute("SELECT section FROM enrollments WHERE student_id = ?", (self.id,), fetchall=True)
@@ -494,9 +635,14 @@ class admin(user):
     def add_subject(self, section_code, student_id):  # to add a subject to a student
         ### later this will probably call student.enroll_subject with correct ID and section_code
         sect=section(section_name=section_code)
-        sect.enroll_student_in_section(student_id)
+        okay,massege = sect.enroll_student_in_section(student_id)
+        return okay, massege
 
     def remove_subject(self, section_code, student_id):  # to remove a subject from a student
+        sect=section(section_name=section_code)
+        okay,massege =sect.drop_student_from_section(student_id)
+        return okay, massege
+
         ### later this will probably call student.drop_subject with correct ID and section_code
         ### we might create student object from database data here
         pass
@@ -522,17 +668,16 @@ class admin(user):
         pass
 
     def expand_capacity(self, section_code, new_capacity):  # to expand section capacity
-        ### must check some constraints then call section.new_capacity
+        sec=section(section_name=section_code)
+        massege= sec.new_capacity(new_capacity)
+        return massege
+    def add_grade(self, student_id, course_code, grade):  # to add grade for a student in a section
+
+        # instr= instructor(username="temp", subject="temp", sections="temp")
+        # instr.__add_grade(student_id, section_code, grade)
+        ### must create instructor object to call its __add_grade method
         pass
 
-    def reduce_capacity(self, section_code, new_capacity):  # to reduce section capacity
-        ### must ensure not less than number of already enrolled students
-        pass
-
-    def avilable_subjects(self, student_id):  # to view subjects that a student can enroll in
-        ### here as well i have to understand data base more to implement this function
-        ### must check prerequisites, time conflicts, capacity etc.
-        pass
 
 
 # Example test (from original file) - commented to avoid running automatically
