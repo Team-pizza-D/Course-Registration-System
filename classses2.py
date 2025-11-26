@@ -177,7 +177,6 @@ class section(subject):
             self.enrolled_students = [f"{r[0]} - {r[1]}" for r in row]
             self.student_id_in_section = [r[0] for r in row]
             self.student_name_in_section = [r[1] for r in row]
-        self.status = status
         find_subject_list=courses_db.execute("SELECT course_code FROM courses WHERE section= ?",(self.section_name,),fetchone=True)
         if find_subject_list==None:
             return None
@@ -187,7 +186,7 @@ class section(subject):
         self.section_term= find_subject.subject_term
 
     def sectioon_info_student(self):  # to display section information
-        row= section_db.execute("SELECT course_code, course_name, sections, capacity, times FROM sections WHERE sections = ?",(self.section_name,),fetchone=True) ### database design must be abdated to include instructor name and creat a table name sections
+        row= courses_db.execute("SELECT course_code, course_name, sections, capacity, times FROM sections WHERE sections = ?",(self.section_name,),fetchone=True) ### database design must be abdated to include instructor name and creat a table name sections
         if row==None:
             return f"{self.section_name}, Section not found"
         self.section_code=row[0]
@@ -205,7 +204,7 @@ class section(subject):
         ### status can be changed to open if capacity not zero
         pass
     def section_is_existing(self):  # to check if section exists
-        row= section_db.execute("SELECT sections FROM sections WHERE sections = ?",(self.section_name,),fetchone=True)
+        row= courses_db.execute("SELECT sections FROM sections WHERE sections = ?",(self.section_name,),fetchone=True)
         if row==None:
             return False
         else:
@@ -213,7 +212,7 @@ class section(subject):
 
     def is_full(self):  # to check if section is full
         ### allways use the function section_is_existing before using this function to avoid errors
-        row= section_db.execute("SELECT capacity FROM sections WHERE sections = ?",(self.section_name,),fetchone=True)
+        row= courses_db.execute("SELECT capacity FROM sections WHERE sections = ?",(self.section_name,),fetchone=True)
         if row==None:
             return True
         if len(self.enrolled_students)>=int(row[0]): ### since there is no data base fore enrolled student i'm going to write it like this (temporary)
@@ -438,8 +437,7 @@ class section(subject):
         if new_capacity < len(self.student_id_in_section):
             return "New capacity cannot be less than the number of enrolled students."
         self.capacity = new_capacity
-        section_db.execute("UPDATE sections SET capacity = ? WHERE sections = ?", (self.capacity, self.section_name), commit=True)
-         ### it's very very very very importanat to abdate line 213 when database design is apdeted and add sereal number for each section
+        courses_db.execute("UPDATE sections SET capacity = ? WHERE sections = ?", (self.capacity, self.section_name), commit=True)
         return f"Section {self.section_name} capacity updated to {self.capacity}."
 
         ### can be used by admin to increase capacity
@@ -670,13 +668,11 @@ class admin(user):
         pass
 
     def expand_capacity(self, section_code, new_capacity):  # to expand section capacity
-        ### must check some constraints then call section.new_capacity
-        pass
-
-    def reduce_capacity(self, section_code, new_capacity):  # to reduce section capacity
-        ### must ensure not less than number of already enrolled students
-        pass
+        sec=section(section_name=section_code)
+        massege= sec.new_capacity(new_capacity)
+        return massege
     def add_grade(self, student_id, course_code, grade):  # to add grade for a student in a section
+
         # instr= instructor(username="temp", subject="temp", sections="temp")
         # instr.__add_grade(student_id, section_code, grade)
         ### must create instructor object to call its __add_grade method
