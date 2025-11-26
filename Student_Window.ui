@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1224</width>
-    <height>795</height>
+    <width>1212</width>
+    <height>1177</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -84,7 +84,7 @@ QPushButton:pressed {
       <x>0</x>
       <y>100</y>
       <width>1251</width>
-      <height>881</height>
+      <height>1061</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -119,19 +119,55 @@ QPushButton:pressed {
         }</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
       <string>Current Schedule</string>
      </attribute>
-     <widget class="QTableWidget" name="tableWidget">
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>Transcript</string>
+     </attribute>
+     <widget class="QTableWidget" name="infoTable">
       <property name="geometry">
        <rect>
-        <x>40</x>
-        <y>40</y>
-        <width>551</width>
-        <height>331</height>
+        <x>30</x>
+        <y>30</y>
+        <width>1101</width>
+        <height>68</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QTableWidget {
+    background-color: #08131c;
+    color: white;
+    gridline-color: white;
+    border: 1px solid white;
+    font-size: 14px;
+}
+
+QHeaderView::section {
+    background-color: #08131c;
+    color: white;
+    border: 1px solid white;
+    font-weight: bold;
+    padding: 6px;
+}
+</string>
+      </property>
+      <property name="showGrid">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="term1">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>190</y>
+        <width>441</width>
+        <height>151</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -139,15 +175,91 @@ QPushButton:pressed {
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_2">
-     <attribute name="title">
-      <string>Transcript</string>
-     </attribute>
-    </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
       <string>Add / Remove Courses</string>
      </attribute>
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="geometry">
+       <rect>
+        <x>730</x>
+        <y>110</y>
+        <width>421</width>
+        <height>641</height>
+       </rect>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>419</width>
+         <height>639</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="welcomeLabel_2">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>110</y>
+        <width>241</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Consolas,Courier New,monospace</family>
+        <pointsize>20</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 20pt;
+}</string>
+      </property>
+      <property name="text">
+       <string>Current Courses</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton">
+      <property name="geometry">
+       <rect>
+        <x>800</x>
+        <y>780</y>
+        <width>111</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_3">
+      <property name="geometry">
+       <rect>
+        <x>980</x>
+        <y>780</y>
+        <width>111</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Remove</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QLabel" name="welcomeLabel">
@@ -185,7 +297,7 @@ QPushButton:pressed {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1224</width>
+     <width>1212</width>
      <height>21</height>
     </rect>
    </property>
