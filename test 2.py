@@ -1,9 +1,12 @@
 import sqlite3
 from classses2 import admin, student,section,subject,instructor,Database
+# ahmad=student(id=2453089)
+# print(ahmad.display_info())
 # courses_db = Database("courses.db")
 # ronaldo = student("ronaldo",database=True)
 tariq = student(username="tariq", id=2430020)
-tariq.enroll_subject("BG")
+tariq.enroll_subject("EC")
+
 # print(tariq.all_conditions_met("BG"))
 # print(ronaldo.display_info())
 # section1= section("CU , CV")
