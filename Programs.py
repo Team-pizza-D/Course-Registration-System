@@ -361,17 +361,17 @@ biomedical_adding((biomedical_codes), (build_course_dict(biomedical_codes, biome
 
 ######################################
 # All courses:
-def all_courses(x1, y1, z1, p1, a1, a2, i1):
+def all_courses(x1, y1, z1, p1, a1, a2, i1, t1):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS courses')
     cr.execute('CREATE TABLE IF NOT EXISTS Courses (course_code TEXT, course_name TEXT, credit INTEGER, section TEXT, instructor INTEGER, capacity TEXT, time TEXT, prerequisites TEXT)')
     for i in range(len(x1)):
-        cr.execute('INSERT INTO Courses (course_code, course_name, credit, prerequisites, section, capacity, instructor) VALUES (?, ?, ?, ?, ?, ?, ?)',
-               (x1[i] , y1[i], z1[i], p1[i], a1[i], 25, i1[i]))
+        cr.execute('INSERT INTO Courses (course_code, course_name, credit, prerequisites, section, capacity, instructor, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+               (x1[i] , y1[i], z1[i], p1[i], a1[i], 25, i1[i], t1[i]))
     for i in range(len(x1)):
-        cr.execute('INSERT INTO Courses (course_code, course_name, credit, prerequisites, section, capacity, instructor) VALUES (?, ?, ?, ?, ?, ?, ?)',
-               (x1[i] , y1[i], z1[i], p1[i], a2[i], 25, i1[i]))
+        cr.execute('INSERT INTO Courses (course_code, course_name, credit, prerequisites, section, capacity, instructor, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+               (x1[i] , y1[i], z1[i], p1[i], a2[i], 25, i1[i], t1[i+74]))
     db.commit()
     db.close()
 
@@ -385,7 +385,6 @@ All_terms = All_Terms | Semi_Shared_Terms_Biomedical | Semi_Shared_Terms_Communi
 #=====================Classes-Times=========================#
 
 B = {}
-
 letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 count = 0
 SPC = 2   # how many sections there are for each course
@@ -396,7 +395,6 @@ for course in All_Courses:
         second = letters[count % 26]
         course_sections.append(first + second)
         count += 1
-
     B[course] = course_sections
 A = loop_dict_value(B)
 L = []
@@ -408,8 +406,8 @@ L2 = []
 for j in range(74):
     L1.append(L[j])
     L2.append(L[j+74])
-#============================================================#
 
+#============================================================#
 
 db = sqlite3.connect("Users.db")
 cr = db.cursor()
@@ -427,13 +425,6 @@ db.commit()
 db.close()
 
 #============================================================#
-
-all_courses(All_Courses,
-            build_course_dict(All_Courses,All_Names),
-            loop_dict_value(All_Credits),
-            loop_dict_value(All_Prerequisites), 
-            L1, L2, 
-            loop_dict_value(last_teacher_for_course))
 
 Times = {}
 Times2 = {}
@@ -453,11 +444,21 @@ for i in range(len(Times2)):
     sections_per_course.append(Y[i])
 db.commit()
 db.close()
-print(All_Courses)
 
+#============================================================#
+
+LL = []
+for i in range(len(L1)):
+    LL.append(L1[i])
+    LL.append(L2[i])
+### To assign each section for its time
+
+#============================================================#
+
+###                  Time      Days      Time      Days     Subject
 Classes_Times = ["9:00-9:50 , S T U", "8:00-9:15 , M W",  #MATH110
                  "10:00-10:50 , S T U", "9:30-10:45 , M W", # PHYS110
-                 "11:00-11:50 , S T U", "11:00-12:45 , M W", # CHEM110
+                 "11:00-11:50 , S T U", "11:00-12:15 , M W", # CHEM110
                  "9:00-9:50 , S T U", "8:00-9:15 , M W",     # CPIT110
                  "11:00-11:50 , S T U", "11:00-12:15 , M W",  # BIO110
                  "10:00-10:50 , S T U", "9:30-10:45 , M W", # STAT110
@@ -472,7 +473,7 @@ Classes_Times = ["9:00-9:50 , S T U", "8:00-9:15 , M W",  #MATH110
                  "6:00-6:50 , S T" , "6:00-6:50 , M W", # ARAB101
                  "9:00-10:50 , S T U" , "11:00-12:50 , S T U", # IE201
                  "9:30-10:45 , M W" , "10:00-10:50 , S T U", # IE255
-                 "11:00-1:50 , T" , "11:00-1:50 , M" # MENG102
+                 "11:00-1:50 , T" , "11:00-1:50 , M", # MENG102
                  "1:00-2:15 , M W" , "1:00-1:50 , S T U", # MATH207
                  "2:00-4:50 , S" , "2:00-4:50 , M", # PHYS281
                  "7:00-7:50 , S T" , "6:00-6:50 , M W", # ARAB201
@@ -484,24 +485,64 @@ Classes_Times = ["9:00-9:50 , S T U", "8:00-9:15 , M W",  #MATH110
                  "10:00-10:50 , S T U" , "10:30-11:45 , M W", # EE301
                  "11:00-12:50 , S T U" , "12:00-1:50 , S T U", #IE202
                  "11:00-11:50 , S T U" , "1:00-1:50 , S T U", # EE321 
-                 "1:00-1:50 , S T U" , "1:00-2:15 , M W" # EE311
+                 "1:00-1:50 , S T U" , "1:00-2:15 , M W", # EE311 
                  "11:00-11:50 , S T U" , "11:00-12:15 , M W", # IE256 
-                 "9:30-10:45 , S T U" , " 11:00-12:50 M W", # EE360
-                 "------------------" , "----------------", # EE366 
+                 "9:30-10:45 , S T U" , " 11:00-12:50 M W", # EE360 
+                 "8:00-8:50 , S T U" , "8:00-9:15 , M W", # EE366 
                  "5:00-5:50 , S T" , "5:00-5:50 , M W", # ISLS301
-                 "9:00-9:50 , M W" , "9:00-9:50 , S T", # EE499
-                 "5:00-5:50 , S T" , "5:00-5:50 , M W", # ISLS401
+                 "9:00-9:50 , M W" , "9:00-9:50 , S T", # EE499 
+                 "5:00-5:50 , S T" , "5:00-5:50 , M W", # ISLS401     
                  "10:00-10:50 , S T U" , "11:00-12:15 , M W", # EE390
-                 "10:00-10:50 , S T U" , "11:00-12:15 , M W", # COMM101
+                 "10:00-10:50 , S T U" , "11:00-12:15 , M W", # COMM101 
                  "9:00-9:50 , S T U" , "9:30-10:45 , M W", # EE331
                  "1:00-1:50 , S T U" , "1:00-2:15 , M W", # EE302 
                  "11:00-12:15 , S T U" , "11:00-12:50 , M W", # EE306
                  "10:00-10:50 , S T U" , "9:30-10:45 , M W", # EE332
-                 "1:00-1:50 , S T U" , "1:00-1:15 , M W" # IE331
-                 "10:00-10:50 , S T U" , "9:30-10:45 , M W", # EE312
+                 "1:00-1:50 , S T U" , "1:00-1:15 , M W", # IE331
+                 "10:00-10:50 , S T U" , "9:30-10:45 , M W", # EE312 
                  "11:00-11:50 , S T U" , "11:00-12:15 , M W", # EE351
                  "1:00-1:50 , S T U" , "1:00-2:15 , M W", # MEP261
                  "1:00-1:50 , S T U" , "1:00-2:15 , M W", # EE303
                  "1:00-1:50 , S T U" , "11:00-12:15 , M W", # EE341
-                 ""
+                 "10:00-10:50 , S T U" , "9:30-10:45", # EE442
+                 "11:00-11:50 , S T U" , "1:00-2:15 , M W", # EE441
+                 "10:00-10:50 , S T U" , "9:30-10:45", # EE404
+                 "11:00-11:50 , S T U" , "1:00-2:15 , M W", # EE451
+                 "9:00-9:50 , S T U" , "9:30-10:45 , M W", # EE405
+                 "11:00-11:50 , S T U" , "1:00-2:15 , M W", # EE453
+                 "11:00-11:50 , S T U" , "1:00-2:15 , M W", # EE454
+                 "1:00-1:50 , S T U" , "11:00-12:15 , M W", # EE305
+                 "9:00-9:50 , S T U" , "11:00-12:15 , M W", # EE364
+                 "8:00-8:50 , S T U" , "9:30-10:45 , M W", # EE361
+                 "9:00-9:50 , S T U" , "11:00-12:15 , M W", # EE367
+                 "10:00-10:50 , S T U" , "11:00-12:15 , M W", # EE460
+                 "9:00-9:50 , S T U" , "9:30-10:45 , M W", # EE462
+                 "11:00-11:50 , S T U" , "1:00-2:15 , M W", # EE463
+                 "10:00-10:50 , S T U" , "11:00-12:15 , M W", # EE421
+                 "1:00-1:50 , S T U" , "1:00-2:15 , M W", # EE423
+                 "9:00-9:50 , S T U" , "9:30-10:45 , M W", # EE413
+                 "11:00-11:50 , S T U" , "1:00-2:15 , M W", # EE425
+                 "10:00-10:50 , S T U" , "9:30-10:45 , M W", # BIO321
+                 "11:00-11:50 , S T U" , "2:30-3:20 , M W", # EE374
+                 "8:00-8:50 , S T U" , "11:00-12:15 , M W", # EE372
+                 "9:00-9:50 , S T U" , "9:30-10:45 , M W", # EE370
+                 "9:00-9:50 , S T U" , "9:30-10:45 , M W", # EE472
+                 "11:00-11:50 , S T U" , "1:00-2:15 , M W", # EE474
+                 "10:00-10:50 , S T U" , "11:00-12:15 , M W", # EE471
+                 "11:00-11:50 , S T U" , "1:00-2:15 , M W", # EE470
                 ]  
+#============================================================#
+
+Last_Dict = {}
+for i in range(len(L)):
+    Last_Dict[LL[i]] = Classes_Times[i]
+
+#============================================================#
+
+all_courses(All_Courses,
+            build_course_dict(All_Courses,All_Names),
+            loop_dict_value(All_Credits),
+            loop_dict_value(All_Prerequisites), 
+            L1, L2, 
+            loop_dict_value(last_teacher_for_course),
+            build_course_dict(L,Last_Dict))
