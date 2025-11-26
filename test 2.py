@@ -4,8 +4,8 @@ from classses2 import admin, student,section,subject,instructor,Database
 # print(ahmad.display_info())
 # courses_db = Database("courses.db")
 # ronaldo = student("ronaldo",database=True)
-tariq = student(username="tariq", id=2430020)
-tariq.enroll_subject("DS")
+# tariq = student(username="tariq", id=2430020)
+# tariq.enroll_subject("DS")
 # tariq = student(id=2430020)
 # print(tariq.is_existing())
 # print(tariq.display_info())
@@ -112,7 +112,13 @@ from classses2 import admin, student, Database, instructor
 # create_admin_table()
 # create_students_table()
 # from classes import user
-
+# bb = "ali ahmed"
+# z = bb.find(" ")
+# print(z)
+# new = ""
+# for i in range(z):
+#     new += bb[i]
+# print(new)
 
 # Create table if not already exists
 

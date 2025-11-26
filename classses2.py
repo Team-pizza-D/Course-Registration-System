@@ -120,7 +120,11 @@ class user:
         return email
     
     def generate_password(self):  # generates random password
-        password = str(self.username) + str(random.randint(100000, 999999))
+        m = self.username.find(" ")
+        first_name = ""
+        for i in range(m):
+            first_name += self.username[i]
+        password = str(first_name) + str(random.randint(100000, 999999))
         return password
     
         
