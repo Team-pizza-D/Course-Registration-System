@@ -467,19 +467,19 @@ class section(subject):
 # _______________________________________________________________________________________________________________
 
 class student(user):
-    def __init__(self,username=None,id = None,email=None,major=None,password=None,enrolled_subjects=None,completed_subjects=None,GPA=None,database=False):
+    def __init__(self,id=None,username = None,email=None,major=None,password=None,enrolled_subjects=None,completed_subjects=None,GPA=None,database=False):
         super().__init__(username, password, email, id)
         self.enrolled_subjects = enrolled_subjects if enrolled_subjects is not None else [] # list of section codes the student is currently enrolled in
         self.completed_subjects = completed_subjects if completed_subjects is not None else []  # list of subject codes the student has completed
         self.current_credits = 0 ### total credits of current enrolled subjects for checking max credits allowed per semester not current total subjects
         # self.email = f"{self.username}{self.Id}@kau.edu.sa" if email is None else email
-        majors_row=users_db.execute("SELECT major fROM students WHERE id = ?", (self.id,), fetchone=True)
-        if majors_row==None:
-            self.major=major
-        self.major=majors_row[0]
+        # majors_row=users_db.execute("SELECT major fROM students WHERE id = ?", (self.id,), fetchone=True)
+        # if majors_row==None:
+        #     self.major=major
+        # self.major=majors_row[0]
+        self.major = major
         if GPA is None:
             self.GPA = self.calculate_GPA()
-        print("DEBUG:", self.major, type(self.major))
         self.database = database
         ### set database to true if you want to insert this student into database upon creation
         ### eg. student = student("azad", database=True)
@@ -501,7 +501,9 @@ class student(user):
         #     self.email = row[2]
         #     self.major = row[4]
             pass ### I will do this later to select student data from database if database is false         
-
+    def return_id(self):
+        return self.id
+    
     def display_info(self):  # to display student information
         return super().display_info() + f", Major: {self.major}, GPA: {self.GPA} "
 
