@@ -322,7 +322,7 @@ class student(user):
         self.major=majors_row
         if GPA is None:
             self.GPA = self.calculate_GPA()
-
+        print("DEBUG:", self.major, type(self.major))
         self.database = database
         ### set database to true if you want to insert this student into database upon creation
         ### eg. student = student("azad", database=True)

@@ -385,7 +385,6 @@ All_terms = All_Terms | Semi_Shared_Terms_Biomedical | Semi_Shared_Terms_Communi
 #=====================Classes-Times=========================#
 
 B = {}
-
 letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 count = 0
 SPC = 2   # how many sections there are for each course
@@ -396,7 +395,6 @@ for course in All_Courses:
         second = letters[count % 26]
         course_sections.append(first + second)
         count += 1
-
     B[course] = course_sections
 A = loop_dict_value(B)
 L = []
@@ -408,8 +406,8 @@ L2 = []
 for j in range(74):
     L1.append(L[j])
     L2.append(L[j+74])
-#============================================================#
 
+#============================================================#
 
 db = sqlite3.connect("Users.db")
 cr = db.cursor()
@@ -453,10 +451,11 @@ LL = []
 for i in range(len(L1)):
     LL.append(L1[i])
     LL.append(L2[i])
-print(LL) ### To assign each section for its time
+### To assign each section for its time
 
 #============================================================#
 
+###                  Time      Days      Time      Days     Subject
 Classes_Times = ["9:00-9:50 , S T U", "8:00-9:15 , M W",  #MATH110
                  "10:00-10:50 , S T U", "9:30-10:45 , M W", # PHYS110
                  "11:00-11:50 , S T U", "11:00-12:15 , M W", # CHEM110
@@ -537,7 +536,6 @@ Classes_Times = ["9:00-9:50 , S T U", "8:00-9:15 , M W",  #MATH110
 Last_Dict = {}
 for i in range(len(L)):
     Last_Dict[LL[i]] = Classes_Times[i]
-print(Last_Dict)
 
 #============================================================#
 
