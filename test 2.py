@@ -4,16 +4,13 @@ from classses2 import admin, student,section,subject,instructor,Database
 # print(ahmad.display_info())
 # courses_db = Database("courses.db")
 # ronaldo = student("ronaldo",database=True)
-<<<<<<< HEAD
 tariq = student(username="tariq", id=2430020)
-tariq.enroll_subject("EC")
-=======
+tariq.enroll_subject("DS")
 # tariq = student(id=2430020)
 # print(tariq.is_existing())
 # print(tariq.display_info())
 # print(tariq.view_enrolled_subjects())
 # print(tariq.transcript())
->>>>>>> 5d116c0db3edc4695c6c84122941820b568e4629
 
 # print(tariq.all_conditions_met("BG"))
 # print(ronaldo.display_info())
