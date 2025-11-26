@@ -3,7 +3,11 @@ from classses2 import admin, student,section,subject,instructor,Database
 # courses_db = Database("courses.db")
 # ronaldo = student("ronaldo",database=True)
 # tariq = student(id=2430020)
+# print(tariq.is_existing())
 # print(tariq.display_info())
+# print(tariq.view_enrolled_subjects())
+# print(tariq.transcript())
+
 # print(tariq.all_conditions_met("BG"))
 # print(ronaldo.display_info())
 # section1= section("CU , CV")
@@ -15,9 +19,9 @@ from classses2 import admin, student,section,subject,instructor,Database
 from classses2 import admin, student, Database
 from classses2 import admin, student, Database, instructor
 
-ahmed = student(id="12345")
-print(ahmed.display_info())
-print(ahmed.view_enrolled_subjects())
+# ahmed = student(id="12345")
+# print(ahmed.display_info())
+# print(ahmed.view_enrolled_subjects())
 
 # print(("Aziz AA").strip())
 # nn = admin("Lionel Messi", database=True)

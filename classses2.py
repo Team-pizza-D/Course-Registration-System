@@ -57,14 +57,14 @@ class user:
          ### else generate new user with provided or generated data
 
         if self.is_existing():
-            try:
-                row = users_db.execute("SELECT username,password, email, FROM admins WHERE id = ? UNION SELECT username, email, status FROM instructors WHERE id = ? UNION SELECT username, email, status FROM students WHERE id = ?", (id, id, id), fetchone=True)
+            # try:
+                row = users_db.execute("SELECT username,password, email FROM admins WHERE id = ? UNION SELECT username, password,email FROM instructors WHERE id = ? UNION SELECT username, password, email FROM students WHERE id = ?", (id, id, id), fetchone=True)
                 self.username = row[0]
                 self.password = row[1]
                 self.email = row[2]
                 self.id = id
-            except sqlite3.Error as e:
-                print(f"Database error: {e}")
+            # except sqlite3.Error as e:
+            #     print(f"Database error: {e}")
         
         else:
             if username is None:
@@ -330,11 +330,11 @@ class student(user):
             try:
                 users_db.execute(
                     "INSERT INTO students (username, password, email, Id,major) VALUES (?, ?, ?, ?, ?)",
-                    (self.username, self.password, self.email, self.Id,self.major),
+                    (self.username, self.password, self.email, self.id,self.major),
                     commit=True,
                     )
             except sqlite3.IntegrityError:
-                print(f"Student with ID {self.Id} already exists in the database.")
+                print(f"Student with ID {self.id} already exists in the database.")
         # else:
         #     row=users_db.execute(
         #         "SELECT username, password, email, Id, major FROM students WHERE Id = ?", (self.id,), fetchone=True
@@ -353,7 +353,7 @@ class student(user):
         ### this function will be main function for student enrollment logic
         pass
         sec=section(section_name=section_code)
-        sec.enroll_student_in_section(self.Id)
+        sec.enroll_student_in_section(self.id)
 
     def drop_subject(self, section_code):  # to drop a subject section for the student
         ### must update enrolled_subjects list and database
@@ -362,6 +362,8 @@ class student(user):
     def view_enrolled_subjects(self):  # to view all enrolled subjects for the student
         row = users_db.execute("SELECT section FROM enrollments WHERE student_id = ?", (self.id,), fetchall=True)
         print(row)
+        if row is None or len(row) == 0:
+            return f"{self.id}, No enrolled subjects found"
         enrolled_sections = [r[0] for r in row]
         return enrolled_sections
 
@@ -433,6 +435,11 @@ class student(user):
     ### not sure if these all the methods needed for student class
 
     def transcript(self):  # to generate a transcript of completed subjects and grades
+        row = users_db.execute("SELECT course, Letter_grade FROM grades WHERE student_id = ?", (self.id,), fetchall=True)
+        if row==None or len(row)==0:
+            return f"{self.id}, No completed subjects found"
+        transcript = {r[0]: r[1] for r in row}
+        return transcript
         ### will be used later to print full academic record
         pass
         
