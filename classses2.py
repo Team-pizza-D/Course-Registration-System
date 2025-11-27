@@ -492,7 +492,7 @@ class student(user):
         self.current_credits = 0 ### total credits of current enrolled subjects for checking max credits allowed per semester not current total subjects
         # self.email = f"{self.username}{self.Id}@kau.edu.sa" if email is None else email
         majors_row=users_db.execute("SELECT major fROM students WHERE id = ?", (self.id,), fetchone=True)
-        if  self.is_existing():
+        if  self.is_student():
             self.major=majors_row[0]
         else:    
             self.major=major
@@ -551,6 +551,39 @@ class student(user):
                 course_name = enrolled_subjects.get(course_code, "Unknown Course")
                 all_enrolled[section] = (course_code, course_name)
         return all_enrolled
+    
+    def view_available_subjects(self):  # to view all available subjects for enrollment
+        if self.is_student():
+            row = users_db.execute("SELECT term,major FROM students WHERE id = ?", (self.id,), fetchone=True)
+            student_term = row[0]
+            student_major = row[1]
+            major_table_map = {
+                'Electrical communication and electronics engineering': "communication",
+                'Electrical computer engineering': "computer",
+                'Electrical power and machines engineering': "power",
+                'Electrical biomedical engineering': "biomedical"
+            }
+            major = major_table_map.get(student_major)
+            if major is None:
+                return f"Major '{student_major}' not recognized."
+            
+            row = courses_db.execute(f"SELECT course_code FROM {major} WHERE terms = ?", (student_term,), fetchall=True)
+            if row is None or len(row) == 0:
+                return f"Term {student_term}, No subjects found for major {student_major}"
+            subjects = [r[0] for r in row]
+            row = courses_db.execute("SELECT section FROM Courses WHERE course_code IN ({seq})".format(seq=','.join(['?']*len(subjects))), tuple(subjects), fetchall=True)
+            available_sections = [r[0] for r in row]
+            enrolled_row = users_db.execute("SELECT section FROM enrollments WHERE student_id = ?", (self.id,), fetchall=True)
+            enrolled_sections = [r[0] for r in enrolled_row]
+            available_sections = [sec for sec in available_sections if sec not in enrolled_sections]
+            all_available = {}
+            for section in available_sections:
+                course_row = courses_db.execute("SELECT course_code FROM Courses WHERE section = ?", (section,), fetchone=True)
+                if course_row:
+                    course_code = course_row[0]
+                    all_available[section] = course_code
+            return all_available
+
 
         ### this should show all current sections that student enrolled in
         pass
@@ -731,6 +764,9 @@ class admin(user):
             subjects = [r[0] for r in row]
             row = courses_db.execute("SELECT section FROM Courses WHERE course_code IN ({seq})".format(seq=','.join(['?']*len(subjects))), tuple(subjects), fetchall=True)
             available_sections = [r[0] for r in row]
+            enrolled_row = users_db.execute("SELECT section FROM enrollments WHERE student_id = ?", (id,), fetchall=True)
+            enrolled_sections = [r[0] for r in enrolled_row]
+            available_sections = [sec for sec in available_sections if sec not in enrolled_sections]
             all_available = {}
             for section in available_sections:
                 course_row = courses_db.execute("SELECT course_code FROM Courses WHERE section = ?", (section,), fetchone=True)

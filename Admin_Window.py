@@ -1,8 +1,6 @@
 import sys
 import os
-from PyQt5.QtWidgets import (
-    QApplication, QMainWindow, QMessageBox, QAbstractItemView,QHeaderView , QTableWidgetItem
-)
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QAbstractItemView,QHeaderView , QTableWidgetItem
 from PyQt5 import uic
 from PyQt5.QtCore import Qt
 
@@ -89,15 +87,11 @@ class AdminWindow(QMainWindow):
         FName = table.item(row, 1).text()
         LName = table.item(row, 2).text()                   #labels equivalent to table fields
         Email = table.item(row, 3).text()
-        Status = table.item(row, 4).text()
 #--------------------------------------------------------------------------------------------------------------------------
         self.Tab1_StudentID.setText(StudentID)
         self.Tab1_FirstName.setText(FName)
         self.Tab1_LastName.setText(LName)               #fills input fields with selected student data
         self.Tab1_Email.setText(Email)
-        index = self.Tab1_Status.findText(Status)
-        if index >= 0:
-            self.Tab1_Status.setCurrentIndex(index)
 #--------------------------------------------------------------------------------------------------------------------------
     # Tab 1 required inputs for search
     def Tab1_Search(self):
@@ -111,7 +105,6 @@ class AdminWindow(QMainWindow):
         self.Tab1_FirstName.clear()
         self.Tab1_LastName.clear()
         self.Tab1_Email.clear()
-        self.Tab1_Status.setCurrentIndex(0)  
 
 
 
@@ -132,11 +125,11 @@ class AdminWindow(QMainWindow):
 
         self.Tab2_SubjectsTable.setRowCount(0)
 
-        for row, (code, name, section) in enumerate(subjects):  #####waiting for database connection to load subjects
-            self.Tab2_SubjectsTable.insertRow(row)
-            self.Tab2_SubjectsTable.setItem(row, 0, QTableWidgetItem(code))
-            self.Tab2_SubjectsTable.setItem(row, 1, QTableWidgetItem(name))
-            self.Tab2_SubjectsTable.setItem(row, 2, QTableWidgetItem(section))
+        # for row, (code, name, section) in enumerate(subjects):  #####waiting for database connection to load subjects
+        #     self.Tab2_SubjectsTable.insertRow(row)
+        #     self.Tab2_SubjectsTable.setItem(row, 0, QTableWidgetItem(code))
+        #     self.Tab2_SubjectsTable.setItem(row, 1, QTableWidgetItem(name))
+        #     self.Tab2_SubjectsTable.setItem(row, 2, QTableWidgetItem(section))
 
 
     def Tab2_SelectSubject(self):
