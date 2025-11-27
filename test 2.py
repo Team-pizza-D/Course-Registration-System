@@ -1,6 +1,27 @@
 import sqlite3
-from classses2 import admin, student,section,subject,instructor 
+from classses2 import admin, student,section,subject,instructor,Database
+# ahmad=student(id=2453089)
+# print(ahmad.display_info())
+# courses_db = Database("courses.db")
+# ronaldo = student("ronaldo",database=True)
+# tariq = student( id=2430020)
+# tariq.enroll_subject("AW")
+# tariq.enroll_subject("AV")
+# tariq.enroll_subject("AX")
+# print(tariq.view_enrolled_subjects())
+# Ahmed = admin(id=78640)
+# print(Ahmed.display_student_in_section("AW"))
+# print(Ahmed.find_student(tariq))
+# print(Ahmed.find_sections("EE250"))
+# print(Ahmed.view_all_subjects("2430020"))
+# tariq = student(id=2430020)
+# print(tariq.is_existing())
+# print(tariq.display_info())
+# print(tariq.view_enrolled_subjects())
+# print(tariq.transcript())
 
+# print(tariq.all_conditions_met("BG"))
+# print(ronaldo.display_info())
 # section1= section("CU , CV")
 # okay,mass= section1.prerequisites_met("2430020")
 # print(okay)
@@ -9,6 +30,10 @@ from classses2 import admin, student,section,subject,instructor
 # print(mass)
 from classses2 import admin, student, Database
 from classses2 import admin, student, Database, instructor
+
+# ahmed = student(id="12345")
+# print(ahmed.display_info())
+# print(ahmed.view_enrolled_subjects())
 
 # print(("Aziz AA").strip())
 # nn = admin("Lionel Messi", database=True)
@@ -95,7 +120,13 @@ from classses2 import admin, student, Database, instructor
 # create_admin_table()
 # create_students_table()
 # from classes import user
-
+# bb = "ali ahmed"
+# z = bb.find(" ")
+# print(z)
+# new = ""
+# for i in range(z):
+#     new += bb[i]
+# print(new)
 
 # Create table if not already exists
 
@@ -122,8 +153,8 @@ cr = db.cursor()
 # cr.execute("DELETE FROM admins")
 # computer = cr.fetchall()
 # print(computer)
-cr.execute("DROP TABLE IF EXISTS instructors")
-cr.execute("CREATE TABLE IF NOT EXISTS instructors (id INTEGER,username TEXT, password TEXT, email TEXT, status TEXT, course_code TEXT, section TEXT)")
+# cr.execute("DROP TABLE IF EXISTS instructors")
+# cr.execute("CREATE TABLE IF NOT EXISTS instructors (id INTEGER,username TEXT, password TEXT, email TEXT, status TEXT, course_code TEXT, section TEXT)")
 # power = cr.fetchall()
 # print(power)
 # cr.execute("SELECT course_code,terms FROM communication")
