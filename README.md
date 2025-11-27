@@ -39,24 +39,27 @@ README.md
 python main.py()
 ```
 Follow the on-screen menu enter University ID and password then press Login.
-.
+
 
 ---
 
 ## File Descriptions
 **main.py**	Entry point of the program. Displays the main menu and connects all parts of the project.
 
-**Programs.py**	 
+**Programs.py**	 It contains all the data about the transcripts such as, courses, prerequists, credits, and terms.
 
-**GUI.py**	
+**GUI.py**	It contains all code for the GUI interfaces.
 
-**Users.py**	
+**Users.py**	It contains all code for the users and connecting it to Classes.
 
-**Classes.py**	
+**Classes.py**	It has all the classes the control the whole project. It connects classes, DataBase, and the GUI to each other.
 
 **README.md**	Documentation file describing the project, team members,and usage instructions.
 
-Example Program Output
+---
+
+
+## Example Program Output
 ```bash
 Welcome to Multi-Mode Calculator
 1. Standard Mode
@@ -106,39 +109,36 @@ Converter Mode
 ---
 ## Challenges Faced
 
-### DataBase
+### 1-DataBase
 
-Learn everything from the beginning 
+Learn everything from the beginning
+
 Understand what is the DataBase and how to creat it
+
 Learn how to create multiple table and columns
+
 Learn how to insert data in the tables
+
 Learn how to connect the tables with the Classes and manage it
 
-### Classes
+
+### 2-Classes
 
 Understand what is the Classes and how to creat it
 
-### The GUI
+Learn how to connect the Classes with the DataBase and the GUI and manage it
+
+
+### 3-The GUI
 
 Understand what is the GUI and how to creat it
+Learn how to connect the GUI with the Classes and manage it
 
 
 
-
-Learn new things such as bitwise 
-
-Handling diffrent conversion formulas
-
-Managing input validation to prevent crashes from invalid user input.
-
-Linking multiple modules together while maintaining clean and readable code.
-
-Handling user navigation between modes efficiently.
-
-Testing edge cases such as division by zero and invalid units.
 
 ## Conclusion
 This project demonstrates teamwork, modular programming, and data validation in Python.
 Each part was developed by two team members to ensure the quality of the work.
 The result is a user-friendly Course-Registration-System that is organized, functional, and easy to extend in the future.
-This project has improved our teamwork skills.
+This project has improved our teamwork skills. 
