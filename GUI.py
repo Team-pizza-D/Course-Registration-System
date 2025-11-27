@@ -32,11 +32,28 @@ class LoginWindow(QMainWindow):
 
     # __________ DATABASE CHECKS __________
 
-    def check_student(self, uni_id):
-        Student = student(id=uni_id)
-        if student.is_student():
-            return True
-        return False
+    def check_student(self, uni_id, password):
+        try:
+            # Create a student object using the ID
+            s = student(id=uni_id)
+
+            # Check if the ID belongs to a real student
+            if not s.is_student():
+                return None  # Not a student
+
+            # Verify password using existing function in user class
+            if not s.correct_password(password):
+                return None  # Password wrong
+
+            # Fetch username and major from DB
+            name = s.username
+            major = s.major
+
+            return (uni_id, name, major)
+
+        except:
+            return None
+
     
     def check_admin(self, uni_id):
         pass
@@ -44,22 +61,25 @@ class LoginWindow(QMainWindow):
     # __________ LOGIN LOGIC __________
 
     def loginfunction(self):
-        UniID = self.IDlineEdit.text()
-        password = self.PasslineEdit.text()
+        UniID = self.IDlineEdit.text().strip()
+        password = self.PasslineEdit.text().strip()
 
-        admin = self.check_admin(UniID)
-        student = self.check_student(UniID)
+        # Check student login using functions from classses2.py
+        student_data = self.check_student(UniID, password)
 
-        if admin:
-            self.openAdminWindow()
-            return
-
-        if student:
-            sid, sname, smajor = student
+        if student_data:
+            sid, sname, smajor = student_data
             self.openStudentWindow(sid, sname, smajor)
             return
 
+        # Admin login (you said you will implement it later)
+        admin_data = self.check_admin(UniID)
+        if admin_data:
+            self.openAdminWindow()
+            return
+
         QtWidgets.QMessageBox.warning(self, "Login Failed", "Invalid ID or Password.")
+
 
     def openStudentWindow(self, sid, sname, smajor):
         self.hide()
@@ -129,7 +149,18 @@ class StudentWindow(QtWidgets.QMainWindow):
         # Clean look
         self.GpaTable.verticalHeader().setVisible(False)
         self.GpaTable.horizontalHeader().setStretchLastSection(True)
+    
+    def transcript_function(self):
+        pass
 
+
+
+
+
+
+
+
+    
 # _____________________________________________________________
 #                        ADMIN WINDOW
 # _____________________________________________________________
