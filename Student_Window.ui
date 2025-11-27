@@ -175,12 +175,22 @@ QLineEdit::focus
         }</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
       <string>Current Schedule</string>
      </attribute>
+     <widget class="QTableWidget" name="CurrentSchTable">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>40</y>
+        <width>1131</width>
+        <height>721</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
@@ -307,7 +317,7 @@ QScrollBar::sub-page:horizontal {
       <widget class="QWidget" name="scrollAreaWidgetContents">
        <property name="geometry">
         <rect>
-         <x>-171</x>
+         <x>0</x>
          <y>0</y>
          <width>1330</width>
          <height>569</height>
@@ -584,7 +594,7 @@ QScrollBar::sub-page:horizontal {
      <rect>
       <x>20</x>
       <y>20</y>
-      <width>431</width>
+      <width>1041</width>
       <height>71</height>
      </rect>
     </property>

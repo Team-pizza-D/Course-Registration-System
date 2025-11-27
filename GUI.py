@@ -85,6 +85,7 @@ class LoginWindow(QMainWindow):
         self.hide()
         self.main_window = StudentWindow(sid, sname, smajor)
         self.main_window.show()
+        
 
 
 # _____________________________________________________________
@@ -114,8 +115,9 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.load_info_table()
         # Load transcript tables
         self.load_transcript_tables()
+      
 
-        
+
     def load_info_table(self):
         # Prepare table
         self.infoTable.setColumnCount(3)
@@ -153,6 +155,7 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.GpaTable.horizontalHeader().setStretchLastSection(True)
     
     def load_transcript_tables(self):
+
         # Get dictionary: { course_code : (term_number, grade) }
         transcript = self.student_obj.transcript()
 
@@ -213,10 +216,7 @@ class StudentWindow(QtWidgets.QMainWindow):
             # Adjust columns
             table.horizontalHeader().setStretchLastSection(True)
             table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
-
-
-
-
+    
 # _____________________________________________________________
 #                        ADMIN WINDOW
 # _____________________________________________________________
