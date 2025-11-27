@@ -663,25 +663,16 @@ class student(user):
         if row is None or len(row) == 0:
             return f"{self.id}, No enrolled subjects found"
         enrolled_sections = [r[0] for r in row]
-        row = courses_db.execute("SELECT course_code,time FROM Courses WHERE section IN ({seq})".format(seq=','.join(['?']*len(enrolled_sections))), tuple(enrolled_sections), fetchall=True)
-        enrolled_subjects = {r[0]: r[1] for r in row}
+        row = courses_db.execute("SELECT course_code,course_name,time FROM Courses WHERE section IN ({seq})".format(seq=','.join(['?']*len(enrolled_sections))), tuple(enrolled_sections), fetchall=True)
+        enrolled_subjects = {r[0]: (r[1], r[2]) for r in row}
         all_enrolled = {}
         for section in enrolled_sections:
             course_row = courses_db.execute("SELECT course_code FROM Courses WHERE section = ?", (section,), fetchone=True)
             if course_row:
                 course_code = course_row[0]
-                time_info = enrolled_subjects.get(course_code, "No Time Info")
-                all_enrolled[section] = (course_code, time_info)
+                course_info = enrolled_subjects.get(course_code, ("Unknown Course", "No Time Info"))
+                all_enrolled[section] = (course_code, course_info[0], course_info[1])
         return all_enrolled
-        # enrolled_subjects = {r[0]: (r[1], r[2]) for r in row}
-        # all_enrolled = {}
-        # for section in enrolled_sections:
-        #     course_row = courses_db.execute("SELECT course_code FROM Courses WHERE section = ?", (section,), fetchone=True)
-        #     if course_row:
-        #         course_code = course_row[0]
-        #         course_info = enrolled_subjects.get(course_code, ("Unknown Course", "No Time Info"))
-        #         all_enrolled[section] = (course_code, course_info[0], course_info[1])
-        # return all_enrolled
     
     def view_available_subjects(self):  # to view all available subjects for enrollment
         if self.is_student():
