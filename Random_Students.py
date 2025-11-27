@@ -1162,7 +1162,7 @@ PLAN_BY_MAJOR = {
 
 def insert_grades_for_student(student_id: str, major: str, current_term: int):
     plan = PLAN_BY_MAJOR[major]
-    completed_courses = [c for (c, sem) in plan if sem <= current_term]
+    completed_courses = [c for (c, sem) in plan if sem < current_term]
 
     rows = []
     for course in completed_courses:
