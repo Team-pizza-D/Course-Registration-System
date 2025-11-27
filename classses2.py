@@ -296,6 +296,10 @@ class section(subject):
         if section_subject_row==None:
             return False , f"Section {self.section_name} not found"
         section_subject_code= section_subject_row[0].strip()
+
+        the_subject= subject(section_subject_code.strip())
+        if the_subject.subject_term > student_term:
+            return False , f"{section_subject_code} is not in the plan fore the term number {student_term}." 
         
 
         if The_id.major.strip()=="Electrical communication and electronics engineering":
@@ -347,6 +351,8 @@ class section(subject):
                 else:
                     prerequisites=prereq_str.split(",")
 
+                   
+
         if prerequisites==None:
             return False , f"Section {self.section_name} not in study plan of {The_id.major}" 
         elif str(prerequisites).strip()=="":
@@ -363,9 +369,7 @@ class section(subject):
             if prereq not in student_completed_subjects:
                 return False , f"Prerequisite {prereq} not completed."
             
-        the_subject= subject(section_subject_code.strip())
-        if the_subject.subject_term > student_term:
-            return False , f"{section_subject_code} is not in the plane fore the term number {student_term}."
+      
         return True , "All prerequisites met."    
 
     def student_is_existing(self, student_id):  # to check if student is already enrolled in the section
@@ -392,7 +396,15 @@ class section(subject):
                 return True , f"Student with ID {student_id} is already enrolled in section {sec} for subject {self.subject}."
         return False , f""
         ### I will need to inrolle some students in some sections to be able to do this 
-        pass    
+        pass
+    def already_taken_subject(self, student_id):  # to check if student has already completed the subject
+        row= users_db.execute("SELECT course FROM grades WHERE student_id = ?", (student_id,), fetchall=True)
+        completed_courses = [r[0] for r in row]
+        if self.subject in completed_courses:
+            return True
+        else:
+            return False
+           
 
     def all_conditions_met(self,student_id): # to check if all conditions are met for enrollment
 
@@ -402,6 +414,8 @@ class section(subject):
             return False , f"student with ID {student_id} is already enrolled in section {self.section_name}"
         if not self.section_is_existing():
             return False , f"section {self.section_name} does not exist"
+        if self.already_taken_subject(student_id):
+            return False , f"student with ID {student_id} has already completed subject {self.subject}"
         okay,message= self.one_section_for_subject(student_id)
         if  okay:
             return False , message
@@ -477,11 +491,12 @@ class student(user):
         self.completed_subjects = completed_subjects if completed_subjects is not None else []  # list of subject codes the student has completed
         self.current_credits = 0 ### total credits of current enrolled subjects for checking max credits allowed per semester not current total subjects
         # self.email = f"{self.username}{self.Id}@kau.edu.sa" if email is None else email
-        # majors_row=users_db.execute("SELECT major fROM students WHERE id = ?", (self.id,), fetchone=True)
-        # if majors_row==None:
-        #     self.major=major
-        # self.major=majors_row[0]
-        self.major = major
+        majors_row=users_db.execute("SELECT major fROM students WHERE id = ?", (self.id,), fetchone=True)
+        if  self.is_existing():
+            self.major=majors_row[0]
+        else:    
+            self.major=major
+        
         if GPA is None:
             self.GPA = self.calculate_GPA()
         self.database = database
