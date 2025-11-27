@@ -256,27 +256,114 @@ class section(subject):
         pass
 
     def has_time_conflict(self, student_id):  # to check time conflict with student's schedule
-        self.section_time=courses_db.execute("SELECT time FROM Courses WHERE section = ?",(self.section_name,),fetchone=True)
-        self.section_time=self.section_time[0].strip()
-        student_schedule_rows= self.student_in_section_db.execute("SELECT section FROM enrollments WHERE student_id = ?", (student_id,), fetchall=True)
-        student_schedules = []
-        for row in student_schedule_rows:
-            sec_time = courses_db.execute("SELECT time FROM Courses WHERE section = ?", (row[0],), fetchone=True)
-            if sec_time:
-                student_schedules.append(sec_time[0].strip())
-        for sched in student_schedules:
-            if sched == self.section_time:
-                return True
-        return False
-        ### I will need to inrolle some students in some sections to be able to check time conflict fartheremore Data base has to add more sections 
+        section_time_list=[]
+        time_row=courses_db.execute("SELECT time FROM Courses WHERE section = ?", (self.section_name,), fetchone=True)
+        time= time_row[0]
+        times= time.split(",")
+        day= times[1].strip()
+        class_time= times[0].strip()
+        class_time= class_time.split("-")
+        print(class_time)
+        start_time=class_time[0].strip().split(":")
+        end_time=class_time[1].strip().split(":")
+        start_time_hour=int(start_time[0])
+        end_time_hour=int(end_time[0])
+        start_time_minute=int(start_time[1])
+        end_time_minute=int(end_time[1])
+        if start_time_hour>end_time_hour:
+            end_time_hour+=12
+        print(start_time_hour)
+        print(end_time_hour)
+        print(start_time_minute)
+        print(end_time_minute)
+        if start_time_hour == end_time_hour:
+            end_time_hour+= (end_time_minute- start_time_minute)/100
+        if start_time_hour  < end_time_hour:
+            diff= end_time_hour - start_time_hour
+            if diff==1:
+                if start_time_minute < end_time_minute:
+                    end_time_hour =start_time_hour +0.60+((end_time_minute-start_time_minute)/100)
+                else:
+                    end_time_hour =start_time_hour +0.60-((start_time_minute-end_time_minute)/100)    
+            if diff==2:
+                if start_time_minute < end_time_minute:
+                    end_time_hour =start_time_hour +1.60+((end_time_minute-start_time_minute)/100)
+                else:
+                    end_time_hour =start_time_hour +1.60-((start_time_minute-end_time_minute)/100)
+            if diff==3:
+                if start_time_minute < end_time_minute:
+                    end_time_hour =start_time_hour +2.60+((end_time_minute-start_time_minute)/100)
+                else:
+                    end_time_hour =start_time_hour +2.60-((start_time_minute-end_time_minute)/100)  
+        start_time_hour*=100
+        end_time_hour*=100
+        start_time_hour=int(start_time_hour)
+        end_time_hour=int(end_time_hour)
+        print(start_time_hour)
+        print(end_time_hour)                  
+
+                    
+        for i in range(start_time_hour, end_time_hour ,5): # using 1 as a stip would be more accurate but would create a very long list, based on data base design used 5 should be enough
+            time_loop= (i+5)/100
+            section_time_list.append(time_loop)
+        print(section_time_list)    
+
+        schedule_row= users_db.execute("SELECT time FROM enrollments WHERE student_id = ?", (student_id,), fetchall=True) 
+        if schedule_row is None or len(schedule_row)==0: 
+            return False , f"No time conflict with student's schedule."
+        for t in schedule_row:
+            student_time= t[0]
+            student_times= student_time.split(",")
+            student_day= student_times[1].strip()
+            student_class_time= student_times[0].strip()
+            student_class_time= student_class_time.split("-")
+            student_start_time=student_class_time[0].strip().split(":")
+            student_end_time=student_class_time[1].strip().split(":")
+            student_start_time_hour=int(student_start_time[0])
+            student_end_time_hour=int(student_end_time[0])
+            student_start_time_minute=int(student_start_time[1])
+            student_end_time_minute=int(student_end_time[1])
+            if student_start_time_hour>student_end_time_hour:
+                student_end_time_hour+=12
+            if student_start_time_hour == student_end_time_hour:
+                student_end_time_hour+= (student_end_time_minute- student_start_time_minute)/100
+            if student_start_time_hour  < student_end_time_hour:
+                diff= student_end_time_hour - student_start_time_hour
+                if diff==1:
+                    if student_start_time_minute < student_end_time_minute:
+                        student_end_time_hour =student_start_time_hour +0.60+((student_end_time_minute-student_start_time_minute)/100)
+                    else:
+                        student_end_time_hour =student_start_time_hour +0.60-((student_start_time_minute-student_end_time_minute)/100)    
+                if diff==2:
+                    if student_start_time_minute < student_end_time_minute:
+                        student_end_time_hour =student_start_time_hour +1.60+((student_end_time_minute-student_start_time_minute)/100)
+                    else:
+                        student_end_time_hour =student_start_time_hour +1.60-((student_start_time_minute-student_end_time_minute)/100)
+                if diff==3:
+                    if student_start_time_minute < student_end_time_minute:
+                        student_end_time_hour =student_start_time_hour +2.60+((student_end_time_minute-student_start_time_minute)/100)
+                    else:
+                        student_end_time_hour =student_start_time_hour +2.60-((student_start_time_minute-student_end_time_minute)/100)  
+            student_start_time_hour*=100
+            student_end_time_hour*=100
+            student_start_time_hour=int(student_start_time_hour)
+            student_end_time_hour=int(student_end_time_hour)
+            for i in range(student_start_time_hour, student_end_time_hour ,5): # using 1 as a stip would be more accurate but would create a very long list, based on data base design used 5 should be enough
+                student_time_loop= (i+5)/100
+                if day==student_day:
+                    if student_time_loop in section_time_list:
+                        return True ,f"Time conflict with student's schedule on {t}"
+        return False , f"No time conflict with student's schedule."
+                    
+
+
+
         
+        
+        ### I will need to inrolle some students in some sections to be able to check time conflict fartheremore Data base has to add more sections 
+        pass
 
     def prerequisites_met(self, student_id,):  # to check if student meets prerequisites
-        
-        try:
-            student_id = int(student_id)
-        except: 
-            return False , "Student ID must be an integer."
         The_id= student(id=student_id)
         row1=users_db.execute("SELECT course , letter_grade FROM grades WHERE student_id = ?", (The_id.id,), fetchall=True)
         students_taken_subject_with_grades={}
@@ -424,21 +511,23 @@ class section(subject):
         okay , message =  self.prerequisites_met(student_id) ### this function must return tuple (bool,str)
         if not okay:
             return False , message
-        # if self.has_time_conflict(student_id):
-        #     return False, f"Time conflict with student's schedule."
+        okay , message= self.has_time_conflict(student_id) ### this function must return tuple (bool,str)
+        if  okay:
+            return False, message
         return True , f"All conditions met for enrollment."
     
     def enroll_student_in_section(self, student_id):  # to enroll a student in the section for data only (admin use only)
         okay , message = self.all_conditions_met(student_id)
         if not okay:
             return False , message
-        row=courses_db.execute("SELECT instructor, course_code FROM Courses WHERE section = ?", (self.section_name,), fetchone=True)
+        row=courses_db.execute("SELECT instructor, course_code, time FROM Courses WHERE section = ?", (self.section_name,), fetchone=True)
         self.instructor=row[0]
         course_code=row[1]
+        time=row[2]
         student_name_row=users_db.execute("SELECT username FROM students WHERE id = ?", (student_id,), fetchone=True)
         student_name= student_name_row[0]
 
-        self.student_in_section_db.execute("INSERT INTO enrollments (student_id, student_name, section,instructor,course) VALUES (?, ?, ?, ?,?)", (student_id, student_name, self.section_name, self.instructor,course_code), commit=True)
+        self.student_in_section_db.execute("INSERT INTO enrollments (student_id, student_name, section,instructor,course,time) VALUES (?, ?, ?, ?,?,?)", (student_id, student_name, self.section_name, self.instructor,course_code,time), commit=True)
         self.enrolled_students.append(f"{student_id} - {student_name}")
         self.student_id_in_section.append(student_id)
         self.student_name_in_section.append(student_name)
