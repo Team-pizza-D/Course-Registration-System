@@ -115,9 +115,10 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.load_info_table()
         # Load transcript tables
         self.load_transcript_tables()
+        # Load current schedule
+        self.load_current_schedule()
+
       
-
-
     def load_info_table(self):
         # Prepare table
         self.infoTable.setColumnCount(3)
@@ -217,14 +218,63 @@ class StudentWindow(QtWidgets.QMainWindow):
             table.horizontalHeader().setStretchLastSection(True)
             table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
     
-# _____________________________________________________________
-#                        ADMIN WINDOW
-# _____________________________________________________________
-class AdminWindow(QtWidgets.QMainWindow):
-    def __init__(self):
-        super().__init__()
-        ui_path = os.path.join(os.path.dirname(__file__), "Admin_Window.ui")
-        uic.loadUi(ui_path, self)
+    def load_current_schedule(self):
+        table = self.CurrentSchTable
+        table.clear()
+
+        # Set correct columns
+        table.setColumnCount(4)
+        table.setHorizontalHeaderLabels(["Course Code", "Course Name", "Days", "Time"])
+        table.verticalHeader().setVisible(False)
+
+        # Get all enrolled subjects from class
+        schedule = self.student_obj.view_enrolled_subjects()
+
+        # If returned string → no subjects
+        if isinstance(schedule, str):
+            table.setRowCount(0)
+            return
+
+        table.setRowCount(len(schedule))
+
+        row = 0
+        for section, (course_code, course_name, time_days) in schedule.items():
+            # Parse "9:00-9:50 , S T U"
+            time_part, days_part = time_days.split(",")
+            time_part = time_part.strip()
+            days_part = days_part.strip()
+
+            # Insert into table
+            item_code = QtWidgets.QTableWidgetItem(course_code)
+            item_name = QtWidgets.QTableWidgetItem(course_name)
+            item_days = QtWidgets.QTableWidgetItem(days_part)
+            item_time = QtWidgets.QTableWidgetItem(time_part)
+
+            # Center text
+            for item in [item_code, item_name, item_days, item_time]:
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+
+            table.setItem(row, 0, item_code)
+            table.setItem(row, 1, item_name)
+            table.setItem(row, 2, item_days)
+            table.setItem(row, 3, item_time)
+
+            row += 1
+
+        # Stretch columns
+        table.horizontalHeader().setStretchLastSection(True)
+        table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+
+
+
+    # _____________________________________________________________
+    #                        ADMIN WINDOW
+    # _____________________________________________________________
+    class AdminWindow(QtWidgets.QMainWindow):
+        def __init__(self):
+            super().__init__()
+            ui_path = os.path.join(os.path.dirname(__file__), "Admin_Window.ui")
+            uic.loadUi(ui_path, self)
 
 
 # _____________________________________________________________
