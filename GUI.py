@@ -4,9 +4,8 @@ import sqlite3
 from PyQt5 import uic, QtWidgets, QtCore
 from PyQt5.QtWidgets import QApplication, QMainWindow, QShortcut
 from PyQt5.QtGui import QKeySequence
-from classses2 import student
+from classses2 import Database,  student, admin, user, subject, section, instructor
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "Users.db")
 
 
 class LoginWindow(QMainWindow):
@@ -33,35 +32,14 @@ class LoginWindow(QMainWindow):
 
     # __________ DATABASE CHECKS __________
 
-    def check_student(self, uni_id, password):
-        try:
-            conn = sqlite3.connect(DB_PATH)
-            cur = conn.cursor()
-            cur.execute(
-                "SELECT id, username, major FROM students WHERE id=? AND password=?",
-                (uni_id, password)
-            )
-            result = cur.fetchone()
-            conn.close()
-            return result   # (id, name, major)
-        except Exception as e:
-            QtWidgets.QMessageBox.critical(self, "Database Error", str(e))
-            return None
-
-    def check_admin(self, uni_id, password):
-        try:
-            conn = sqlite3.connect(DB_PATH)
-            cur = conn.cursor()
-            cur.execute(
-                "SELECT Id FROM admins WHERE Id=? AND password=?",
-                (uni_id, password)
-            )
-            result = cur.fetchone()
-            conn.close()
-            return result is not None
-        except Exception as e:
-            QtWidgets.QMessageBox.critical(self, "Database Error", str(e))
-            return False
+    def check_student(self, uni_id):
+        Student = student(id=uni_id)
+        if student.is_student():
+            return True
+        return False
+    
+    def check_admin(self, uni_id):
+        pass
 
     # __________ LOGIN LOGIC __________
 
@@ -69,8 +47,8 @@ class LoginWindow(QMainWindow):
         UniID = self.IDlineEdit.text()
         password = self.PasslineEdit.text()
 
-        admin = self.check_admin(UniID, password)
-        student = self.check_student(UniID, password)
+        admin = self.check_admin(UniID)
+        student = self.check_student(UniID)
 
         if admin:
             self.openAdminWindow()
