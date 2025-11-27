@@ -112,6 +112,8 @@ class StudentWindow(QtWidgets.QMainWindow):
 
         # Load student info into table
         self.load_info_table()
+        # Load transcript tables
+        self.load_transcript_tables()
 
         
     def load_info_table(self):
@@ -150,17 +152,71 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.GpaTable.verticalHeader().setVisible(False)
         self.GpaTable.horizontalHeader().setStretchLastSection(True)
     
-    def transcript_function(self):
-        pass
+    def load_transcript_tables(self):
+        # Get dictionary: { course_code : (term_number, grade) }
+        transcript = self.student_obj.transcript()
+
+        if isinstance(transcript, str):
+            print(transcript)
+            return
+
+        # Organize by term
+        terms_dict = {i: [] for i in range(1, 11)}
+
+        for course_code, (term, grade) in transcript.items():
+            if isinstance(term, int) and 1 <= term <= 10:
+                terms_dict[term].append((course_code, grade))
+
+        # INSERT DATA INTO EACH TABLE
+        for term in range(1, 11):
+            # Find table inside scrollAreaWidgetContents
+            table = self.scrollAreaWidgetContents.findChild(
+                QtWidgets.QTableWidget,
+                f"term{term}"
+            )
+
+            if table is None:
+                print(f"[Error] Table term{term} not found.")
+                continue
+
+            # Determine suffix (st, nd, rd, th)
+            if term == 1:
+                suffix = "st"
+            elif term == 2:
+                suffix = "nd"
+            elif term == 3:
+                suffix = "rd"
+            else:
+                suffix = "th"
+
+            # Configure table
+            table.clear()
+            table.setColumnCount(2)
+            table.setHorizontalHeaderLabels([f"{term}{suffix} Term", "Grade"])
+            table.verticalHeader().setVisible(False)
+
+            course_list = terms_dict[term]
+            table.setRowCount(len(course_list))
+
+            # Fill rows
+            for row_idx, (course_code, grade) in enumerate(course_list):
+                item_course = QtWidgets.QTableWidgetItem(course_code)
+                item_grade = QtWidgets.QTableWidgetItem(grade)
+
+                # Center text
+                item_course.setTextAlignment(QtCore.Qt.AlignCenter)
+                item_grade.setTextAlignment(QtCore.Qt.AlignCenter)
+
+                table.setItem(row_idx, 0, item_course)
+                table.setItem(row_idx, 1, item_grade)
+
+            # Adjust columns
+            table.horizontalHeader().setStretchLastSection(True)
+            table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
 
 
 
-
-
-
-
-    
 # _____________________________________________________________
 #                        ADMIN WINDOW
 # _____________________________________________________________
