@@ -187,7 +187,7 @@ QLineEdit::focus
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -359,55 +359,6 @@ QLineEdit::focus
          <height>41</height>
         </rect>
        </property>
-      </widget>
-      <widget class="QLabel" name="label_7">
-       <property name="geometry">
-        <rect>
-         <x>690</x>
-         <y>130</y>
-         <width>111</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>Status :</string>
-       </property>
-      </widget>
-      <widget class="QComboBox" name="Tab1_Status">
-       <property name="geometry">
-        <rect>
-         <x>770</x>
-         <y>130</y>
-         <width>261</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QComboBox {
-    color: white;
-   background-color: rgb(8, 35, 54);
-    font-size: 14px;
-}
-QComboBox QAbstractItemView {
-    color: white;
-    background-color: #0b1d2c;
-    font-size: 16px;
-}
-</string>
-       </property>
-       <item>
-        <property name="text">
-         <string>Inactive</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Active</string>
-        </property>
-       </item>
       </widget>
       <widget class="QLineEdit" name="Tab1_Section">
        <property name="geometry">
@@ -608,17 +559,6 @@ QComboBox QAbstractItemView {
        <column>
         <property name="text">
          <string>Section</string>
-        </property>
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Status</string>
         </property>
         <property name="font">
          <font>
@@ -920,7 +860,7 @@ QComboBox QAbstractItemView {
         <bool>false</bool>
        </property>
        <property name="columnCount">
-        <number>6</number>
+        <number>3</number>
        </property>
        <column>
         <property name="text">
@@ -955,9 +895,6 @@ QComboBox QAbstractItemView {
          </font>
         </property>
        </column>
-       <column/>
-       <column/>
-       <column/>
       </widget>
      </widget>
     </widget>
@@ -979,6 +916,17 @@ QComboBox QAbstractItemView {
         <height>341</height>
        </rect>
       </property>
+      <column>
+       <property name="text">
+        <string>Student ID</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
       <column>
        <property name="text">
         <string>Course Name</string>
