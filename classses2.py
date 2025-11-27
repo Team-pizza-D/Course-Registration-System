@@ -671,10 +671,42 @@ class student(user):
 
     def transcript(self):  # to generate a transcript of completed subjects and grades
         row = users_db.execute("SELECT course, Letter_grade FROM grades WHERE student_id = ?", (self.id,), fetchall=True)
-        if row==None or len(row)==0:
-            return f"{self.id}, No completed subjects found"
-        transcript = {r[0]: r[1] for r in row}
-        return transcript
+        completed = {r[0]: r[1] for r in row}
+        row = users_db.execute("SELECT term, major FROM students WHERE id = ?", (self.id,), fetchone=True)
+        student_term = row[0]
+        student_major = row[1]
+        major_table_map = {
+            'Electrical communication and electronics engineering': "communication",
+            'Electrical computer engineering': "computer",
+            'Electrical power and machines engineering': "power",
+            'Electrical biomedical engineering': "biomedical"
+        }
+        major = major_table_map.get(student_major)
+        if major is None:
+            return f"Major '{student_major}' not recognized."
+        row = courses_db.execute(f"SELECT course_code,terms FROM {major}" , fetchall=True)
+        subject_terms = {r[0]: r[1] for r in row}
+        # print(subject_terms)
+        full_record = {}
+        for course_code, term in subject_terms.items():
+            grade = completed.get(course_code)
+            if grade:
+                grade = grade
+            else:
+                grade = "--"
+            full_record[course_code] = (term, grade)
+        return full_record
+            
+
+        # print(subject_terms)
+        # full_record = {}
+        # for course, grade in completed.items():
+        #     term = subject_terms.get(course, "Unknown Term")
+        #     full_record[course] = (term, grade)
+        # return full_record
+       
+
+        
         ### will be used later to print full academic record
         pass
         
