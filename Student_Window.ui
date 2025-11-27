@@ -119,7 +119,7 @@ QPushButton:pressed {
         }</string>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -140,22 +140,25 @@ QPushButton:pressed {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">QTableWidget {
-    background-color: #08131c;
-    color: white;
-    gridline-color: white;
-    border: 1px solid white;
-    font-size: 14px;
-}
+       <string notr="true">    QTableWidget {
+        background-color: #001622;
+        color: white;
+        font-size: 14px;
+        border: 1px solid #4c4c4c;
+    }
 
-QHeaderView::section {
-    background-color: #08131c;
-    color: white;
-    border: 1px solid white;
-    font-weight: bold;
-    padding: 6px;
-}
-</string>
+    QHeaderView::section {
+        background-color: #0b2e4a;
+        color: white;
+        padding: 5px;
+        border: 1px solid #32414B;
+        font-weight: bold;
+    }
+
+    QTableWidget::item:selected {
+        background-color: #1e90ff;
+        color: black;
+    }</string>
       </property>
       <property name="showGrid">
        <bool>true</bool>
