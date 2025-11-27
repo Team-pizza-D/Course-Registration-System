@@ -538,11 +538,19 @@ class student(user):
 
     def view_enrolled_subjects(self):  # to view all enrolled subjects for the student
         row = users_db.execute("SELECT section FROM enrollments WHERE student_id = ?", (self.id,), fetchall=True)
-        print(row)
         if row is None or len(row) == 0:
             return f"{self.id}, No enrolled subjects found"
         enrolled_sections = [r[0] for r in row]
-        return enrolled_sections
+        row = courses_db.execute("SELECT course_code, course_name FROM Courses WHERE section IN ({seq})".format(seq=','.join(['?']*len(enrolled_sections))), tuple(enrolled_sections), fetchall=True)
+        enrolled_subjects = {r[0]: r[1] for r in row}
+        all_enrolled = {}
+        for section in enrolled_sections:
+            course_row = courses_db.execute("SELECT course_code FROM Courses WHERE section = ?", (section,), fetchone=True)
+            if course_row:
+                course_code = course_row[0]
+                course_name = enrolled_subjects.get(course_code, "Unknown Course")
+                all_enrolled[section] = (course_code, course_name)
+        return all_enrolled
 
         ### this should show all current sections that student enrolled in
         pass
@@ -665,9 +673,6 @@ class admin(user):
         
 
             
-        
-
-
     def add_subject(self, section_code, student_id):  # to add a subject to a student
         ### later this will probably call student.enroll_subject with correct ID and section_code
         sect=section(section_name=section_code)
@@ -684,6 +689,13 @@ class admin(user):
         pass
 
     def display_student_in_section(self, section_code):  # to display students in a section
+        row = users_db.execute("SELECT student_id FROM enrollments WHERE section = ?", (section_code,), fetchall=True)
+        if row is None:
+            return f"Section {section_code}, No enrolled students found"
+        enrolled_students_id = [r[0] for r in row]
+        row = users_db.execute("SELECT * FROM students WHERE id IN ({seq})".format(seq=','.join(['?']*len(enrolled_students_id))), tuple(enrolled_students_id), fetchall=True)
+        enrolled_students_info = {r[0]: r[1:] for r in row}
+        return enrolled_students_info
         ### can create section object then call section.display_student_in_section
         pass
 
@@ -692,14 +704,56 @@ class admin(user):
     #     pass
 
     def find_student(self, student_id):  # to find student by id
+        if student_id.is_existing():
+            return student_id.display_info()
+        
         ### must search in database for student_id and return student info
         pass
 
-    def view_all_subjects(self, available_only):  # to view all available subjects
+    def view_all_subjects(self, id):  # to view all available subjects
+        if student(id).is_student():
+            row = users_db.execute("SELECT term,major FROM students WHERE id = ?", (id,), fetchone=True)
+            student_term = row[0]
+            student_major = row[1]
+            major_table_map = {
+                'Electrical communication and electronics engineering': "communication",
+                'Electrical computer engineering': "computer",
+                'Electrical power and machines engineering': "power",
+                'Electrical biomedical engineering': "biomedical"
+            }
+            major = major_table_map.get(student_major)
+            if major is None:
+                return f"Major '{student_major}' not recognized."
+            
+            row = courses_db.execute(f"SELECT course_code FROM {major} WHERE terms = ?", (student_term,), fetchall=True)
+            if row is None or len(row) == 0:
+                return f"Term {student_term}, No subjects found for major {student_major}"
+            subjects = [r[0] for r in row]
+            row = courses_db.execute("SELECT section FROM Courses WHERE course_code IN ({seq})".format(seq=','.join(['?']*len(subjects))), tuple(subjects), fetchall=True)
+            available_sections = [r[0] for r in row]
+            all_available = {}
+            for section in available_sections:
+                course_row = courses_db.execute("SELECT course_code FROM Courses WHERE section = ?", (section,), fetchone=True)
+                if course_row:
+                    course_code = course_row[0]
+                    all_available[section] = course_code
+            return all_available
+
+            
+            
+            
+            
+        
+        
         ### if available_only True, only show open sections
         pass
 
-    def find_sections(self, subject_code):  # to view sections for a specific subject
+    def find_sections(self, course_code):  # to view sections for a specific subject
+        row  = courses_db.execute("SELECT section FROM Courses WHERE course_code = ?", (course_code,), fetchall=True)
+        if row is None or len(row) == 0:
+            return f"Subject {course_code}, No sections found"
+        sections = [r[0] for r in row]
+        return sections
         ### must search in database for sections with this subject_code
         pass
 
