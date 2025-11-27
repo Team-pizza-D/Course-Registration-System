@@ -307,7 +307,7 @@ QScrollBar::sub-page:horizontal {
       <widget class="QWidget" name="scrollAreaWidgetContents">
        <property name="geometry">
         <rect>
-         <x>0</x>
+         <x>-171</x>
          <y>0</y>
          <width>1330</width>
          <height>569</height>
@@ -315,7 +315,7 @@ QScrollBar::sub-page:horizontal {
        </property>
        <layout class="QGridLayout" name="gridLayout">
         <item row="1" column="5">
-         <widget class="QTableWidget" name="tableWidget_10">
+         <widget class="QTableWidget" name="term10">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
@@ -325,7 +325,7 @@ QScrollBar::sub-page:horizontal {
          </widget>
         </item>
         <item row="0" column="5">
-         <widget class="QTableWidget" name="tableWidget_9">
+         <widget class="QTableWidget" name="term9">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
@@ -335,7 +335,7 @@ QScrollBar::sub-page:horizontal {
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QTableWidget" name="tableWidget_3">
+         <widget class="QTableWidget" name="term2">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
@@ -345,7 +345,7 @@ QScrollBar::sub-page:horizontal {
          </widget>
         </item>
         <item row="0" column="2">
-         <widget class="QTableWidget" name="tableWidget_4">
+         <widget class="QTableWidget" name="term3">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
@@ -355,7 +355,7 @@ QScrollBar::sub-page:horizontal {
          </widget>
         </item>
         <item row="0" column="3">
-         <widget class="QTableWidget" name="tableWidget_2">
+         <widget class="QTableWidget" name="term5">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
@@ -365,7 +365,7 @@ QScrollBar::sub-page:horizontal {
          </widget>
         </item>
         <item row="1" column="4">
-         <widget class="QTableWidget" name="tableWidget_7">
+         <widget class="QTableWidget" name="term8">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
@@ -375,7 +375,7 @@ QScrollBar::sub-page:horizontal {
          </widget>
         </item>
         <item row="1" column="3">
-         <widget class="QTableWidget" name="tableWidget_6">
+         <widget class="QTableWidget" name="term6">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
@@ -385,7 +385,7 @@ QScrollBar::sub-page:horizontal {
          </widget>
         </item>
         <item row="1" column="2">
-         <widget class="QTableWidget" name="tableWidget">
+         <widget class="QTableWidget" name="term4">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
@@ -395,7 +395,7 @@ QScrollBar::sub-page:horizontal {
          </widget>
         </item>
         <item row="0" column="4">
-         <widget class="QTableWidget" name="tableWidget_8">
+         <widget class="QTableWidget" name="term7">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
@@ -405,7 +405,7 @@ QScrollBar::sub-page:horizontal {
          </widget>
         </item>
         <item row="0" column="0">
-         <widget class="QTableWidget" name="tableWidget_5">
+         <widget class="QTableWidget" name="term1">
           <property name="enabled">
            <bool>true</bool>
           </property>
