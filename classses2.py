@@ -279,7 +279,7 @@ class section(subject):
         day= times[1].strip()
         class_time= times[0].strip()
         class_time= class_time.split("-")
-        print(class_time)
+        # print(class_time)
         start_time=class_time[0].strip().split(":")
         end_time=class_time[1].strip().split(":")
         start_time_hour=int(start_time[0])
@@ -288,10 +288,10 @@ class section(subject):
         end_time_minute=int(end_time[1])
         if start_time_hour>end_time_hour:
             end_time_hour+=12
-        print(start_time_hour)
-        print(end_time_hour)
-        print(start_time_minute)
-        print(end_time_minute)
+        # print(start_time_hour)
+        # print(end_time_hour)
+        # print(start_time_minute)
+        # print(end_time_minute)
         if start_time_hour == end_time_hour:
             end_time_hour+= (end_time_minute- start_time_minute)/100
         if start_time_hour  < end_time_hour:
@@ -315,14 +315,14 @@ class section(subject):
         end_time_hour*=100
         start_time_hour=int(start_time_hour)
         end_time_hour=int(end_time_hour)
-        print(start_time_hour)
-        print(end_time_hour)                  
+        # print(start_time_hour)
+        # print(end_time_hour)                  
 
                     
         for i in range(start_time_hour, end_time_hour ,5): # using 1 as a stip would be more accurate but would create a very long list, based on data base design used 5 should be enough
             time_loop= (i+5)/100
             section_time_list.append(time_loop)
-        print(section_time_list)    
+        # print(section_time_list)    
 
         schedule_row= users_db.execute("SELECT time FROM enrollments WHERE student_id = ?", (student_id,), fetchall=True) 
         if schedule_row is None or len(schedule_row)==0: 
@@ -663,16 +663,25 @@ class student(user):
         if row is None or len(row) == 0:
             return f"{self.id}, No enrolled subjects found"
         enrolled_sections = [r[0] for r in row]
-        row = courses_db.execute("SELECT course_code, course_name,time FROM Courses WHERE section IN ({seq})".format(seq=','.join(['?']*len(enrolled_sections))), tuple(enrolled_sections), fetchall=True)
-        enrolled_subjects = {r[0]: (r[1], r[2]) for r in row}
+        row = courses_db.execute("SELECT course_code,time FROM Courses WHERE section IN ({seq})".format(seq=','.join(['?']*len(enrolled_sections))), tuple(enrolled_sections), fetchall=True)
+        enrolled_subjects = {r[0]: r[1] for r in row}
         all_enrolled = {}
         for section in enrolled_sections:
             course_row = courses_db.execute("SELECT course_code FROM Courses WHERE section = ?", (section,), fetchone=True)
             if course_row:
                 course_code = course_row[0]
-                course_info = enrolled_subjects.get(course_code, ("Unknown Course", "No Time Info"))
-                all_enrolled[section] = (course_code, course_info[0], course_info[1])
+                time_info = enrolled_subjects.get(course_code, "No Time Info")
+                all_enrolled[section] = (course_code, time_info)
         return all_enrolled
+        # enrolled_subjects = {r[0]: (r[1], r[2]) for r in row}
+        # all_enrolled = {}
+        # for section in enrolled_sections:
+        #     course_row = courses_db.execute("SELECT course_code FROM Courses WHERE section = ?", (section,), fetchone=True)
+        #     if course_row:
+        #         course_code = course_row[0]
+        #         course_info = enrolled_subjects.get(course_code, ("Unknown Course", "No Time Info"))
+        #         all_enrolled[section] = (course_code, course_info[0], course_info[1])
+        # return all_enrolled
     
     def view_available_subjects(self):  # to view all available subjects for enrollment
         if self.is_student():
