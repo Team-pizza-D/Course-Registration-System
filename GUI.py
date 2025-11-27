@@ -4,8 +4,8 @@ import sqlite3
 from PyQt5 import uic, QtWidgets, QtCore
 from PyQt5.QtWidgets import QApplication, QMainWindow, QShortcut
 from PyQt5.QtGui import QKeySequence
+from classses2 import Database,  student, admin, user, subject, section, instructor
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "Users.db")
 
 
 class LoginWindow(QMainWindow):
@@ -32,35 +32,14 @@ class LoginWindow(QMainWindow):
 
     # __________ DATABASE CHECKS __________
 
-    def check_student(self, uni_id, password):
-        try:
-            conn = sqlite3.connect(DB_PATH)
-            cur = conn.cursor()
-            cur.execute(
-                "SELECT id, username, major FROM students WHERE id=? AND password=?",
-                (uni_id, password)
-            )
-            result = cur.fetchone()
-            conn.close()
-            return result   # (id, name, major)
-        except Exception as e:
-            QtWidgets.QMessageBox.critical(self, "Database Error", str(e))
-            return None
-
-    def check_admin(self, uni_id, password):
-        try:
-            conn = sqlite3.connect(DB_PATH)
-            cur = conn.cursor()
-            cur.execute(
-                "SELECT Id FROM admins WHERE Id=? AND password=?",
-                (uni_id, password)
-            )
-            result = cur.fetchone()
-            conn.close()
-            return result is not None
-        except Exception as e:
-            QtWidgets.QMessageBox.critical(self, "Database Error", str(e))
-            return False
+    def check_student(self, uni_id):
+        Student = student(id=uni_id)
+        if student.is_student():
+            return True
+        return False
+    
+    def check_admin(self, uni_id):
+        pass
 
     # __________ LOGIN LOGIC __________
 
@@ -68,8 +47,8 @@ class LoginWindow(QMainWindow):
         UniID = self.IDlineEdit.text()
         password = self.PasslineEdit.text()
 
-        admin = self.check_admin(UniID, password)
-        student = self.check_student(UniID, password)
+        admin = self.check_admin(UniID)
+        student = self.check_student(UniID)
 
         if admin:
             self.openAdminWindow()
@@ -100,6 +79,13 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.student_id = sid
         self.student_name = sname
         self.student_major = smajor
+        self.infoTable.verticalHeader().setVisible(False)
+        
+        # Call the GPA function from classses2.py
+        self.student_obj = student(self.student_id)
+        gpa_value = self.student_obj.calculate_GPA()
+        self.update_GPA_table(gpa_value)
+
 
         # Set welcome text
         self.welcomeLabel.setText(f"Welcome, {self.student_name}")
@@ -107,6 +93,7 @@ class StudentWindow(QtWidgets.QMainWindow):
         # Load student info into table
         self.load_info_table()
 
+        
     def load_info_table(self):
         # Prepare table
         self.infoTable.setColumnCount(3)
@@ -130,6 +117,18 @@ class StudentWindow(QtWidgets.QMainWindow):
         for col in range(3):
             self.infoTable.item(0, col).setTextAlignment(QtCore.Qt.AlignCenter)
 
+    def update_GPA_table(self, gpa):
+        self.GpaTable.setRowCount(1)
+        self.GpaTable.setColumnCount(1)
+        self.GpaTable.setHorizontalHeaderLabels(["GPA"])
+
+        item = QtWidgets.QTableWidgetItem(str(gpa))
+        item.setTextAlignment(QtCore.Qt.AlignCenter)
+        self.GpaTable.setItem(0, 0, item)
+
+        # Clean look
+        self.GpaTable.verticalHeader().setVisible(False)
+        self.GpaTable.horizontalHeader().setStretchLastSection(True)
 
 # _____________________________________________________________
 #                        ADMIN WINDOW
