@@ -226,8 +226,8 @@ class section(subject):
         self.section_term= self.subject_.subject_term
         self.subject=self.subject_.subject_name
 
-    def sectioon_info_student(self):  # to display section information
-        row= courses_db.execute("SELECT course_code, course_name, section, capacity, times, instructor FROM Courses WHERE section = ?",(self.section_name,),fetchall=True) ### database design must be abdated to include instructor name and creat a table name sections
+    def section_info_student(self):  # to display section information
+        row= courses_db.execute("SELECT course_code, course_name, section, capacity, time, instructor FROM Courses WHERE section = ?",(self.section_name,),fetchone=True) ### database design must be abdated to include instructor name and creat a table name sections
         if row==None:
             return f"{self.section_name}, Section not found"
         self.subject_code=row[0]
