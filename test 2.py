@@ -7,6 +7,7 @@ from classses2 import admin, student,section,subject,instructor,Database
 tariq = student( id=2430020)
 print(tariq.calculate_GPA())
 print(tariq.is_existing())
+print(tariq.correct_password("tariq899413"))
 # print(tariq.view_available_subjects())
 # tariq.enroll_subject("AW")
 # tariq.enroll_subject("AV")

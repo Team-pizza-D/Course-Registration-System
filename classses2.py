@@ -94,15 +94,27 @@ class user:
         return f"Username: {self.username}, Email: {self.email}, ID: {self.id}"
     def is_admin(self):  # to check if user is admin
         # This will later be known by which table is the information in (student or admin)
-        return True if isinstance(self, admin) else False
+        row = users_db.execute("SELECT id FROM admins WHERE id = ?", (self.id,), fetchone=True)
+        if row:
+            return True
+        else:
+            return False
 
     def is_student(self):  # to check if user is student
         # This will later be known by which table is the information in (student or admin)
-        return True if isinstance(self, student) else False
+        row = users_db.execute("SELECT id FROM students WHERE id = ?", (self.id,), fetchone=True)
+        if row:
+            return True
+        else:
+            return False
     
     def is_instructor(self):  # to check if user is instructor
         #This will later be known by which table is the information in (student or admin)
-        return True if isinstance(self, instructor) else False
+        row = users_db.execute("SELECT id FROM instructors WHERE id = ?", (self.id,), fetchone=True)
+        if row:
+            return True
+        else:
+            return False
     
     def generate_unique_id(self):  # generates unique user ID
         existing_ids_row = users_db.execute("SELECT id FROM admins UNION SELECT id FROM instructors UNION SELECT id FROM students", fetchall=True)
@@ -126,6 +138,11 @@ class user:
             first_name += self.username[i]
         password = str(first_name) + str(random.randint(100000, 999999))
         return password
+    def correct_password(self, password):  # to check if provided password matches user's password
+        row = users_db.execute("SELECT password FROM admins WHERE id = ? UNION SELECT password FROM instructors WHERE id = ? UNION SELECT password FROM students WHERE id = ?", (self.id, self.id, self.id), fetchone=True)
+        password_in_db = row[0] if row else None
+        return password == password_in_db
+
     
         
     
