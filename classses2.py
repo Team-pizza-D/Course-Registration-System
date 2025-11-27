@@ -94,15 +94,27 @@ class user:
         return f"Username: {self.username}, Email: {self.email}, ID: {self.id}"
     def is_admin(self):  # to check if user is admin
         # This will later be known by which table is the information in (student or admin)
-        return True if isinstance(self, admin) else False
+        row = users_db.execute("SELECT id FROM admins WHERE id = ?", (self.id,), fetchone=True)
+        if row:
+            return True
+        else:
+            return False
 
     def is_student(self):  # to check if user is student
         # This will later be known by which table is the information in (student or admin)
-        return True if isinstance(self, student) else False
+        row = users_db.execute("SELECT id FROM students WHERE id = ?", (self.id,), fetchone=True)
+        if row:
+            return True
+        else:
+            return False
     
     def is_instructor(self):  # to check if user is instructor
         #This will later be known by which table is the information in (student or admin)
-        return True if isinstance(self, instructor) else False
+        row = users_db.execute("SELECT id FROM instructors WHERE id = ?", (self.id,), fetchone=True)
+        if row:
+            return True
+        else:
+            return False
     
     def generate_unique_id(self):  # generates unique user ID
         existing_ids_row = users_db.execute("SELECT id FROM admins UNION SELECT id FROM instructors UNION SELECT id FROM students", fetchall=True)
