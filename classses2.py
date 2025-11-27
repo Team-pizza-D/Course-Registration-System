@@ -177,25 +177,21 @@ class subject:  ### Data base team said that this is currently not needed but i 
                 break
         
 
-
-    def is_full(self):  # to check if subject is full
-        # in the future this can depend on subject capacity if needed
-        pass
-
-    def view_enrolled_students(self):  # to view all enrolled students
-        # later this can return / print all enrolled students for this subject
-        pass
-
-    def inroll_student_in_subject(self, student_id):  # to enroll a student in the subject for data only (admin use only)
-        ### just for data tracking, actual enrollment is handled in student class
-        ### notce that when considering database design, function will have to update the database instead of just appending to list
-        pass
-
-    def drop_student_from_subject(self, student_id):  # to drop a student from the subject for data only (admin use only)
-        pass
+    def already_graded(self, student_id):  # to check if student has already been graded in the section
+        row= users_db.execute("SELECT numeric_grade FROM grades WHERE student_id = ? AND course = ?", (student_id, self.subject_name,), fetchone=True)
+        if row==None or row[0]==None:
+            return False
+        else:
+            return True
+    def is_existing(self):  # to check if subject exists in database
+        row= courses_db.execute("SELECT course_code FROM Courses WHERE course_code = ?",(self.subject_name,),fetchone=True)
+        if row==None or len(row[0])==0:
+            return False
+        else:
+            return True
+         ### I will need to inrolle some students in some sections to be able to do this
 
 ### notce that when considering database design, function will have to update the database instead of just removing from list
-        pass
 
 
 # _______________________________________________________________________________________________________________
@@ -231,15 +227,18 @@ class section(subject):
         self.subject=self.subject_.subject_name
 
     def sectioon_info_student(self):  # to display section information
-        row= courses_db.execute("SELECT course_code, course_name, sections, capacity, times FROM sections WHERE sections = ?",(self.section_name,),fetchone=True) ### database design must be abdated to include instructor name and creat a table name sections
+        row= courses_db.execute("SELECT course_code, course_name, section, capacity, times, instructor FROM Courses WHERE section = ?",(self.section_name,),fetchall=True) ### database design must be abdated to include instructor name and creat a table name sections
         if row==None:
             return f"{self.section_name}, Section not found"
-        self.section_code=row[0]
+        self.subject_code=row[0]
         self.subject_name=row[1]   
         self.section_name=row[2]
         self.capacity=row[3]
         self.schedule=row[4]
-        return f"Section Code: {self.section_code}, Subject Name: {self.subject_name}, Section Name: {self.section_name}, Capacity: {self.capacity}, Schedule: {self.schedule}"
+        self.instructor=row[5]
+        self.remaining_seats= self.remaining_seats()
+        
+        return f" Subject Name: {self.subject_name}, Section Name: {self.section_name}, subject_code: {self.subject_code} max Capacity: {self.capacity}, Schedule: {self.schedule}, Instructor: {self.instructor},seats remaining: {self.remaining_seats}"
         ###we still need structors name in the database to return it here
 
         ### return section name, subject name, instructor, schedule (will be used by student)
@@ -250,7 +249,7 @@ class section(subject):
         pass
     def section_is_existing(self):  # to check if section exists
         row= courses_db.execute("SELECT section FROM Courses WHERE section = ?",(self.section_name,),fetchone=True)
-        if row==None:
+        if row==None or len(row[0])==0:
             return False
         else:
             return True
@@ -502,12 +501,8 @@ class section(subject):
         ### I will need to inrolle some students in some sections to be able to do this 
         pass
     def already_taken_subject(self, student_id):  # to check if student has already completed the subject
-        row= users_db.execute("SELECT course FROM grades WHERE student_id = ?", (student_id,), fetchall=True)
-        completed_courses = [r[0] for r in row]
-        if self.subject in completed_courses:
-            return True
-        else:
-            return False
+        stu=student(id=student_id)
+        return stu.already_taken_subject(self.subject)
            
 
     def all_conditions_met(self,student_id): # to check if all conditions are met for enrollment
@@ -549,21 +544,31 @@ class section(subject):
         self.student_id_in_section.append(student_id)
         self.student_name_in_section.append(student_name)
         users_db.execute("INSERT INTO grades (student_id, course) VALUES (?, ?)", (student_id, self.subject), commit=True)
-         ### it's very very very very importanat to abdate line 213 when database design is apdeted and add sereal number for each section
 
         return True , f"Student with ID {student_id} successfully enrolled in section {self.section_name}."
 
         
 
         
-            
-           
-         ### I will need to inrolle some students in some sections to be able to do this 
-        ### just for data tracking, actual enrollment logic is handled in student class
-        ### notce that when considering database design, function will have to update the database instead of just appending to list
+
 
 
     def drop_student_from_section(self, student_id):  # to drop a student from the section for data only (admin use only)
+        if not self.student_is_real(student_id):
+            return False , f"student with ID {student_id} does not exist"
+        if not self.student_is_existing(student_id):
+            return False , f"student with ID {student_id} is not enrolled in section {self.section_name}"
+        if not self.section_is_existing():
+            return False , f"section {self.section_name} does not exist"
+        if self.already_graded(student_id):
+            return False , f"student with ID {student_id} has already been graded in subject {self.subject}"
+        users_db.execute("DELETE FROM enrollments WHERE student_id = ? AND section = ?", (student_id, self.section_name,), commit=True)
+        users_db.execute("DELETE FROM grades WHERE student_id = ? AND course = ?", (student_id, self.subject,), commit=True)
+        index = self.student_id_in_section.index(student_id)
+        self.enrolled_students.pop(index)
+        self.student_id_in_section.pop(index)
+        return True , f"Student with ID {student_id} successfully dropped from section {self.section_name}."
+
          ### I will need to inrolle some students in some sections to be able to do this
         ### notce that when considering database design, function will have to update the database instead of just removing from list
         pass
@@ -583,9 +588,13 @@ class section(subject):
         
 
     def remaining_seats(self):  # to check remaining seats in the section
-        ### should return capacity - len(enrolled_students)
-        ### I will need to inrolle some students in some sections to be able to do this
-        pass
+        if not self.section_is_existing():
+            return f"section {self.section_name} does not exist"
+        row= courses_db.execute("SELECT capacity FROM Courses WHERE section = ?",(self.section_name,),fetchone=True)
+        capacity=row[0]
+        remaining= capacity - len(self.student_id_in_section)
+        return remaining
+
 
 
 # _______________________________________________________________________________________________________________
@@ -631,6 +640,13 @@ class student(user):
     
     def display_info(self):  # to display student information
         return super().display_info() + f", Major: {self.major}, GPA: {self.GPA} "
+    def already_taken_subject(self, subject_code):  # to check if student has already completed the subject
+        row= users_db.execute("SELECT course FROM grades WHERE student_id = ?", (self.id,), fetchall=True)
+        completed_courses = [r[0] for r in row]
+        if subject_code in completed_courses:
+            return True
+        else:
+            return False
 
     def enroll_subject(self, section_code):  # to enroll student in a subject section
         sec=section(section_name=section_code)
@@ -904,11 +920,41 @@ class admin(user):
         massege= sec.new_capacity(new_capacity)
         return massege
     def add_grade(self, student_id, course_code, grade):  # to add grade for a student in a section
-
-        # instr= instructor(username="temp", subject="temp", sections="temp")
-        # instr.__add_grade(student_id, section_code, grade)
-        ### must create instructor object to call its __add_grade method
-        pass
+        sub=subject(course_code)
+        stu=student(id=student_id)
+        if not stu.is_student():
+            return f"Student with ID {student_id} does not exist."
+        if not sub.is_existing():
+            return f"Subject with code {course_code} does not exist."
+        if not stu.already_taken_subject(course_code):
+            return f"Student with ID {student_id} has not completed subject {course_code}."
+         # Validate and convert grade to letter grade
+        try :
+            grade = float(grade)
+        except:
+            return "Grade must be a number."
+        if grade < 0.0 or grade > 100.0:
+            return "Grade must be between 0 and 100."
+        if  grade >= 95.0:
+            letter_grade = "A+"
+        elif grade >= 90.0:
+            letter_grade = "A"
+        elif grade >= 85.0:
+            letter_grade = "B+"
+        elif grade >= 80.0:
+            letter_grade = "B"
+        elif grade >= 75.0:
+            letter_grade = "C+"
+        elif grade >= 70.0:
+            letter_grade = "C"
+        elif grade >= 65.0:
+            letter_grade = "D+"
+        elif grade >= 60.0:
+            letter_grade = "D"
+        else:
+            letter_grade = "F"
+            users_db.execute("UPDATE grades SET numeric_grade = ?, letter_grade = ? WHERE student_id = ? AND course = ?", (grade, letter_grade, student_id, course_code), commit=True)
+        return f"Grade {grade} ({letter_grade}) added for student ID {student_id} in course {course_code}."
 
 
 
