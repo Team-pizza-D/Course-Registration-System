@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1212</width>
-    <height>1177</height>
+    <width>1216</width>
+    <height>989</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -192,7 +192,7 @@ QLineEdit::focus
         <x>30</x>
         <y>30</y>
         <width>1101</width>
-        <height>68</height>
+        <height>81</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -220,31 +220,149 @@ QTableWidget::item:selected {
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QTableWidget" name="term1">
+     <widget class="QTableWidget" name="GpaTable">
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>270</y>
-        <width>441</width>
-        <height>151</height>
+        <y>130</y>
+        <width>241</width>
+        <height>81</height>
        </rect>
       </property>
       <property name="styleSheet">
        <string notr="true"/>
       </property>
      </widget>
-     <widget class="QTableWidget" name="GpaTable">
+     <widget class="QScrollArea" name="scrollArea">
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>120</y>
-        <width>241</width>
-        <height>68</height>
+        <y>230</y>
+        <width>1161</width>
+        <height>581</height>
        </rect>
       </property>
       <property name="styleSheet">
        <string notr="true"/>
       </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>1330</width>
+         <height>558</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="1" column="5">
+         <widget class="QTableWidget" name="tableWidget_10">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="5">
+         <widget class="QTableWidget" name="tableWidget_9">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QTableWidget" name="tableWidget_3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QTableWidget" name="tableWidget_4">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QTableWidget" name="tableWidget_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="4">
+         <widget class="QTableWidget" name="tableWidget_7">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QTableWidget" name="tableWidget_6">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QTableWidget" name="tableWidget">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="4">
+         <widget class="QTableWidget" name="tableWidget_8">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QTableWidget" name="tableWidget_5">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_3">
@@ -254,9 +372,9 @@ QTableWidget::item:selected {
      <widget class="QLabel" name="welcomeLabel_2">
       <property name="geometry">
        <rect>
-        <x>140</x>
-        <y>230</y>
-        <width>241</width>
+        <x>100</x>
+        <y>170</y>
+        <width>301</width>
         <height>41</height>
        </rect>
       </property>
@@ -287,7 +405,7 @@ QTableWidget::item:selected {
       <property name="geometry">
        <rect>
         <x>710</x>
-        <y>760</y>
+        <y>660</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -300,7 +418,7 @@ QTableWidget::item:selected {
       <property name="geometry">
        <rect>
         <x>890</x>
-        <y>760</y>
+        <y>660</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -313,7 +431,7 @@ QTableWidget::item:selected {
       <property name="geometry">
        <rect>
         <x>100</x>
-        <y>310</y>
+        <y>250</y>
         <width>301</width>
         <height>361</height>
        </rect>
@@ -323,7 +441,7 @@ QTableWidget::item:selected {
       <property name="geometry">
        <rect>
         <x>480</x>
-        <y>110</y>
+        <y>90</y>
         <width>241</width>
         <height>51</height>
        </rect>
@@ -333,7 +451,7 @@ QTableWidget::item:selected {
       <property name="geometry">
        <rect>
         <x>480</x>
-        <y>40</y>
+        <y>20</y>
         <width>241</width>
         <height>41</height>
        </rect>
@@ -365,7 +483,7 @@ QTableWidget::item:selected {
       <property name="geometry">
        <rect>
         <x>580</x>
-        <y>310</y>
+        <y>250</y>
         <width>561</width>
         <height>381</height>
        </rect>
@@ -374,9 +492,9 @@ QTableWidget::item:selected {
      <widget class="QLabel" name="welcomeLabel_6">
       <property name="geometry">
        <rect>
-        <x>740</x>
-        <y>230</y>
-        <width>271</width>
+        <x>700</x>
+        <y>170</y>
+        <width>331</width>
         <height>41</height>
        </rect>
       </property>
@@ -440,8 +558,8 @@ QTableWidget::item:selected {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1212</width>
-     <height>21</height>
+     <width>1216</width>
+     <height>26</height>
     </rect>
    </property>
   </widget>

@@ -4,9 +4,8 @@ import sqlite3
 from PyQt5 import uic, QtWidgets, QtCore
 from PyQt5.QtWidgets import QApplication, QMainWindow, QShortcut
 from PyQt5.QtGui import QKeySequence
-from classses2 import student
+from classses2 import Database,  student, admin, user, subject, section, instructor
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "Users.db")
 
 
 class LoginWindow(QMainWindow):
@@ -35,53 +34,52 @@ class LoginWindow(QMainWindow):
 
     def check_student(self, uni_id, password):
         try:
-            conn = sqlite3.connect(DB_PATH)
-            cur = conn.cursor()
-            cur.execute(
-                "SELECT id, username, major FROM students WHERE id=? AND password=?",
-                (uni_id, password)
-            )
-            result = cur.fetchone()
-            conn.close()
-            return result   # (id, name, major)
-        except Exception as e:
-            QtWidgets.QMessageBox.critical(self, "Database Error", str(e))
+            # Create a student object using the ID
+            s = student(id=uni_id)
+
+            # Check if the ID belongs to a real student
+            if not s.is_student():
+                return None  # Not a student
+
+            # Verify password using existing function in user class
+            if not s.correct_password(password):
+                return None  # Password wrong
+
+            # Fetch username and major from DB
+            name = s.username
+            major = s.major
+
+            return (uni_id, name, major)
+
+        except:
             return None
 
-    def check_admin(self, uni_id, password):
-        try:
-            conn = sqlite3.connect(DB_PATH)
-            cur = conn.cursor()
-            cur.execute(
-                "SELECT Id FROM admins WHERE Id=? AND password=?",
-                (uni_id, password)
-            )
-            result = cur.fetchone()
-            conn.close()
-            return result is not None
-        except Exception as e:
-            QtWidgets.QMessageBox.critical(self, "Database Error", str(e))
-            return False
+    
+    def check_admin(self, uni_id):
+        pass
 
     # __________ LOGIN LOGIC __________
 
     def loginfunction(self):
-        UniID = self.IDlineEdit.text()
-        password = self.PasslineEdit.text()
+        UniID = self.IDlineEdit.text().strip()
+        password = self.PasslineEdit.text().strip()
 
-        admin = self.check_admin(UniID, password)
-        student = self.check_student(UniID, password)
+        # Check student login using functions from classses2.py
+        student_data = self.check_student(UniID, password)
 
-        if admin:
-            self.openAdminWindow()
-            return
-
-        if student:
-            sid, sname, smajor = student
+        if student_data:
+            sid, sname, smajor = student_data
             self.openStudentWindow(sid, sname, smajor)
             return
 
+        # Admin login (you said you will implement it later)
+        admin_data = self.check_admin(UniID)
+        if admin_data:
+            self.openAdminWindow()
+            return
+
         QtWidgets.QMessageBox.warning(self, "Login Failed", "Invalid ID or Password.")
+
 
     def openStudentWindow(self, sid, sname, smajor):
         self.hide()
@@ -151,7 +149,18 @@ class StudentWindow(QtWidgets.QMainWindow):
         # Clean look
         self.GpaTable.verticalHeader().setVisible(False)
         self.GpaTable.horizontalHeader().setStretchLastSection(True)
+    
+    def transcript_function(self):
+        pass
 
+
+
+
+
+
+
+
+    
 # _____________________________________________________________
 #                        ADMIN WINDOW
 # _____________________________________________________________
