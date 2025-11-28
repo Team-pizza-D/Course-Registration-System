@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1216</width>
-    <height>989</height>
+    <width>1212</width>
+    <height>960</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -181,6 +181,22 @@ QLineEdit::focus
      <attribute name="title">
       <string>Current Schedule</string>
      </attribute>
+     <widget class="QTableWidget" name="CurrentSchTable">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>40</y>
+        <width>1131</width>
+        <height>721</height>
+       </rect>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="showGrid">
+       <bool>false</bool>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
@@ -216,8 +232,11 @@ QTableWidget::item:selected {
         color: black;
     }</string>
       </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
       <property name="showGrid">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QTableWidget" name="GpaTable">
@@ -231,6 +250,12 @@ QTableWidget::item:selected {
       </property>
       <property name="styleSheet">
        <string notr="true"/>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="showGrid">
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QScrollArea" name="scrollArea">
@@ -315,97 +340,151 @@ QScrollBar::sub-page:horizontal {
        </property>
        <layout class="QGridLayout" name="gridLayout">
         <item row="1" column="5">
-         <widget class="QTableWidget" name="tableWidget_10">
+         <widget class="QTableWidget" name="term10">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
         <item row="0" column="5">
-         <widget class="QTableWidget" name="tableWidget_9">
+         <widget class="QTableWidget" name="term9">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QTableWidget" name="tableWidget_3">
+         <widget class="QTableWidget" name="term2">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
         <item row="0" column="2">
-         <widget class="QTableWidget" name="tableWidget_4">
+         <widget class="QTableWidget" name="term3">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
         <item row="0" column="3">
-         <widget class="QTableWidget" name="tableWidget_2">
+         <widget class="QTableWidget" name="term5">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
         <item row="1" column="4">
-         <widget class="QTableWidget" name="tableWidget_7">
+         <widget class="QTableWidget" name="term8">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
         <item row="1" column="3">
-         <widget class="QTableWidget" name="tableWidget_6">
+         <widget class="QTableWidget" name="term6">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
         <item row="1" column="2">
-         <widget class="QTableWidget" name="tableWidget">
+         <widget class="QTableWidget" name="term4">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
         <item row="0" column="4">
-         <widget class="QTableWidget" name="tableWidget_8">
+         <widget class="QTableWidget" name="term7">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
          </widget>
         </item>
         <item row="0" column="0">
-         <widget class="QTableWidget" name="tableWidget_5">
+         <widget class="QTableWidget" name="term1">
           <property name="enabled">
            <bool>true</bool>
           </property>
@@ -414,6 +493,12 @@ QScrollBar::sub-page:horizontal {
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -492,6 +577,9 @@ QScrollBar::sub-page:horizontal {
         <height>361</height>
        </rect>
       </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
      </widget>
      <widget class="QLineEdit" name="lineEdit_2">
       <property name="geometry">
@@ -544,6 +632,9 @@ QScrollBar::sub-page:horizontal {
         <height>381</height>
        </rect>
       </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
      </widget>
      <widget class="QLabel" name="welcomeLabel_6">
       <property name="geometry">
@@ -584,7 +675,7 @@ QScrollBar::sub-page:horizontal {
      <rect>
       <x>20</x>
       <y>20</y>
-      <width>431</width>
+      <width>1041</width>
       <height>71</height>
      </rect>
     </property>
@@ -614,7 +705,7 @@ QScrollBar::sub-page:horizontal {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1216</width>
+     <width>1212</width>
      <height>26</height>
     </rect>
    </property>
