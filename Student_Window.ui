@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1216</width>
-    <height>989</height>
+    <width>1212</width>
+    <height>960</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -175,7 +175,7 @@ QLineEdit::focus
         }</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -189,6 +189,12 @@ QLineEdit::focus
         <width>1131</width>
         <height>721</height>
        </rect>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="showGrid">
+       <bool>false</bool>
       </property>
      </widget>
     </widget>
@@ -226,8 +232,11 @@ QTableWidget::item:selected {
         color: black;
     }</string>
       </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
       <property name="showGrid">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QTableWidget" name="GpaTable">
@@ -241,6 +250,12 @@ QTableWidget::item:selected {
       </property>
       <property name="styleSheet">
        <string notr="true"/>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="showGrid">
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QScrollArea" name="scrollArea">
@@ -332,6 +347,12 @@ QScrollBar::sub-page:horizontal {
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
          </widget>
         </item>
         <item row="0" column="5">
@@ -341,6 +362,12 @@ QScrollBar::sub-page:horizontal {
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -352,6 +379,12 @@ QScrollBar::sub-page:horizontal {
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
          </widget>
         </item>
         <item row="0" column="2">
@@ -361,6 +394,12 @@ QScrollBar::sub-page:horizontal {
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -372,6 +411,12 @@ QScrollBar::sub-page:horizontal {
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="4">
@@ -381,6 +426,12 @@ QScrollBar::sub-page:horizontal {
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -392,6 +443,12 @@ QScrollBar::sub-page:horizontal {
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="2">
@@ -402,6 +459,12 @@ QScrollBar::sub-page:horizontal {
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
          </widget>
         </item>
         <item row="0" column="4">
@@ -411,6 +474,12 @@ QScrollBar::sub-page:horizontal {
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -424,6 +493,12 @@ QScrollBar::sub-page:horizontal {
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -502,6 +577,9 @@ QScrollBar::sub-page:horizontal {
         <height>361</height>
        </rect>
       </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
      </widget>
      <widget class="QLineEdit" name="lineEdit_2">
       <property name="geometry">
@@ -553,6 +631,9 @@ QScrollBar::sub-page:horizontal {
         <width>561</width>
         <height>381</height>
        </rect>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
       </property>
      </widget>
      <widget class="QLabel" name="welcomeLabel_6">
@@ -624,7 +705,7 @@ QScrollBar::sub-page:horizontal {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1216</width>
+     <width>1212</width>
      <height>26</height>
     </rect>
    </property>

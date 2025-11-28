@@ -97,6 +97,9 @@ class StudentWindow(QtWidgets.QMainWindow):
         ui_path = os.path.join(os.path.dirname(__file__), "Student_Window.ui")
         uic.loadUi(ui_path, self)
 
+        # self.setFixedWidth(1216)
+        # self.setFixedHeight(966)
+
         self.student_id = sid
         self.student_name = sname
         self.student_major = smajor
@@ -222,15 +225,14 @@ class StudentWindow(QtWidgets.QMainWindow):
         table = self.CurrentSchTable
         table.clear()
 
-        # Set correct columns
-        table.setColumnCount(4)
-        table.setHorizontalHeaderLabels(["Course Code", "Course Name", "Days", "Time"])
+        # Updated column order
+        table.setColumnCount(5)
+        table.setHorizontalHeaderLabels(["Course Code", "Course Name", "Section", "Days", "Time"])
         table.verticalHeader().setVisible(False)
 
-        # Get all enrolled subjects from class
+        # Load data from classes2.py
         schedule = self.student_obj.view_enrolled_subjects()
 
-        # If returned string → no subjects
         if isinstance(schedule, str):
             table.setRowCount(0)
             return
@@ -239,42 +241,48 @@ class StudentWindow(QtWidgets.QMainWindow):
 
         row = 0
         for section, (course_code, course_name, time_days) in schedule.items():
+            
             # Parse "9:00-9:50 , S T U"
             time_part, days_part = time_days.split(",")
             time_part = time_part.strip()
             days_part = days_part.strip()
 
-            # Insert into table
+            # Create table items
             item_code = QtWidgets.QTableWidgetItem(course_code)
             item_name = QtWidgets.QTableWidgetItem(course_name)
+            item_section = QtWidgets.QTableWidgetItem(section)
             item_days = QtWidgets.QTableWidgetItem(days_part)
             item_time = QtWidgets.QTableWidgetItem(time_part)
 
-            # Center text
-            for item in [item_code, item_name, item_days, item_time]:
+            # Center align text
+            for item in [item_code, item_name, item_section, item_days, item_time]:
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
 
+            # Insert into the table (updated order)
             table.setItem(row, 0, item_code)
             table.setItem(row, 1, item_name)
-            table.setItem(row, 2, item_days)
-            table.setItem(row, 3, item_time)
+            table.setItem(row, 2, item_section)
+            table.setItem(row, 3, item_days)
+            table.setItem(row, 4, item_time)
 
             row += 1
 
-        # Stretch columns
+        # Stretch columns to fit nicely
         table.horizontalHeader().setStretchLastSection(True)
         table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
 
 
-    # _____________________________________________________________
-    #                        ADMIN WINDOW
-    # _____________________________________________________________
-    class AdminWindow(QtWidgets.QMainWindow):
-        def __init__(self):
-            super().__init__()
-            ui_path = os.path.join(os.path.dirname(__file__), "Admin_Window.ui")
-            uic.loadUi(ui_path, self)
+
+
+# _____________________________________________________________
+#                        ADMIN WINDOW
+# _____________________________________________________________
+class AdminWindow(QtWidgets.QMainWindow):
+    def __init__(self):
+        super().__init__()
+        ui_path = os.path.join(os.path.dirname(__file__), "Admin_Window.ui")
+        uic.loadUi(ui_path, self)
 
 
 # _____________________________________________________________
