@@ -315,6 +315,7 @@ class section(subject):
         end_time_hour*=100
         start_time_hour=int(start_time_hour)
         end_time_hour=int(end_time_hour)
+                          
         # print(start_time_hour)
         # print(end_time_hour)                  
 
@@ -322,6 +323,7 @@ class section(subject):
         for i in range(start_time_hour, end_time_hour ,5): # using 1 as a stip would be more accurate but would create a very long list, based on data base design used 5 should be enough
             time_loop= (i+5)/100
             section_time_list.append(time_loop)
+            
         # print(section_time_list)    
 
         schedule_row= users_db.execute("SELECT time FROM enrollments WHERE student_id = ?", (student_id,), fetchall=True) 
@@ -453,6 +455,7 @@ class section(subject):
                     return True , f"The subject has no prerequisites."
                 else:
                     prerequisites=prereq_str.split(",")
+        student_completed_subjects_upper= [subj.upper() for subj in student_completed_subjects]            
 
                    
 
@@ -462,6 +465,7 @@ class section(subject):
             return True , "No prerequisites for this section."
         for prereq in prerequisites:
             preq= prereq.strip()
+            preq=preq.upper()
             grade= students_taken_subject_with_grades.get(preq)
             if grade== None:
                 return False , f"Prerequisite {preq} not completed."
@@ -469,7 +473,8 @@ class section(subject):
                 return False , f"Prerequisite {preq} not passed."
         for prereq in prerequisites:
             prereq= prereq.strip()
-            if prereq not in student_completed_subjects:
+            prereq=prereq.upper()
+            if prereq not in student_completed_subjects_upper:
                 return False , f"Prerequisite {prereq} not completed."
             
       
@@ -656,7 +661,7 @@ class student(user):
     def drop_subject(self, section_code):  # to drop a subject section for the student
         sect=section(section_name=section_code)
         okay,massege =sect.drop_student_from_section(self.id)
-        return okay, massege
+        return print(okay, massege)
 
     def view_enrolled_subjects(self):  # to view all enrolled subjects for the student
         row = users_db.execute("SELECT section FROM enrollments WHERE student_id = ?", (self.id,), fetchall=True)
@@ -700,11 +705,19 @@ class student(user):
             available_sections = [sec for sec in available_sections if sec not in enrolled_sections]
             all_available = {}
             for section in available_sections:
-                course_row = courses_db.execute("SELECT course_code FROM Courses WHERE section = ?", (section,), fetchone=True)
+                course_row = courses_db.execute("SELECT course_code, instructor ,section,time,credit FROM Courses WHERE section = ?", (section,), fetchone=True)
                 if course_row:
                     course_code = course_row[0]
-                    all_available[section] = course_code
+                    instructor = course_row[1]
+                    section = course_row[2]
+                    time = course_row[3]
+                    credit = course_row[4]
+                    all_available[section] = (section,course_code, instructor, time, credit)
             return all_available
+            #     if course_row:
+            #         course_code = course_row[0]
+            #         all_available[section] = course_code
+            # return all_available
 
 
         ### this should show all current sections that student enrolled in
