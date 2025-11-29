@@ -2,19 +2,22 @@ import sqlite3
 from classses2 import admin, student,section,subject,instructor,Database
 
 
-# tariq = student( id=2430020)
+tariq = student( id=2430020)
 # print("--------------------------------")
 # print(tariq.view_available_subjects())
 # print("--------------------------------")
 # print(tariq.view_enrolled_subjects())
 # print("--------------------------------")
-# tariq.enroll_subject("AW")
+tariq.enroll_subject("AW")
 # print("--------------------------------")
 # print(tariq.view_available_subjects())
 # print("--------------------------------")
 # print(tariq.view_enrolled_subjects())
 # tariq.drop_subject("AW")
-
+a = section("AW")
+print(a.section_info_student())
+b = (a.student_id_in_section())
+print(b)
 
 # ahmad=student(id=2453089)
 # print(ahmad.display_info())
