@@ -120,7 +120,8 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.load_transcript_tables()
         # Load current schedule
         self.load_current_schedule()
-
+        # Load available courses
+        self.load_available_courses()
       
     def load_info_table(self):
         # Prepare table
@@ -222,6 +223,7 @@ class StudentWindow(QtWidgets.QMainWindow):
             table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
     
     def load_current_schedule(self):
+
         table = self.CurrentSchTable
         table.clear()
 
@@ -272,6 +274,54 @@ class StudentWindow(QtWidgets.QMainWindow):
         table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         table.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Interactive)
         table.setColumnWidth(1, 350) 
+
+    def load_available_courses(self):
+        table = self.Available_CoursesTable
+        table.clear()
+
+        # Table structure
+        table.setColumnCount(5)
+        table.setHorizontalHeaderLabels(
+            ["Course Code", "Instructor", "Section", "Time", "Credit"]
+        )
+        table.verticalHeader().setVisible(False)
+
+        # Fetch available subjects from classses2.py
+        available = self.student_obj.view_available_subjects()
+
+        # Handle no available courses
+        if isinstance(available, str):
+            table.setRowCount(0)
+            return
+
+        table.setRowCount(len(available))
+
+        row = 0
+        for section_name, (section, course_code, instructor, time, credit) in available.items():
+
+            # Create items
+            item_code = QtWidgets.QTableWidgetItem(course_code)
+            item_inst = QtWidgets.QTableWidgetItem(instructor)
+            item_section = QtWidgets.QTableWidgetItem(section)
+            item_time = QtWidgets.QTableWidgetItem(time)
+            item_credit = QtWidgets.QTableWidgetItem(str(credit))
+
+            # Center-align
+            for item in [item_code, item_inst, item_section, item_time, item_credit]:
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+
+            # Insert into table
+            table.setItem(row, 0, item_code)
+            table.setItem(row, 1, item_inst)
+            table.setItem(row, 2, item_section)
+            table.setItem(row, 3, item_time)
+            table.setItem(row, 4, item_credit)
+
+            row += 1
+
+        # Make columns expand nicely
+        table.horizontalHeader().setStretchLastSection(True)
+        table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
 
 

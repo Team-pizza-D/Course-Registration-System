@@ -175,7 +175,7 @@ QLineEdit::focus
         }</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -513,8 +513,8 @@ QScrollBar::sub-page:horizontal {
      <widget class="QLabel" name="welcomeLabel_2">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>170</y>
+        <x>50</x>
+        <y>50</y>
         <width>301</width>
         <height>41</height>
        </rect>
@@ -545,8 +545,8 @@ QScrollBar::sub-page:horizontal {
      <widget class="QPushButton" name="pushButton">
       <property name="geometry">
        <rect>
-        <x>710</x>
-        <y>660</y>
+        <x>800</x>
+        <y>550</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -558,8 +558,8 @@ QScrollBar::sub-page:horizontal {
      <widget class="QPushButton" name="pushButton_3">
       <property name="geometry">
        <rect>
-        <x>890</x>
-        <y>660</y>
+        <x>140</x>
+        <y>550</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -571,76 +571,155 @@ QScrollBar::sub-page:horizontal {
      <widget class="QTableWidget" name="Current_CoursesTable">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>250</y>
+        <x>50</x>
+        <y>130</y>
         <width>301</width>
         <height>361</height>
        </rect>
       </property>
       <property name="editTriggers">
-       <set>QAbstractItemView::NoEditTriggers</set>
+       <set>QAbstractItemView::SelectedClicked</set>
       </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEdit_2">
-      <property name="geometry">
-       <rect>
-        <x>480</x>
-        <y>90</y>
-        <width>241</width>
-        <height>51</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="welcomeLabel_4">
-      <property name="geometry">
-       <rect>
-        <x>480</x>
-        <y>20</y>
-        <width>241</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Consolas,Courier New,monospace</family>
-        <pointsize>20</pointsize>
-        <weight>50</weight>
-        <italic>false</italic>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QLabel{
-    font-family: Consolas, &quot;Courier New&quot;, monospace;
-	color: rgb(232, 232, 232);
-	font: 20pt;
-}</string>
-      </property>
-      <property name="text">
-       <string>Course Code</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
+      <property name="showGrid">
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QTableWidget" name="Available_CoursesTable">
       <property name="geometry">
        <rect>
-        <x>580</x>
-        <y>250</y>
-        <width>561</width>
-        <height>381</height>
+        <x>530</x>
+        <y>130</y>
+        <width>631</width>
+        <height>361</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">self.setStyleSheet
+/* Scroll area background (content behind the cards) */
+QScrollArea {
+    background-color: #1e1e1e;
+    border: none;
+}
+
+/* Horizontal scroll bar */
+QScrollBar:horizontal {
+    height: 10px;
+    background: #181818;
+    margin: 0px 24px 0px 24px;      /* space before/after arrows */
+    border-radius: 5px;
+}
+
+/* The draggable handle */
+QScrollBar::handle:horizontal {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 0,
+        stop: 0 #3a3a3a,
+        stop: 1 #595959
+    );
+    border-radius: 5px;
+    min-width: 40px;
+}
+
+/* Handle hover &amp; pressed */
+QScrollBar::handle:horizontal:hover {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 0,
+        stop: 0 #4a4a4a,
+        stop: 1 #707070
+    );
+}
+
+QScrollBar::handle:horizontal:pressed {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 0,
+        stop: 0 #606060,
+        stop: 1 #808080
+    );
+}
+
+/* Remove ugly arrows but keep margin clean */
+QScrollBar::add-line:horizontal,
+QScrollBar::sub-line:horizontal {
+    background: none;
+    width: 0px;
+    height: 0px;
+}
+
+/* The area before and after the handle */
+QScrollBar::add-page:horizontal,
+QScrollBar::sub-page:horizontal {
+    background: none;
+}
+
+/* Scroll area background (content behind the cards) */
+QScrollArea {
+    background-color: #1e1e1e;
+    border: none;
+}
+
+/* Horizontal scroll bar */
+QScrollBar:vertical {
+    height: 10px;
+    background: #181818;
+    margin: 0px 24px 0px 24px;      /* space before/after arrows */
+    border-radius: 5px;
+}
+
+/* The draggable handle */
+QScrollBar::handle:vertical {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 0,
+        stop: 0 #3a3a3a,
+        stop: 1 #595959
+    );
+    border-radius: 5px;
+    min-width: 40px;
+}
+
+/* Handle hover &amp; pressed */
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 0,
+        stop: 0 #4a4a4a,
+        stop: 1 #707070
+    );
+}
+
+QScrollBar::handle:vertical:pressed {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 0,
+        stop: 0 #606060,
+        stop: 1 #808080
+    );
+}
+
+/* Remove ugly arrows but keep margin clean */
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    background: none;
+    width: 0px;
+    height: 0px;
+}
+
+/* The area before and after the handle */
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: none;
+}
+</string>
+      </property>
       <property name="editTriggers">
-       <set>QAbstractItemView::NoEditTriggers</set>
+       <set>QAbstractItemView::SelectedClicked</set>
+      </property>
+      <property name="showGrid">
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QLabel" name="welcomeLabel_6">
       <property name="geometry">
        <rect>
-        <x>700</x>
-        <y>170</y>
+        <x>690</x>
+        <y>50</y>
         <width>331</width>
         <height>41</height>
        </rect>
