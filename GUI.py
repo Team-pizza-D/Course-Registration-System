@@ -105,6 +105,8 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.student_major = smajor
         self.infoTable.verticalHeader().setVisible(False)
         self.AddButton.clicked.connect(self.add_selected_course)
+        self.RemoveButton.clicked.connect(self.remove_selected_course)
+
 
         
         # Call the GPA function from classses2.py
@@ -548,32 +550,34 @@ class StudentWindow(QtWidgets.QMainWindow):
 
         selected_section = None
 
-        # Scan all checkboxes and find the selected one
+        # Find which row is checked
         for row in range(table.rowCount()):
             checkbox = table.cellWidget(row, 0)
-            if checkbox.isChecked():
-                selected_section = self.available_section_map[row]   # get section code
+            if checkbox and checkbox.isChecked():
+                selected_section = self.available_section_map[row]   # section code (e.g. "AW")
                 break
 
         if not selected_section:
-            QtWidgets.QMessageBox.warning(self, "Error", "Please select a course to add.")
+            QtWidgets.QMessageBox.warning(self, "Enrollment", "Please select a course to add.")
             return
 
-        # Call enroll_subject(section_code)
+        # Use section.enroll_student_in_section to get (ok, msg)
         try:
-            self.student_obj.enroll_subject(selected_section)
+            sec = section(section_name=selected_section)
+            ok, msg = sec.enroll_student_in_section(self.student_id)
         except Exception as e:
             QtWidgets.QMessageBox.critical(
-                self, "Enrollment Error", f"Error enrolling in section {selected_section}:\n{e}"
+                self,
+                "Enrollment Error",
+                f"Unexpected error while enrolling in {selected_section}:\n{e}"
             )
             return
 
-        # Refresh all tables after successful enrollment
-        self.refresh_all_tables()
-
-        QtWidgets.QMessageBox.information(
-            self, "Success", f"You have been enrolled into section {selected_section}."
-        )
+        if ok:
+            QtWidgets.QMessageBox.information(self, "Enrollment", msg)
+            self.refresh_all_tables()
+        else:
+            QtWidgets.QMessageBox.warning(self, "Enrollment", msg)
 
     def refresh_all_tables(self):
         self.load_info_table()
@@ -581,6 +585,44 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.load_current_schedule()
         self.load_available_courses()
         self.load_current_courses_table()
+
+    def remove_selected_course(self):
+        table = self.Current_CoursesTable
+
+        selected_section = None
+
+        # Find the checked checkbox
+        for row in range(table.rowCount()):
+            checkbox = table.cellWidget(row, 0)
+            if checkbox and checkbox.isChecked():
+                selected_section = self.current_section_map[row]
+                break
+
+        if not selected_section:
+            QtWidgets.QMessageBox.warning(self, "Remove Course", "Please select a course to remove.")
+            return
+
+        # IMPORTANT: REFRESH student object so it sees latest DB changes
+        self.student_obj = student(self.student_id)
+
+        # Call drop_subject() — returns (ok, msg)
+        try:
+            ok, msg = self.student_obj.drop_subject(selected_section)
+        except Exception as e:
+            QtWidgets.QMessageBox.critical(
+                self,
+                "Remove Course Error",
+                f"Unexpected error while removing section {selected_section}:\n{e}"
+            )
+            return
+
+        if ok:
+            QtWidgets.QMessageBox.information(self, "Remove Course", msg)
+            self.refresh_all_tables()
+        else:
+            QtWidgets.QMessageBox.warning(self, "Remove Course", msg)
+
+
 
 
 
