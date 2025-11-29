@@ -563,8 +563,8 @@ class StudentWindow(QtWidgets.QMainWindow):
 
         # Use section.enroll_student_in_section to get (ok, msg)
         try:
-            sec = section(section_name=selected_section)
-            ok, msg = sec.enroll_student_in_section(self.student_id)
+            self.student_obj = student(self.student_id)  # Refresh student object
+            ok, msg = self.student_obj.enroll_subject(selected_section)
         except Exception as e:
             QtWidgets.QMessageBox.critical(
                 self,
@@ -586,41 +586,7 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.load_available_courses()
         self.load_current_courses_table()
 
-    def remove_selected_course(self):
-        table = self.Current_CoursesTable
-
-        selected_section = None
-
-        # Find the checked checkbox
-        for row in range(table.rowCount()):
-            checkbox = table.cellWidget(row, 0)
-            if checkbox and checkbox.isChecked():
-                selected_section = self.current_section_map[row]
-                break
-
-        if not selected_section:
-            QtWidgets.QMessageBox.warning(self, "Remove Course", "Please select a course to remove.")
-            return
-
-        # IMPORTANT: REFRESH student object so it sees latest DB changes
-        self.student_obj = student(self.student_id)
-
-        # Call drop_subject() — returns (ok, msg)
-        try:
-            ok, msg = self.student_obj.drop_subject(selected_section)
-        except Exception as e:
-            QtWidgets.QMessageBox.critical(
-                self,
-                "Remove Course Error",
-                f"Unexpected error while removing section {selected_section}:\n{e}"
-            )
-            return
-
-        if ok:
-            QtWidgets.QMessageBox.information(self, "Remove Course", msg)
-            self.refresh_all_tables()
-        else:
-            QtWidgets.QMessageBox.warning(self, "Remove Course", msg)
+    
 
 
 
