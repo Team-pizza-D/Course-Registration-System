@@ -713,7 +713,10 @@ class student(user):
                     time = course_row[3]
                     credit = course_row[4]
                     all_available[section] = (section,course_code, instructor, time, credit)
-            return all_available
+            #organize by course code
+            sorted_available = dict(sorted(all_available.items(), key=lambda item: item[1][1]))
+            return sorted_available
+            
             #     if course_row:
             #         course_code = course_row[0]
             #         all_available[section] = course_code

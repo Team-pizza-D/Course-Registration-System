@@ -1,5 +1,21 @@
 import sqlite3
 from classses2 import admin, student,section,subject,instructor,Database
+
+
+# tariq = student( id=2430020)
+# print("--------------------------------")
+# print(tariq.view_available_subjects())
+# print("--------------------------------")
+# print(tariq.view_enrolled_subjects())
+# print("--------------------------------")
+# tariq.enroll_subject("AW")
+# print("--------------------------------")
+# print(tariq.view_available_subjects())
+# print("--------------------------------")
+# print(tariq.view_enrolled_subjects())
+# tariq.drop_subject("AW")
+
+
 # ahmad=student(id=2453089)
 # print(ahmad.display_info())
 # courses_db = Database("courses.db")
@@ -11,7 +27,7 @@ from classses2 import admin, student,section,subject,instructor,Database
 # tariq = student( id=2510005)
 # print(tariq.display_info())
 tariq = student( id=2430020)
-print(tariq.view_available_subjects())
+# print(tariq.view_available_subjects())
 # sec=section("AW")
 # print(sec.remaining_seats())
 # print(sec.section_info_student())
