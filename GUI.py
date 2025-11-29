@@ -296,8 +296,6 @@ class StudentWindow(QtWidgets.QMainWindow):
 
         row = 0
 
-        self.rows_disabled_last_time = []
-
         for _, (section, course_code, instructor, time, credit) in available.items():
 
             # Checkbox
@@ -345,7 +343,7 @@ class StudentWindow(QtWidgets.QMainWindow):
         sender = self.sender()
         clicked_row = None
 
-        # Find which row the checkbox belongs to
+        # Find clicked row
         for row in range(table.rowCount()):
             if table.cellWidget(row, 0) == sender:
                 clicked_row = row
@@ -354,68 +352,52 @@ class StudentWindow(QtWidgets.QMainWindow):
         if clicked_row is None:
             return
 
-        selected_section = self.available_section_map[clicked_row]
-        student_id = self.student_id
-
-        # If UNCHECKED → restore ONLY previously disabled rows
+        # If UNCHECKED → restore everything
         if state == 0:
-            self.reset_checkbox_states()
+            self.restore_all_rows()
             return
 
-        # CLEAR previous disabled rows
-        self.rows_disabled_last_time = []
-
-        # CHECK → detect conflicts and disable them
-        selected_sec_obj = section(section_name=selected_section)
-
+        # CHECKED → gray all other rows
         for row in range(table.rowCount()):
-            if row == clicked_row:
-                continue
-
-            sec_code = self.available_section_map[row]
             checkbox = table.cellWidget(row, 0)
-            sec_obj = section(section_name=sec_code)
 
-            ok, msg = sec_obj.all_conditions_met(student_id)
-
-            # Case 1: Same subject
-            if sec_obj.subject == selected_sec_obj.subject:
+            if row != clicked_row:
                 checkbox.setEnabled(False)
-                self.set_row_gray(table, row)
-                self.rows_disabled_last_time.append(row)
-                continue
+                self.set_row_gray(row)
+            else:
+                checkbox.setEnabled(True)
+                self.set_row_normal(row)   
 
-            # Case 2: Conflict
-            if not ok:
-                checkbox.setEnabled(False)
-                self.set_row_gray(table, row)
-                self.rows_disabled_last_time.append(row)
-                continue
-
-    def reset_checkbox_states(self):
+    def set_row_gray(self, row):
         table = self.Available_CoursesTable
-
-        # Re-enable and restore ONLY previously disabled rows
-        for row in self.rows_disabled_last_time:
-            checkbox = table.cellWidget(row, 0)
-            checkbox.setEnabled(True)
-
-            for col in range(1, table.columnCount()):
-                item = table.item(row, col)
-                if item:
-                    item.setBackground(QtGui.QColor("#001622"))   # Normal row color
-                    item.setForeground(QtGui.QColor("white"))     # Normal text
-
-    # Clear the history
-        self.rows_disabled_last_time = []
-
-    def set_row_gray(self, table, row):
-        """Disable visual style: gray background + gray text."""
         for col in range(1, table.columnCount()):
             item = table.item(row, col)
             if item:
                 item.setBackground(QtGui.QColor("#001622"))
                 item.setForeground(QtGui.QColor("#7a7a7a"))
+
+    def set_row_normal(self, row):
+        table = self.Available_CoursesTable
+        for col in range(1, table.columnCount()):
+            item = table.item(row, col)
+            if item:
+                item.setBackground(QtGui.QColor("#001622"))  # table background
+                item.setForeground(QtGui.QColor("white"))
+
+    def restore_all_rows(self):
+        table = self.Available_CoursesTable
+
+        # Re-enable all checkboxes + restore row colors
+        for row in range(table.rowCount()):
+            checkbox = table.cellWidget(row, 0)
+            checkbox.setEnabled(True)
+            checkbox.setChecked(False)
+
+            for col in range(1, table.columnCount()):
+                item = table.item(row, col)
+                if item:
+                    item.setBackground(QtGui.QColor("#001622"))
+                    item.setForeground(QtGui.QColor("white"))
 
 
 
