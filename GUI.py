@@ -548,32 +548,38 @@ class StudentWindow(QtWidgets.QMainWindow):
 
         selected_section = None
 
-        # Scan all checkboxes and find the selected one
+        # Find which row is checked
         for row in range(table.rowCount()):
             checkbox = table.cellWidget(row, 0)
-            if checkbox.isChecked():
-                selected_section = self.available_section_map[row]   # get section code
+            if checkbox and checkbox.isChecked():
+                selected_section = self.available_section_map[row]   # section code (e.g. "AW")
                 break
 
         if not selected_section:
-            QtWidgets.QMessageBox.warning(self, "Error", "Please select a course to add.")
+            QtWidgets.QMessageBox.warning(self, "Enrollment", "Please select a course to add.")
             return
 
-        # Call enroll_subject(section_code)
+        # --- USE enroll_subject(section_code) AND GET ok/message ---
         try:
-            self.student_obj.enroll_subject(selected_section)
+            ok, msg = self.student_obj.enroll_subject(selected_section)
         except Exception as e:
+            # In case enroll_subject fails in some unexpected way
             QtWidgets.QMessageBox.critical(
-                self, "Enrollment Error", f"Error enrolling in section {selected_section}:\n{e}"
+                self,
+                "Enrollment Error",
+                f"Unexpected error while enrolling in {selected_section}:\n{e}"
             )
             return
 
-        # Refresh all tables after successful enrollment
-        self.refresh_all_tables()
-
-        QtWidgets.QMessageBox.information(
-            self, "Success", f"You have been enrolled into section {selected_section}."
-        )
+        # Show the exact message coming from enroll_subject
+        if ok:
+            # Success message from your logic
+            QtWidgets.QMessageBox.information(self, "Enrollment", msg)
+            # Refresh everything only if enrollment actually happened
+            self.refresh_all_tables()
+        else:
+            # Failure / constraint message from your logic
+            QtWidgets.QMessageBox.warning(self, "Enrollment", msg)
 
     def refresh_all_tables(self):
         self.load_info_table()
