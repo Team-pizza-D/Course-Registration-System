@@ -705,11 +705,19 @@ class student(user):
             available_sections = [sec for sec in available_sections if sec not in enrolled_sections]
             all_available = {}
             for section in available_sections:
-                course_row = courses_db.execute("SELECT course_code FROM Courses WHERE section = ?", (section,), fetchone=True)
+                course_row = courses_db.execute("SELECT course_code, instructor ,section,time,credit FROM Courses WHERE section = ?", (section,), fetchone=True)
                 if course_row:
                     course_code = course_row[0]
-                    all_available[section] = course_code
+                    instructor = course_row[1]
+                    section = course_row[2]
+                    time = course_row[3]
+                    credit = course_row[4]
+                    all_available[section] = (section,course_code, instructor, time, credit)
             return all_available
+            #     if course_row:
+            #         course_code = course_row[0]
+            #         all_available[section] = course_code
+            # return all_available
 
 
         ### this should show all current sections that student enrolled in
