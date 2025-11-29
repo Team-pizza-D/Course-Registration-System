@@ -270,6 +270,8 @@ class StudentWindow(QtWidgets.QMainWindow):
         # Stretch columns to fit nicely
         table.horizontalHeader().setStretchLastSection(True)
         table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+        table.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Interactive)
+        table.setColumnWidth(1, 350) 
 
 
 
