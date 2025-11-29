@@ -668,15 +668,27 @@ class student(user):
         if row is None or len(row) == 0:
             return f"{self.id}, No enrolled subjects found"
         enrolled_sections = [r[0] for r in row]
-        row = courses_db.execute("SELECT course_code,course_name,time FROM Courses WHERE section IN ({seq})".format(seq=','.join(['?']*len(enrolled_sections))), tuple(enrolled_sections), fetchall=True)
-        enrolled_subjects = {r[0]: (r[1], r[2]) for r in row}
+        row = courses_db.execute("SELECT course_code,course_name,time,credit,section,instructor FROM Courses WHERE section IN ({seq})".format(seq=','.join(['?']*len(enrolled_sections))), tuple(enrolled_sections), fetchall=True)
+        if row is None or len(row) == 0:
+            return f"{self.id}, No enrolled subjects found"
         all_enrolled = {}
-        for section in enrolled_sections:
-            course_row = courses_db.execute("SELECT course_code FROM Courses WHERE section = ?", (section,), fetchone=True)
-            if course_row:
-                course_code = course_row[0]
-                course_info = enrolled_subjects.get(course_code, ("Unknown Course", "No Time Info"))
-                all_enrolled[section] = (course_code, course_info[0], course_info[1])
+        for r in row:
+            course_code = r[0]
+            course_name = r[1]
+            time = r[2]
+            credit = r[3]
+            section = r[4]
+            instructor = r[5]
+            all_enrolled[section] = (course_code, course_name, time, section, credit, instructor)
+
+        # enrolled_subjects = {r[0]: (r[1], r[2]) for r in row}
+        # all_enrolled = {}
+        # for section in enrolled_sections:
+        #     course_row = courses_db.execute("SELECT course_code FROM Courses WHERE section = ?", (section,), fetchone=True)
+        #     if course_row:
+        #         course_code = course_row[0]
+        #         course_info = enrolled_subjects.get(course_code, ("Unknown Course", "No Time Info"))
+        #         all_enrolled[section] = (course_code, course_info[0], course_info[1])
         return all_enrolled
     
     def view_available_subjects(self):  # to view all available subjects for enrollment
