@@ -104,6 +104,8 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.student_name = sname
         self.student_major = smajor
         self.infoTable.verticalHeader().setVisible(False)
+        self.AddButton.clicked.connect(self.add_selected_course)
+
         
         # Call the GPA function from classses2.py
         self.student_obj = student(self.student_id)
@@ -541,6 +543,44 @@ class StudentWindow(QtWidgets.QMainWindow):
                     item.setBackground(QtGui.QColor("#001622"))
                     item.setForeground(QtGui.QColor("white"))
 
+    def add_selected_course(self):
+        table = self.Available_CoursesTable
+
+        selected_section = None
+
+        # Scan all checkboxes and find the selected one
+        for row in range(table.rowCount()):
+            checkbox = table.cellWidget(row, 0)
+            if checkbox.isChecked():
+                selected_section = self.available_section_map[row]   # get section code
+                break
+
+        if not selected_section:
+            QtWidgets.QMessageBox.warning(self, "Error", "Please select a course to add.")
+            return
+
+        # Call enroll_subject(section_code)
+        try:
+            self.student_obj.enroll_subject(selected_section)
+        except Exception as e:
+            QtWidgets.QMessageBox.critical(
+                self, "Enrollment Error", f"Error enrolling in section {selected_section}:\n{e}"
+            )
+            return
+
+        # Refresh all tables after successful enrollment
+        self.refresh_all_tables()
+
+        QtWidgets.QMessageBox.information(
+            self, "Success", f"You have been enrolled into section {selected_section}."
+        )
+
+    def refresh_all_tables(self):
+        self.load_info_table()
+        self.load_transcript_tables()
+        self.load_current_schedule()
+        self.load_available_courses()
+        self.load_current_courses_table()
 
 
 

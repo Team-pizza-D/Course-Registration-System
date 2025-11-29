@@ -542,7 +542,7 @@ QScrollBar::sub-page:horizontal {
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="AddButton">
       <property name="geometry">
        <rect>
         <x>870</x>
@@ -555,7 +555,7 @@ QScrollBar::sub-page:horizontal {
        <string>Add</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_3">
+     <widget class="QPushButton" name="RemoveButton">
       <property name="geometry">
        <rect>
         <x>230</x>
