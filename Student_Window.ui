@@ -619,7 +619,7 @@ QScrollBar::sub-page:horizontal {
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QTableWidget" name="Available_CoursesTable_2">
+     <widget class="QTableWidget" name="Current_CoursesTable">
       <property name="geometry">
        <rect>
         <x>10</x>
