@@ -655,13 +655,13 @@ class student(user):
 
     def enroll_subject(self, section_code):  # to enroll student in a subject section
         sec=section(section_name=section_code)
-        okay,massege =sec.enroll_student_in_section(self.id)
-        return print(okay, massege)
+        okay,message =sec.enroll_student_in_section(self.id)
+        return okay, message
 
     def drop_subject(self, section_code):  # to drop a subject section for the student
         sect=section(section_name=section_code)
-        okay,massege =sect.drop_student_from_section(self.id)
-        return print(okay, massege)
+        okay,message =sect.drop_student_from_section(self.id)
+        return okay, message
 
     def view_enrolled_subjects(self):  # to view all enrolled subjects for the student
         row = users_db.execute("SELECT section FROM enrollments WHERE student_id = ?", (self.id,), fetchall=True)
