@@ -1,7 +1,7 @@
 import sys
 import os
 import sqlite3
-from PyQt5 import uic, QtWidgets, QtCore
+from PyQt5 import uic, QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QShortcut
 from PyQt5.QtGui import QKeySequence
 from classses2 import Database,  student, admin, user, subject, section, instructor
@@ -279,50 +279,143 @@ class StudentWindow(QtWidgets.QMainWindow):
         table = self.Available_CoursesTable
         table.clear()
 
-        # Table structure
-        table.setColumnCount(5)
+        table.setColumnCount(6)
         table.setHorizontalHeaderLabels(
-            ["Course Code", "Instructor", "Section", "Time", "Credit"]
+            ["", "Course Code", "Instructor", "Section", "Time", "Credit"]
         )
         table.verticalHeader().setVisible(False)
 
-        # Fetch available subjects from classses2.py
         available = self.student_obj.view_available_subjects()
 
-        # Handle no available courses
         if isinstance(available, str):
             table.setRowCount(0)
             return
 
+        self.available_section_map = {}
         table.setRowCount(len(available))
 
         row = 0
-        for section_name, (section, course_code, instructor, time, credit) in available.items():
 
-            # Create items
-            item_code = QtWidgets.QTableWidgetItem(course_code)
-            item_inst = QtWidgets.QTableWidgetItem(instructor)
-            item_section = QtWidgets.QTableWidgetItem(section)
-            item_time = QtWidgets.QTableWidgetItem(time)
-            item_credit = QtWidgets.QTableWidgetItem(str(credit))
+        self.rows_disabled_last_time = []
 
-            # Center-align
-            for item in [item_code, item_inst, item_section, item_time, item_credit]:
+        for _, (section, course_code, instructor, time, credit) in available.items():
+
+            # Checkbox
+            checkbox = QtWidgets.QCheckBox()
+            checkbox.setStyleSheet("margin-left: 8px;")
+            checkbox.stateChanged.connect(self.on_available_checkbox_changed)
+            table.setCellWidget(row, 0, checkbox)
+
+            # Store mapping row → section name
+            self.available_section_map[row] = section
+
+            # Fill row
+            items = [
+                QtWidgets.QTableWidgetItem(course_code),
+                QtWidgets.QTableWidgetItem(instructor),
+                QtWidgets.QTableWidgetItem(section),
+                QtWidgets.QTableWidgetItem(time),
+                QtWidgets.QTableWidgetItem(str(credit)),
+            ]
+
+            col = 1
+            for item in items:
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
-
-            # Insert into table
-            table.setItem(row, 0, item_code)
-            table.setItem(row, 1, item_inst)
-            table.setItem(row, 2, item_section)
-            table.setItem(row, 3, item_time)
-            table.setItem(row, 4, item_credit)
+                table.setItem(row, col, item)
+                col += 1
 
             row += 1
 
-        # Make columns expand nicely
-        table.horizontalHeader().setStretchLastSection(True)
-        table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+        # Column sizes
+        table.setColumnWidth(0, 40)
+        table.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Fixed)
 
+        table.setColumnWidth(3, 70)  # section column
+        table.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.Fixed)
+
+        table.setColumnWidth(5, 60)  # credit column
+        table.horizontalHeader().setSectionResizeMode(5, QtWidgets.QHeaderView.Fixed)
+
+        # Stretch rest
+        for col in [1, 2, 4]:
+            table.horizontalHeader().setSectionResizeMode(col, QtWidgets.QHeaderView.Stretch)
+
+    def on_available_checkbox_changed(self, state):
+        table = self.Available_CoursesTable
+        sender = self.sender()
+        clicked_row = None
+
+        # Find which row the checkbox belongs to
+        for row in range(table.rowCount()):
+            if table.cellWidget(row, 0) == sender:
+                clicked_row = row
+                break
+
+        if clicked_row is None:
+            return
+
+        selected_section = self.available_section_map[clicked_row]
+        student_id = self.student_id
+
+        # If UNCHECKED → restore ONLY previously disabled rows
+        if state == 0:
+            self.reset_checkbox_states()
+            return
+
+        # CLEAR previous disabled rows
+        self.rows_disabled_last_time = []
+
+        # CHECK → detect conflicts and disable them
+        selected_sec_obj = section(section_name=selected_section)
+
+        for row in range(table.rowCount()):
+            if row == clicked_row:
+                continue
+
+            sec_code = self.available_section_map[row]
+            checkbox = table.cellWidget(row, 0)
+            sec_obj = section(section_name=sec_code)
+
+            ok, msg = sec_obj.all_conditions_met(student_id)
+
+            # Case 1: Same subject
+            if sec_obj.subject == selected_sec_obj.subject:
+                checkbox.setEnabled(False)
+                self.set_row_gray(table, row)
+                self.rows_disabled_last_time.append(row)
+                continue
+
+            # Case 2: Conflict
+            if not ok:
+                checkbox.setEnabled(False)
+                self.set_row_gray(table, row)
+                self.rows_disabled_last_time.append(row)
+                continue
+
+    def reset_checkbox_states(self):
+        table = self.Available_CoursesTable
+
+        # Re-enable and restore ONLY previously disabled rows
+        for row in self.rows_disabled_last_time:
+            checkbox = table.cellWidget(row, 0)
+            checkbox.setEnabled(True)
+
+            for col in range(1, table.columnCount()):
+                item = table.item(row, col)
+                if item:
+                    item.setBackground(QtGui.QColor("#001622"))   # Normal row color
+                    item.setForeground(QtGui.QColor("white"))     # Normal text
+
+    # Clear the history
+        self.rows_disabled_last_time = []
+
+    def set_row_gray(self, table, row):
+        """Disable visual style: gray background + gray text."""
+        for col in range(1, table.columnCount()):
+            item = table.item(row, col)
+            if item:
+                item.setBackground(QtGui.QColor("#001622"))
+                item.setForeground(QtGui.QColor("#7a7a7a"))
 
 
 
