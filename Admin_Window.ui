@@ -501,9 +501,9 @@ QLineEdit::focus
       <widget class="QLabel" name="EnrollmentMessege">
        <property name="geometry">
         <rect>
-         <x>440</x>
-         <y>310</y>
-         <width>341</width>
+         <x>50</x>
+         <y>640</y>
+         <width>501</width>
          <height>41</height>
         </rect>
        </property>
