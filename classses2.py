@@ -179,7 +179,7 @@ class subject:  ### Data base team said that this is currently not needed but i 
 
     def already_graded(self, student_id):  # to check if student has already been graded in the section
         row= users_db.execute("SELECT numeric_grade FROM grades WHERE student_id = ? AND course = ?", (student_id, self.subject_name,), fetchone=True)
-        if row==None or row[0]==None:
+        if row==None or row[0]==None or len(row[0])==0:
             return False
         else:
             return True
@@ -565,6 +565,8 @@ class section(subject):
             return False , f"student with ID {student_id} is not enrolled in section {self.section_name}"
         if not self.section_is_existing():
             return False , f"section {self.section_name} does not exist"
+        if self.already_taken_subject(student_id):
+            return False , f"student with ID {student_id} has already completed subject {self.subject}"
         if self.already_graded(student_id):
             return False , f"student with ID {student_id} has already been graded in subject {self.subject}"
         users_db.execute("DELETE FROM enrollments WHERE student_id = ? AND section = ?", (student_id, self.section_name,), commit=True)
@@ -655,28 +657,40 @@ class student(user):
 
     def enroll_subject(self, section_code):  # to enroll student in a subject section
         sec=section(section_name=section_code)
-        okay,massege =sec.enroll_student_in_section(self.id)
-        return print(okay, massege)
+        okay,message =sec.enroll_student_in_section(self.id)
+        return okay, message
 
     def drop_subject(self, section_code):  # to drop a subject section for the student
         sect=section(section_name=section_code)
-        okay,massege =sect.drop_student_from_section(self.id)
-        return print(okay, massege)
+        okay,message =sect.drop_student_from_section(self.id)
+        return okay, message
 
     def view_enrolled_subjects(self):  # to view all enrolled subjects for the student
         row = users_db.execute("SELECT section FROM enrollments WHERE student_id = ?", (self.id,), fetchall=True)
         if row is None or len(row) == 0:
             return f"{self.id}, No enrolled subjects found"
         enrolled_sections = [r[0] for r in row]
-        row = courses_db.execute("SELECT course_code,course_name,time FROM Courses WHERE section IN ({seq})".format(seq=','.join(['?']*len(enrolled_sections))), tuple(enrolled_sections), fetchall=True)
-        enrolled_subjects = {r[0]: (r[1], r[2]) for r in row}
+        row = courses_db.execute("SELECT course_code,course_name,time,credit,section,instructor FROM Courses WHERE section IN ({seq})".format(seq=','.join(['?']*len(enrolled_sections))), tuple(enrolled_sections), fetchall=True)
+        if row is None or len(row) == 0:
+            return f"{self.id}, No enrolled subjects found"
         all_enrolled = {}
-        for section in enrolled_sections:
-            course_row = courses_db.execute("SELECT course_code FROM Courses WHERE section = ?", (section,), fetchone=True)
-            if course_row:
-                course_code = course_row[0]
-                course_info = enrolled_subjects.get(course_code, ("Unknown Course", "No Time Info"))
-                all_enrolled[section] = (course_code, course_info[0], course_info[1])
+        for r in row:
+            course_code = r[0]
+            course_name = r[1]
+            time = r[2]
+            credit = r[3]
+            section = r[4]
+            instructor = r[5]
+            all_enrolled[section] = (course_code, course_name, time, section, credit, instructor)
+
+        # enrolled_subjects = {r[0]: (r[1], r[2]) for r in row}
+        # all_enrolled = {}
+        # for section in enrolled_sections:
+        #     course_row = courses_db.execute("SELECT course_code FROM Courses WHERE section = ?", (section,), fetchone=True)
+        #     if course_row:
+        #         course_code = course_row[0]
+        #         course_info = enrolled_subjects.get(course_code, ("Unknown Course", "No Time Info"))
+        #         all_enrolled[section] = (course_code, course_info[0], course_info[1])
         return all_enrolled
     
     def view_available_subjects(self):  # to view all available subjects for enrollment
@@ -705,11 +719,22 @@ class student(user):
             available_sections = [sec for sec in available_sections if sec not in enrolled_sections]
             all_available = {}
             for section in available_sections:
-                course_row = courses_db.execute("SELECT course_code FROM Courses WHERE section = ?", (section,), fetchone=True)
+                course_row = courses_db.execute("SELECT course_code, instructor ,section,time,credit FROM Courses WHERE section = ?", (section,), fetchone=True)
                 if course_row:
                     course_code = course_row[0]
-                    all_available[section] = course_code
-            return all_available
+                    instructor = course_row[1]
+                    section = course_row[2]
+                    time = course_row[3]
+                    credit = course_row[4]
+                    all_available[section] = (section,course_code, instructor, time, credit)
+            #organize by course code
+            sorted_available = dict(sorted(all_available.items(), key=lambda item: item[1][1]))
+            return sorted_available
+            
+            #     if course_row:
+            #         course_code = course_row[0]
+            #         all_available[section] = course_code
+            # return all_available
 
 
         ### this should show all current sections that student enrolled in
@@ -839,8 +864,6 @@ class instructor(user):
             )
     def display_info(self):
         return super().display_info() + f", Subject: {self.subject}"     
-    def __add_grade(self, student_id, section_code, grade):  # to add grade for a student in a section
-        pass
     def show_students(self,section_code):  # to show all students in a section
         self.section= section(section_name=section_code)
         self.section.view_enrolled_students()
@@ -932,6 +955,9 @@ class admin(user):
                 if course_row:
                     course_code = course_row[0]
                     all_available[section] = course_code
+        else:
+            all_available= f"Student with ID {id} does not exist."            
+
             return all_available
 
             
@@ -991,6 +1017,7 @@ class admin(user):
         else:
             letter_grade = "F"
             users_db.execute("UPDATE grades SET numeric_grade = ?, letter_grade = ? WHERE student_id = ? AND course = ?", (grade, letter_grade, student_id, course_code), commit=True)
+            users_db.execute("DELETE FROM enrollments WHERE student_id = ? AND course = ?", (student_id, course_code), commit=True)
         return f"Grade {grade} ({letter_grade}) added for student ID {student_id} in course {course_code}."
 
 

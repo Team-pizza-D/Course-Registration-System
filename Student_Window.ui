@@ -131,7 +131,15 @@ QLineEdit::focus
 
 }
 
-</string>
+QMessageBox {
+    color: white;
+}
+QLabel {
+    color: white;
+}
+QPushButton {
+    color: white;
+}</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="tabWidget">
@@ -175,7 +183,7 @@ QLineEdit::focus
         }</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -513,8 +521,8 @@ QScrollBar::sub-page:horizontal {
      <widget class="QLabel" name="welcomeLabel_2">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>170</y>
+        <x>150</x>
+        <y>50</y>
         <width>301</width>
         <height>41</height>
        </rect>
@@ -542,11 +550,11 @@ QScrollBar::sub-page:horizontal {
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="AddButton">
       <property name="geometry">
        <rect>
-        <x>710</x>
-        <y>660</y>
+        <x>870</x>
+        <y>530</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -555,11 +563,11 @@ QScrollBar::sub-page:horizontal {
        <string>Add</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_3">
+     <widget class="QPushButton" name="RemoveButton">
       <property name="geometry">
        <rect>
-        <x>890</x>
-        <y>660</y>
+        <x>230</x>
+        <y>530</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -568,79 +576,82 @@ QScrollBar::sub-page:horizontal {
        <string>Remove</string>
       </property>
      </widget>
-     <widget class="QTableWidget" name="Current_CoursesTable">
-      <property name="geometry">
-       <rect>
-        <x>100</x>
-        <y>250</y>
-        <width>301</width>
-        <height>361</height>
-       </rect>
-      </property>
-      <property name="editTriggers">
-       <set>QAbstractItemView::NoEditTriggers</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEdit_2">
-      <property name="geometry">
-       <rect>
-        <x>480</x>
-        <y>90</y>
-        <width>241</width>
-        <height>51</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="welcomeLabel_4">
-      <property name="geometry">
-       <rect>
-        <x>480</x>
-        <y>20</y>
-        <width>241</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Consolas,Courier New,monospace</family>
-        <pointsize>20</pointsize>
-        <weight>50</weight>
-        <italic>false</italic>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QLabel{
-    font-family: Consolas, &quot;Courier New&quot;, monospace;
-	color: rgb(232, 232, 232);
-	font: 20pt;
-}</string>
-      </property>
-      <property name="text">
-       <string>Course Code</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
      <widget class="QTableWidget" name="Available_CoursesTable">
       <property name="geometry">
        <rect>
-        <x>580</x>
-        <y>250</y>
-        <width>561</width>
-        <height>381</height>
+        <x>610</x>
+        <y>130</y>
+        <width>591</width>
+        <height>361</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">/* ==== Modern Dark Scrollbar ==== */
+
+QScrollBar:vertical {
+    background: #00111d; 
+    width: 14px;
+    margin: 0px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #2b2b2b;
+    min-height: 30px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #3c3c3c;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+/* Horizontal same theme */
+QScrollBar:horizontal {
+    background: #00111d;
+    height: 14px;
+    margin: 0px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #2b2b2b;
+    min-width: 30px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #3c3c3c;
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: none;
+}
+</string>
       </property>
       <property name="editTriggers">
        <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="showGrid">
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QLabel" name="welcomeLabel_6">
       <property name="geometry">
        <rect>
-        <x>700</x>
-        <y>170</y>
+        <x>720</x>
+        <y>50</y>
         <width>331</width>
         <height>41</height>
        </rect>
@@ -666,6 +677,25 @@ QScrollBar::sub-page:horizontal {
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="Current_CoursesTable">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>130</y>
+        <width>591</width>
+        <height>361</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="showGrid">
+       <bool>false</bool>
       </property>
      </widget>
     </widget>

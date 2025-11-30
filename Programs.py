@@ -1,4 +1,7 @@
 # Here we will add the courses
+'''When you run this file, everything will be stored in a file named "courses.db", this file contains all subjects maps for the four majors.
+Also, one more table for all subjects are availble for EE students and their sections.
+You can look for these information by "DB browser (SQLite)". '''
 import sqlite3
 # Shared courses :
 ####################################################################################################
