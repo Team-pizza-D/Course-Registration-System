@@ -940,7 +940,7 @@ QLineEdit::focus
        <string>Section ID : </string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="Tab4_StudentID_2">
+     <widget class="QLineEdit" name="Tab3_Course_Code_2">
       <property name="geometry">
        <rect>
         <x>200</x>
@@ -950,7 +950,7 @@ QLineEdit::focus
        </rect>
       </property>
      </widget>
-     <widget class="QLineEdit" name="Tab4_StudentID_3">
+     <widget class="QLineEdit" name="Tab3_Section_ID_2">
       <property name="geometry">
        <rect>
         <x>600</x>
@@ -976,7 +976,7 @@ QLineEdit::focus
        <string>New Capacity : </string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="Tab4_StudentID_4">
+     <widget class="QLineEdit" name="Tab3_Capacity">
       <property name="geometry">
        <rect>
         <x>1070</x>
@@ -1201,7 +1201,7 @@ QComboBox QAbstractItemView {
        </property>
       </item>
      </widget>
-     <widget class="QLineEdit" name="Tab4_StudentID">
+     <widget class="QLineEdit" name="Tab4_Student_ID">
       <property name="geometry">
        <rect>
         <x>202</x>
@@ -1211,7 +1211,7 @@ QComboBox QAbstractItemView {
        </rect>
       </property>
      </widget>
-     <widget class="QLineEdit" name="Tab4_Course_Name">
+     <widget class="QLineEdit" name="Tab4_Course_name">
       <property name="geometry">
        <rect>
         <x>200</x>
@@ -1221,7 +1221,7 @@ QComboBox QAbstractItemView {
        </rect>
       </property>
      </widget>
-     <widget class="QLineEdit" name="Tab4_Course_Code">
+     <widget class="QLineEdit" name="Tab4_Course_code">
       <property name="geometry">
        <rect>
         <x>970</x>
