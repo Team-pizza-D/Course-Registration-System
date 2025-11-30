@@ -548,7 +548,7 @@ class section(subject):
         self.enrolled_students.append(f"{student_id} - {student_name}")
         self.student_id_in_section.append(student_id)
         self.student_name_in_section.append(student_name)
-        users_db.execute("INSERT INTO grades (student_id, course) VALUES (?, ?)", (student_id, self.subject), commit=True)
+        # users_db.execute("INSERT INTO grades (student_id, course) VALUES (?, ?)", (student_id, self.subject), commit=True)
 
         return True , f"Student with ID {student_id} successfully enrolled in section {self.section_name}."
 
