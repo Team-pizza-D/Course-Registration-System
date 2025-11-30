@@ -54,9 +54,22 @@ class LoginWindow(QMainWindow):
         except:
             return None
 
-    
-    def check_admin(self, uni_id):
-        pass
+    def check_admin(self, uni_id, password):
+        try:
+            a = admin(id=uni_id)
+
+            if not a.is_admin():
+                return None
+            
+            if not a.correct_password(password):
+                return None
+            name = a.username
+
+
+            return (uni_id, name)
+
+        except:
+            return None
 
     # __________ LOGIN LOGIC __________
 
@@ -73,7 +86,7 @@ class LoginWindow(QMainWindow):
             return
 
         # Admin login (you said you will implement it later)
-        admin_data = self.check_admin(UniID)
+        admin_data = self.check_admin(UniID, password)
         if admin_data:
             self.openAdminWindow()
             return
@@ -86,6 +99,10 @@ class LoginWindow(QMainWindow):
         self.main_window = StudentWindow(sid, sname, smajor)
         self.main_window.show()
         
+    def openAdminWindow(self):
+        self.hide()
+        self.main_window = AdminWindow()
+        self.main_window.show()
 
 
 # _____________________________________________________________
