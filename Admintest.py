@@ -46,6 +46,11 @@ class AdminWindow(QtWidgets.QMainWindow):
         # Ensure message label starts empty
         self.EnrollmentMessege.setText("")
 
+
+    # =========================================================
+    #              SUBJECT ENROLLMENT (TAB 1)
+    # =========================================================
+
     # =========================================================
     #              SUBJECT ENROLLMENT (TAB 2)
     # =========================================================
@@ -88,8 +93,6 @@ class AdminWindow(QtWidgets.QMainWindow):
         self.Tab2_SubjectsTable.clearContents()
         self.StudentCourseTable.setRowCount(0)
         self.Tab2_SubjectsTable.setRowCount(0)
-
-    # ---------- Right table: Available subjects ----------
 
     def load_available_subjects_table(self):
         """
@@ -224,8 +227,6 @@ class AdminWindow(QtWidgets.QMainWindow):
                 if item:
                     item.setBackground(QtGui.QColor("#001622"))
                     item.setForeground(QtGui.QColor("white"))
-
-    # ---------- Left table: Student current courses ----------
 
     def load_student_current_courses_table(self):
         """
@@ -366,8 +367,6 @@ class AdminWindow(QtWidgets.QMainWindow):
                     item.setBackground(QtGui.QColor("#001622"))
                     item.setForeground(QtGui.QColor("white"))
 
-    # ---------- Add / Remove buttons using admin methods ----------
-
     def add_selected_course(self):
 
         if self.current_student is None:
@@ -408,9 +407,6 @@ class AdminWindow(QtWidgets.QMainWindow):
             self.load_available_subjects_table()
         else:
             QtWidgets.QMessageBox.warning(self, "Enrollment", msg)
-
-
-
 
     def remove_selected_course(self):
         """
@@ -456,8 +452,6 @@ class AdminWindow(QtWidgets.QMainWindow):
         else:
             QtWidgets.QMessageBox.warning(self, "Remove Course", msg)
 
-
-# Optional: simple launcher if you want to run this file directly
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     win = AdminWindow()

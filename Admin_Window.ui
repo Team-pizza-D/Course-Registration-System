@@ -187,7 +187,7 @@ QLineEdit::focus
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -501,9 +501,9 @@ QLineEdit::focus
       <widget class="QLabel" name="EnrollmentMessege">
        <property name="geometry">
         <rect>
-         <x>50</x>
+         <x>10</x>
          <y>640</y>
-         <width>501</width>
+         <width>671</width>
          <height>41</height>
         </rect>
        </property>
@@ -807,78 +807,6 @@ QLineEdit::focus
        <string>Course Grade : </string>
       </property>
      </widget>
-     <widget class="QComboBox" name="Tab4_Course_Grade">
-      <property name="geometry">
-       <rect>
-        <x>1010</x>
-        <y>40</y>
-        <width>281</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QComboBox {
-    background-color: white;
-    color: black;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 4px;
-}
-
-QComboBox QAbstractItemView {
-    background-color: white;
-    color: black;
-    font-size: 16px;
-    font-weight: bold;
-}
-</string>
-      </property>
-      <item>
-       <property name="text">
-        <string>A+</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>A</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>B+</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>B</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>C+</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>C</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>D+</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>D</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>F</string>
-       </property>
-      </item>
-     </widget>
      <widget class="QLineEdit" name="Tab4_Student_ID">
       <property name="geometry">
        <rect>
@@ -995,6 +923,16 @@ QComboBox QAbstractItemView {
       </property>
       <property name="text">
        <string>Confirm</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="Tab4_Course_code_2">
+      <property name="geometry">
+       <rect>
+        <x>990</x>
+        <y>40</y>
+        <width>201</width>
+        <height>41</height>
+       </rect>
       </property>
      </widget>
     </widget>
