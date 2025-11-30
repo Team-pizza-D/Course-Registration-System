@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1220</width>
-    <height>901</height>
+    <width>1212</width>
+    <height>960</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -131,7 +131,15 @@ QLineEdit::focus
 
 }
 
-</string>
+QMessageBox {
+    color: white;
+}
+QLabel {
+    color: white;
+}
+QPushButton {
+    color: white;
+}</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="tabWidget">
@@ -175,12 +183,28 @@ QLineEdit::focus
         }</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
       <string>Current Schedule</string>
      </attribute>
+     <widget class="QTableWidget" name="CurrentSchTable">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>40</y>
+        <width>1131</width>
+        <height>721</height>
+       </rect>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="showGrid">
+       <bool>false</bool>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
@@ -216,28 +240,18 @@ QTableWidget::item:selected {
         color: black;
     }</string>
       </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
       <property name="showGrid">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QTableWidget" name="term1">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>270</y>
-        <width>441</width>
-        <height>151</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QTableWidget" name="GpaTable">
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>140</y>
+        <y>130</y>
         <width>241</width>
         <height>81</height>
        </rect>
@@ -245,6 +259,259 @@ QTableWidget::item:selected {
       <property name="styleSheet">
        <string notr="true"/>
       </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="showGrid">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>230</y>
+        <width>1161</width>
+        <height>581</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">self.setStyleSheet
+/* Scroll area background (content behind the cards) */
+QScrollArea {
+    background-color: #1e1e1e;
+    border: none;
+}
+
+/* Horizontal scroll bar */
+QScrollBar:horizontal {
+    height: 10px;
+    background: #181818;
+    margin: 0px 24px 0px 24px;      /* space before/after arrows */
+    border-radius: 5px;
+}
+
+/* The draggable handle */
+QScrollBar::handle:horizontal {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 0,
+        stop: 0 #3a3a3a,
+        stop: 1 #595959
+    );
+    border-radius: 5px;
+    min-width: 40px;
+}
+
+/* Handle hover &amp; pressed */
+QScrollBar::handle:horizontal:hover {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 0,
+        stop: 0 #4a4a4a,
+        stop: 1 #707070
+    );
+}
+
+QScrollBar::handle:horizontal:pressed {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 0,
+        stop: 0 #606060,
+        stop: 1 #808080
+    );
+}
+
+/* Remove ugly arrows but keep margin clean */
+QScrollBar::add-line:horizontal,
+QScrollBar::sub-line:horizontal {
+    background: none;
+    width: 0px;
+    height: 0px;
+}
+
+/* The area before and after the handle */
+QScrollBar::add-page:horizontal,
+QScrollBar::sub-page:horizontal {
+    background: none;
+}
+</string>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>1330</width>
+         <height>569</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="1" column="5">
+         <widget class="QTableWidget" name="term10">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="5">
+         <widget class="QTableWidget" name="term9">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QTableWidget" name="term2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QTableWidget" name="term3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QTableWidget" name="term5">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="4">
+         <widget class="QTableWidget" name="term8">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QTableWidget" name="term6">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QTableWidget" name="term4">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="4">
+         <widget class="QTableWidget" name="term7">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QTableWidget" name="term1">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_3">
@@ -254,8 +521,8 @@ QTableWidget::item:selected {
      <widget class="QLabel" name="welcomeLabel_2">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>170</y>
+        <x>150</x>
+        <y>50</y>
         <width>301</width>
         <height>41</height>
        </rect>
@@ -283,11 +550,11 @@ QTableWidget::item:selected {
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="AddButton">
       <property name="geometry">
        <rect>
-        <x>710</x>
-        <y>660</y>
+        <x>870</x>
+        <y>530</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -296,11 +563,11 @@ QTableWidget::item:selected {
        <string>Add</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_3">
+     <widget class="QPushButton" name="RemoveButton">
       <property name="geometry">
        <rect>
-        <x>890</x>
-        <y>660</y>
+        <x>230</x>
+        <y>530</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -309,73 +576,82 @@ QTableWidget::item:selected {
        <string>Remove</string>
       </property>
      </widget>
-     <widget class="QTableWidget" name="Current_CoursesTable">
-      <property name="geometry">
-       <rect>
-        <x>100</x>
-        <y>250</y>
-        <width>301</width>
-        <height>361</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEdit_2">
-      <property name="geometry">
-       <rect>
-        <x>480</x>
-        <y>90</y>
-        <width>241</width>
-        <height>51</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="welcomeLabel_4">
-      <property name="geometry">
-       <rect>
-        <x>480</x>
-        <y>20</y>
-        <width>241</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Consolas,Courier New,monospace</family>
-        <pointsize>20</pointsize>
-        <weight>50</weight>
-        <italic>false</italic>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QLabel{
-    font-family: Consolas, &quot;Courier New&quot;, monospace;
-	color: rgb(232, 232, 232);
-	font: 20pt;
-}</string>
-      </property>
-      <property name="text">
-       <string>Course Code</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
      <widget class="QTableWidget" name="Available_CoursesTable">
       <property name="geometry">
        <rect>
-        <x>580</x>
-        <y>250</y>
-        <width>561</width>
-        <height>381</height>
+        <x>610</x>
+        <y>130</y>
+        <width>591</width>
+        <height>361</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">/* ==== Modern Dark Scrollbar ==== */
+
+QScrollBar:vertical {
+    background: #00111d; 
+    width: 14px;
+    margin: 0px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #2b2b2b;
+    min-height: 30px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #3c3c3c;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+/* Horizontal same theme */
+QScrollBar:horizontal {
+    background: #00111d;
+    height: 14px;
+    margin: 0px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #2b2b2b;
+    min-width: 30px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #3c3c3c;
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: none;
+}
+</string>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="showGrid">
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QLabel" name="welcomeLabel_6">
       <property name="geometry">
        <rect>
-        <x>700</x>
-        <y>170</y>
+        <x>720</x>
+        <y>50</y>
         <width>331</width>
         <height>41</height>
        </rect>
@@ -403,6 +679,25 @@ QTableWidget::item:selected {
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
+     <widget class="QTableWidget" name="Current_CoursesTable">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>130</y>
+        <width>591</width>
+        <height>361</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="showGrid">
+       <bool>false</bool>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QLabel" name="welcomeLabel">
@@ -410,7 +705,7 @@ QTableWidget::item:selected {
      <rect>
       <x>20</x>
       <y>20</y>
-      <width>431</width>
+      <width>1041</width>
       <height>71</height>
      </rect>
     </property>
@@ -440,7 +735,7 @@ QTableWidget::item:selected {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1220</width>
+     <width>1212</width>
      <height>26</height>
     </rect>
    </property>

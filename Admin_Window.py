@@ -164,8 +164,17 @@ class AdminWindow(QMainWindow):
     def Tab2_DeleteCourseFunction(self):
         pass
 
+#---------------------------------Tab 3 functions---------------------------------
+def tab3functions(self):
+    coursename = self.Tab3_Course_Code_2.text()
+    sectionid = self.Tab3_Section_ID_2.text()
+    capacity = self.Tab3_Capacity.text()
 
-
+#---------------------------------Tab 4 functions---------------------------------
+def tab4functions(self):
+    studentid = self.Tab4_Student_ID.text()
+    coursename = self.Tab4_Course_name.text()
+    coursecode = self.Tab4_Course_code.text()
 
 
 
