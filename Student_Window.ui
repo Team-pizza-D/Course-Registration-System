@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1212</width>
+    <width>1237</width>
     <height>960</height>
    </rect>
   </property>
@@ -192,7 +192,7 @@ QPushButton {
      <widget class="QTableWidget" name="CurrentSchTable">
       <property name="geometry">
        <rect>
-        <x>40</x>
+        <x>50</x>
         <y>40</y>
         <width>1131</width>
         <height>721</height>
@@ -213,9 +213,9 @@ QPushButton {
      <widget class="QTableWidget" name="infoTable">
       <property name="geometry">
        <rect>
-        <x>30</x>
+        <x>40</x>
         <y>30</y>
-        <width>1101</width>
+        <width>1161</width>
         <height>81</height>
        </rect>
       </property>
@@ -250,7 +250,7 @@ QTableWidget::item:selected {
      <widget class="QTableWidget" name="GpaTable">
       <property name="geometry">
        <rect>
-        <x>30</x>
+        <x>40</x>
         <y>130</y>
         <width>241</width>
         <height>81</height>
@@ -269,7 +269,7 @@ QTableWidget::item:selected {
      <widget class="QScrollArea" name="scrollArea">
       <property name="geometry">
        <rect>
-        <x>30</x>
+        <x>40</x>
         <y>230</y>
         <width>1161</width>
         <height>581</height>
@@ -521,7 +521,7 @@ QScrollBar::sub-page:horizontal {
      <widget class="QLabel" name="welcomeLabel_2">
       <property name="geometry">
        <rect>
-        <x>150</x>
+        <x>160</x>
         <y>50</y>
         <width>301</width>
         <height>41</height>
@@ -554,7 +554,7 @@ QScrollBar::sub-page:horizontal {
       <property name="geometry">
        <rect>
         <x>870</x>
-        <y>530</y>
+        <y>630</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -567,7 +567,7 @@ QScrollBar::sub-page:horizontal {
       <property name="geometry">
        <rect>
         <x>230</x>
-        <y>530</y>
+        <y>630</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -579,10 +579,10 @@ QScrollBar::sub-page:horizontal {
      <widget class="QTableWidget" name="Available_CoursesTable">
       <property name="geometry">
        <rect>
-        <x>610</x>
+        <x>630</x>
         <y>130</y>
         <width>591</width>
-        <height>361</height>
+        <height>481</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -650,7 +650,7 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
      <widget class="QLabel" name="welcomeLabel_6">
       <property name="geometry">
        <rect>
-        <x>720</x>
+        <x>730</x>
         <y>50</y>
         <width>331</width>
         <height>41</height>
@@ -682,10 +682,10 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
      <widget class="QTableWidget" name="Current_CoursesTable">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>20</x>
         <y>130</y>
         <width>591</width>
-        <height>361</height>
+        <height>481</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -735,7 +735,7 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1212</width>
+     <width>1237</width>
      <height>26</height>
     </rect>
    </property>
