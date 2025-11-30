@@ -6,119 +6,13 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QShortcut
 from PyQt5.QtGui import QKeySequence
 from classses2 import Database,  student, admin, user, subject, section, instructor
 
-
-
-class LoginWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        ui_path = os.path.join(os.path.dirname(__file__), "Login.ui")
-        uic.loadUi(ui_path, self)
-        self.setFixedWidth(552)
-        self.setFixedHeight(650)
-
-        self.loginButton.clicked.connect(self.loginfunction)
-
-        # Enter triggers login
-        QShortcut(QKeySequence("Return"), self, self.loginButton.click)
-        QShortcut(QKeySequence("Enter"), self, self.loginButton.click)
-
-        self.checkBox_show.stateChanged.connect(self.toggle_password)
-
-    def toggle_password(self):
-        if self.checkBox_show.isChecked():
-            self.PasslineEdit.setEchoMode(QtWidgets.QLineEdit.Normal)
-        else:
-            self.PasslineEdit.setEchoMode(QtWidgets.QLineEdit.Password)
-
-    # __________ DATABASE CHECKS __________
-
-    def check_student(self, uni_id, password):
-        try:
-            # Create a student object using the ID
-            s = student(id=uni_id)
-
-            # Check if the ID belongs to a real student
-            if not s.is_student():
-                return None  # Not a student
-
-            # Verify password using existing function in user class
-            if not s.correct_password(password):
-                return None  # Password wrong
-
-            # Fetch username and major from DB
-            name = s.username
-            major = s.major
-
-            return (uni_id, name, major)
-
-        except:
-            return None
-
-    def check_admin(self, uni_id, password):
-        try:
-            a = admin(id=uni_id)
-
-            if not a.is_admin():
-                return None
-            
-            if not a.correct_password(password):
-                return None
-            name = a.username
-
-
-            return (uni_id, name)
-
-        except:
-            return None
-
-    # __________ LOGIN LOGIC __________
-
-    def loginfunction(self):
-        UniID = self.IDlineEdit.text().strip()
-        password = self.PasslineEdit.text().strip()
-
-        # Check student login using functions from classses2.py
-        student_data = self.check_student(UniID, password)
-
-        if student_data:
-            sid, sname, smajor = student_data
-            self.openStudentWindow(sid, sname, smajor)
-            return
-
-        # Admin login (you said you will implement it later)
-        admin_data = self.check_admin(UniID, password)
-        if admin_data:
-            self.openAdminWindow()
-            return
-
-        QtWidgets.QMessageBox.warning(self, "Login Failed", "Invalid ID or Password.")
-
-
-    def openStudentWindow(self, sid, sname, smajor):
-        self.hide()
-        self.main_window = StudentWindow(sid, sname, smajor)
-        self.main_window.show()
-        
-    def openAdminWindow(self):
-        self.hide()
-        self.main_window = AdminWindow()
-        self.main_window.show()
-
-
-# _____________________________________________________________
-#                        STUDENT WINDOW
-# _____________________________________________________________
 class StudentWindow(QtWidgets.QMainWindow):
     def __init__(self, sid, sname, smajor):
         super().__init__()
         ui_path = os.path.join(os.path.dirname(__file__), "Student_Window.ui")
         uic.loadUi(ui_path, self)
 
-<<<<<<< HEAD
-        self.setFixedWidth(1216)    
-=======
         self.setFixedWidth(1248)    
->>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
         self.setFixedHeight(966)
 
         self.student_id = sid
@@ -369,11 +263,7 @@ class StudentWindow(QtWidgets.QMainWindow):
         table.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Fixed)        
 
 
-<<<<<<< HEAD
-    # __________Courses Tab__________
-=======
     # __________Add/Remove Tab__________
->>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
     def load_available_courses(self):
         table = self.Available_CoursesTable
         table.clearContents()
@@ -715,31 +605,3 @@ class StudentWindow(QtWidgets.QMainWindow):
             self.refresh_all_tables()
         else:
             QtWidgets.QMessageBox.warning(self, "Remove Course", msg)
-    
-
-
-
-
-
-# _____________________________________________________________
-#                        ADMIN WINDOW
-# _____________________________________________________________
-class AdminWindow(QtWidgets.QMainWindow):
-    def __init__(self):
-        super().__init__()
-        ui_path = os.path.join(os.path.dirname(__file__), "Admin_Window.ui")
-        uic.loadUi(ui_path, self)
-
-
-# _____________________________________________________________
-#                            MAIN
-# _____________________________________________________________
-def main():
-    app = QApplication(sys.argv)
-    window = LoginWindow()
-    window.show()
-    sys.exit(app.exec_())
-
-
-if __name__ == "__main__":
-    main()

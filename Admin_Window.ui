@@ -6,8 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
+<<<<<<< HEAD
     <width>1391</width>
     <height>861</height>
+=======
+    <width>1236</width>
+    <height>966</height>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
    </rect>
   </property>
   <property name="windowTitle">
@@ -183,7 +188,11 @@ QLineEdit::focus
       <x>0</x>
       <y>50</y>
       <width>1381</width>
+<<<<<<< HEAD
       <height>791</height>
+=======
+      <height>871</height>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
      </rect>
     </property>
     <property name="currentIndex">
@@ -240,6 +249,7 @@ QLineEdit::focus
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
+<<<<<<< HEAD
       <widget class="QLabel" name="label_5">
        <property name="geometry">
         <rect>
@@ -286,12 +296,19 @@ QLineEdit::focus
        <property name="geometry">
         <rect>
          <x>790</x>
+=======
+      <widget class="QLineEdit" name="Tab1_LastName">
+       <property name="geometry">
+        <rect>
+         <x>750</x>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
          <y>70</y>
          <width>261</width>
          <height>41</height>
         </rect>
        </property>
       </widget>
+<<<<<<< HEAD
       <widget class="QLabel" name="label_8">
        <property name="geometry">
         <rect>
@@ -308,10 +325,12 @@ QLineEdit::focus
         <string>Student ID :</string>
        </property>
       </widget>
+=======
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
       <widget class="QLabel" name="label_9">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>50</x>
          <y>70</y>
          <width>131</width>
          <height>41</height>
@@ -327,9 +346,15 @@ QLineEdit::focus
       <widget class="QLabel" name="label_10">
        <property name="geometry">
         <rect>
+<<<<<<< HEAD
          <x>0</x>
          <y>130</y>
          <width>141</width>
+=======
+         <x>640</x>
+         <y>80</y>
+         <width>101</width>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
          <height>21</height>
         </rect>
        </property>
@@ -340,6 +365,7 @@ QLineEdit::focus
         <string>Last Name :</string>
        </property>
       </widget>
+<<<<<<< HEAD
       <widget class="QLineEdit" name="Tab1_StudentID">
        <property name="geometry">
         <rect>
@@ -350,6 +376,8 @@ QLineEdit::focus
         </rect>
        </property>
       </widget>
+=======
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
       <widget class="QLineEdit" name="Tab1_FirstName">
        <property name="geometry">
         <rect>
@@ -360,6 +388,7 @@ QLineEdit::focus
         </rect>
        </property>
       </widget>
+<<<<<<< HEAD
       <widget class="QLineEdit" name="Tab1_Section">
        <property name="geometry">
         <rect>
@@ -370,6 +399,8 @@ QLineEdit::focus
         </rect>
        </property>
       </widget>
+=======
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
      </widget>
      <widget class="QFrame" name="frame_3">
       <property name="geometry">
@@ -389,9 +420,9 @@ QLineEdit::focus
       <widget class="QPushButton" name="Tab1_AddStudent">
        <property name="geometry">
         <rect>
-         <x>70</x>
+         <x>250</x>
          <y>20</y>
-         <width>131</width>
+         <width>231</width>
          <height>41</height>
         </rect>
        </property>
@@ -402,38 +433,12 @@ QLineEdit::focus
         <string>Add</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="Tab1_SearchStudent">
-       <property name="geometry">
-        <rect>
-         <x>300</x>
-         <y>20</y>
-         <width>131</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Search</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="Tab1_SelectStudent">
-       <property name="geometry">
-        <rect>
-         <x>600</x>
-         <y>20</y>
-         <width>131</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Select</string>
-       </property>
-      </widget>
       <widget class="QPushButton" name="Tab1_DeleteStudent">
        <property name="geometry">
         <rect>
-         <x>900</x>
+         <x>630</x>
          <y>20</y>
-         <width>131</width>
+         <width>241</width>
          <height>41</height>
         </rect>
        </property>
@@ -514,29 +519,7 @@ QLineEdit::focus
        </column>
        <column>
         <property name="text">
-         <string>First Name</string>
-        </property>
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Middle Name</string>
-        </property>
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Last Name</string>
+         <string>Name</string>
         </property>
         <property name="font">
          <font>
@@ -548,17 +531,6 @@ QLineEdit::focus
        <column>
         <property name="text">
          <string>Email Address</string>
-        </property>
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Section</string>
         </property>
         <property name="font">
          <font>
@@ -609,6 +581,7 @@ QLineEdit::focus
         </rect>
        </property>
       </widget>
+<<<<<<< HEAD
       <widget class="QLabel" name="label_4">
        <property name="geometry">
         <rect>
@@ -666,6 +639,13 @@ QLineEdit::focus
         <rect>
          <x>490</x>
          <y>230</y>
+=======
+      <widget class="QPushButton" name="Tab2_AddCourse">
+       <property name="geometry">
+        <rect>
+         <x>980</x>
+         <y>640</y>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
          <width>131</width>
          <height>41</height>
         </rect>
@@ -678,7 +658,11 @@ QLineEdit::focus
        <property name="geometry">
         <rect>
          <x>700</x>
+<<<<<<< HEAD
          <y>230</y>
+=======
+         <y>640</y>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
          <width>131</width>
          <height>41</height>
         </rect>
@@ -687,6 +671,7 @@ QLineEdit::focus
         <string>Remove</string>
        </property>
       </widget>
+<<<<<<< HEAD
       <widget class="QLabel" name="label_12">
        <property name="geometry">
         <rect>
@@ -713,12 +698,14 @@ QLineEdit::focus
         </rect>
        </property>
       </widget>
+=======
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
       <widget class="QLabel" name="EnrollmentMessege">
        <property name="geometry">
         <rect>
-         <x>440</x>
-         <y>310</y>
-         <width>341</width>
+         <x>10</x>
+         <y>640</y>
+         <width>671</width>
          <height>41</height>
         </rect>
        </property>
@@ -729,10 +716,10 @@ QLineEdit::focus
       <widget class="QTableWidget" name="StudentCourseTable">
        <property name="geometry">
         <rect>
-         <x>60</x>
-         <y>300</y>
-         <width>771</width>
-         <height>401</height>
+         <x>10</x>
+         <y>130</y>
+         <width>591</width>
+         <height>481</height>
         </rect>
        </property>
        <property name="styleSheet">
@@ -766,6 +753,7 @@ QLineEdit::focus
        <property name="cornerButtonEnabled">
         <bool>false</bool>
        </property>
+<<<<<<< HEAD
        <column>
         <property name="text">
          <string>Student ID</string>
@@ -843,18 +831,52 @@ QLineEdit::focus
          <height>41</height>
         </rect>
        </property>
+=======
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
       </widget>
       <widget class="QTableWidget" name="Tab2_SubjectsTable">
        <property name="geometry">
         <rect>
+<<<<<<< HEAD
          <x>890</x>
          <y>300</y>
          <width>411</width>
          <height>391</height>
+=======
+         <x>620</x>
+         <y>130</y>
+         <width>591</width>
+         <height>481</height>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 255, 255);</string>
+        <string notr="true">    
+    QTableWidget {
+        background-color: #001622;
+        color: white;
+        font-size: 14px;
+        border: 1px solid #4c4c4c;
+    }
+
+    QHeaderView::section {
+        background-color: #0b2e4a;
+        color: white;
+        padding: 5px;
+        border: 1px solid #32414B;
+        font-weight: bold;
+    }
+
+    QTableWidget::item:selected {
+        background-color: #1e90ff;
+        color: black;
+    }</string>
+       </property>
+       <property name="verticalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -866,41 +888,21 @@ QLineEdit::focus
         <bool>false</bool>
        </property>
        <property name="columnCount">
-        <number>3</number>
+        <number>0</number>
        </property>
-       <column>
-        <property name="text">
-         <string>Course Code</string>
-        </property>
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Course Name</string>
-        </property>
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Section ID</string>
-        </property>
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
+      </widget>
+      <widget class="QPushButton" name="pushButton">
+       <property name="geometry">
+        <rect>
+         <x>460</x>
+         <y>80</y>
+         <width>111</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Submit</string>
+       </property>
       </widget>
      </widget>
     </widget>
@@ -908,12 +910,21 @@ QLineEdit::focus
      <attribute name="title">
       <string>Sections Capacites</string>
      </attribute>
+<<<<<<< HEAD
      <widget class="QLabel" name="label_18">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>50</y>
         <width>181</width>
+=======
+     <widget class="QLabel" name="label_19">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>40</y>
+        <width>141</width>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
         <height>41</height>
        </rect>
       </property>
@@ -921,6 +932,7 @@ QLineEdit::focus
        <string notr="true">font: 75 16pt &quot;MS Shell Dlg 2&quot;;</string>
       </property>
       <property name="text">
+<<<<<<< HEAD
        <string>Course Code : </string>
       </property>
      </widget>
@@ -948,13 +960,21 @@ QLineEdit::focus
         <width>241</width>
         <height>41</height>
        </rect>
+=======
+       <string>Section Code : </string>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
       </property>
      </widget>
      <widget class="QLineEdit" name="Tab3_Section_ID_2">
       <property name="geometry">
        <rect>
+<<<<<<< HEAD
         <x>600</x>
         <y>50</y>
+=======
+        <x>320</x>
+        <y>40</y>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
         <width>251</width>
         <height>41</height>
        </rect>
@@ -963,9 +983,15 @@ QLineEdit::focus
      <widget class="QLabel" name="label_21">
       <property name="geometry">
        <rect>
+<<<<<<< HEAD
         <x>880</x>
         <y>50</y>
         <width>181</width>
+=======
+        <x>720</x>
+        <y>40</y>
+        <width>161</width>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
         <height>41</height>
        </rect>
       </property>
@@ -979,13 +1005,19 @@ QLineEdit::focus
      <widget class="QLineEdit" name="Tab3_Capacity">
       <property name="geometry">
        <rect>
+<<<<<<< HEAD
         <x>1070</x>
         <y>50</y>
+=======
+        <x>880</x>
+        <y>40</y>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
         <width>251</width>
         <height>41</height>
        </rect>
       </property>
      </widget>
+<<<<<<< HEAD
      <widget class="QTableWidget" name="StudentCourseTable_5">
       <property name="geometry">
        <rect>
@@ -993,6 +1025,15 @@ QLineEdit::focus
         <y>150</y>
         <width>1351</width>
         <height>581</height>
+=======
+     <widget class="QTableWidget" name="CapacityTable">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>210</y>
+        <width>1351</width>
+        <height>521</height>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
        </rect>
       </property>
       <property name="styleSheet">
@@ -1060,6 +1101,22 @@ QLineEdit::focus
        </property>
       </column>
      </widget>
+<<<<<<< HEAD
+=======
+     <widget class="QPushButton" name="Tab3_Confirm">
+      <property name="geometry">
+       <rect>
+        <x>530</x>
+        <y>140</y>
+        <width>181</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Confirm</string>
+      </property>
+     </widget>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
@@ -1081,6 +1138,7 @@ QLineEdit::focus
        <string>Student ID :</string>
       </property>
      </widget>
+<<<<<<< HEAD
      <widget class="QLabel" name="label_7">
       <property name="geometry">
        <rect>
@@ -1103,6 +1161,14 @@ QLineEdit::focus
         <x>760</x>
         <y>30</y>
         <width>181</width>
+=======
+     <widget class="QLabel" name="label_16">
+      <property name="geometry">
+       <rect>
+        <x>440</x>
+        <y>40</y>
+        <width>131</width>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
         <height>41</height>
        </rect>
       </property>
@@ -1116,9 +1182,15 @@ QLineEdit::focus
      <widget class="QLabel" name="label_17">
       <property name="geometry">
        <rect>
+<<<<<<< HEAD
         <x>760</x>
         <y>120</y>
         <width>181</width>
+=======
+        <x>840</x>
+        <y>40</y>
+        <width>141</width>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
         <height>41</height>
        </rect>
       </property>
@@ -1129,6 +1201,7 @@ QLineEdit::focus
        <string>Course Grade : </string>
       </property>
      </widget>
+<<<<<<< HEAD
      <widget class="QComboBox" name="Tab4_Course_Grade">
       <property name="geometry">
        <rect>
@@ -1201,11 +1274,14 @@ QComboBox QAbstractItemView {
        </property>
       </item>
      </widget>
+=======
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
      <widget class="QLineEdit" name="Tab4_Student_ID">
       <property name="geometry">
        <rect>
         <x>202</x>
         <y>41</y>
+<<<<<<< HEAD
         <width>291</width>
         <height>41</height>
        </rect>
@@ -1217,6 +1293,9 @@ QComboBox QAbstractItemView {
         <x>200</x>
         <y>120</y>
         <width>291</width>
+=======
+        <width>231</width>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
         <height>41</height>
        </rect>
       </property>
@@ -1224,13 +1303,20 @@ QComboBox QAbstractItemView {
      <widget class="QLineEdit" name="Tab4_Course_code">
       <property name="geometry">
        <rect>
+<<<<<<< HEAD
         <x>970</x>
         <y>30</y>
         <width>291</width>
+=======
+        <x>580</x>
+        <y>40</y>
+        <width>231</width>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
         <height>41</height>
        </rect>
       </property>
      </widget>
+<<<<<<< HEAD
      <widget class="QTableWidget" name="StudentCourseTable_4">
       <property name="geometry">
        <rect>
@@ -1238,6 +1324,15 @@ QComboBox QAbstractItemView {
         <y>200</y>
         <width>1241</width>
         <height>491</height>
+=======
+     <widget class="QTableWidget" name="StudentGradeTable_4">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>250</y>
+        <width>1241</width>
+        <height>441</height>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
        </rect>
       </property>
       <property name="styleSheet">
@@ -1296,6 +1391,20 @@ QComboBox QAbstractItemView {
       <column>
        <property name="text">
         <string>Course Name</string>
+<<<<<<< HEAD
+=======
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Course Grade</string>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
        </property>
        <property name="font">
         <font>
@@ -1305,6 +1414,29 @@ QComboBox QAbstractItemView {
        </property>
       </column>
      </widget>
+     <widget class="QPushButton" name="Tab4_Confirm">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>180</y>
+        <width>271</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Confirm</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="Tab4_Course_code_2">
+      <property name="geometry">
+       <rect>
+        <x>990</x>
+        <y>40</y>
+        <width>201</width>
+        <height>41</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>
@@ -1313,8 +1445,13 @@ QComboBox QAbstractItemView {
     <rect>
      <x>0</x>
      <y>0</y>
+<<<<<<< HEAD
      <width>1391</width>
      <height>26</height>
+=======
+     <width>1236</width>
+     <height>21</height>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
     </rect>
    </property>
   </widget>
