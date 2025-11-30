@@ -97,8 +97,8 @@ class StudentWindow(QtWidgets.QMainWindow):
         ui_path = os.path.join(os.path.dirname(__file__), "Student_Window.ui")
         uic.loadUi(ui_path, self)
 
-        # self.setFixedWidth(1216)
-        # self.setFixedHeight(966)
+        self.setFixedWidth(1216)    
+        self.setFixedHeight(966)
 
         self.student_id = sid
         self.student_name = sname
@@ -117,7 +117,11 @@ class StudentWindow(QtWidgets.QMainWindow):
 
         # Set welcome text
         self.welcomeLabel.setText(f"Welcome, {self.student_name}")
-
+        self.tabWidget.setCurrentIndex(1)
+        
+        # General table setup
+        self.setup_current_courses_table()
+        self.setup_current_schedule_table()
         # Load student info into table
         self.load_info_table()
         # Load transcript tables
@@ -128,7 +132,66 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.load_available_courses()
         # Load current courses
         self.load_current_courses_table()
-      
+    
+    # __________General Table Setup__________
+    def setup_current_courses_table(self):
+        table = self.Current_CoursesTable
+
+        # Always start from a clean, empty table
+        table.clear()
+        table.setRowCount(0)
+
+        # 6 columns: checkbox + course info
+        table.setColumnCount(6)
+        table.setHorizontalHeaderLabels(
+            ["", "Course Code", "Instructor", "Section", "Time", "Credit"]
+        )
+
+        # Hide row numbers
+        table.verticalHeader().setVisible(False)
+
+        # Column sizes (same as after you add/remove a subject)
+        table.setColumnWidth(0, 40)
+        table.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Fixed)
+
+        table.setColumnWidth(3, 70)   # Section
+        table.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.Fixed)
+
+        table.setColumnWidth(5, 60)   # Credit
+        table.horizontalHeader().setSectionResizeMode(5, QtWidgets.QHeaderView.Fixed)
+
+        # Stretch the other columns
+        for col in [1, 2, 4]:
+            table.horizontalHeader().setSectionResizeMode(col, QtWidgets.QHeaderView.Stretch)
+
+    def setup_current_schedule_table(self):
+        table = self.CurrentSchTable
+
+        # Completely reset the table look
+        table.clear()
+        table.setRowCount(0)
+
+        # 5 columns: Code, Name, Section, Days, Time
+        table.setColumnCount(5)
+        table.setHorizontalHeaderLabels([
+            "Course Code", "Course Name", "Section", "Days", "Time"
+        ])
+
+        table.verticalHeader().setVisible(False)
+
+        # Stretch nicely (same layout you want)
+        table.horizontalHeader().setStretchLastSection(True)
+
+        # Course Name column should be wider
+        table.setColumnWidth(1, 350)
+        table.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Fixed)
+
+        # Other columns stretch
+        for col in [0, 2, 3, 4]:
+            table.horizontalHeader().setSectionResizeMode(col, QtWidgets.QHeaderView.Stretch)
+
+
+    # __________Transcript Tab__________
     def load_info_table(self):
         # Prepare table
         self.infoTable.setColumnCount(3)
@@ -228,10 +291,13 @@ class StudentWindow(QtWidgets.QMainWindow):
             table.horizontalHeader().setStretchLastSection(True)
             table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
     
+
+    # __________Schedule Tab__________
     def load_current_schedule(self):
 
         table = self.CurrentSchTable
-        table.clear()
+        table.clearContents()
+
 
         # Updated column order
         table.setColumnCount(5)
@@ -276,14 +342,17 @@ class StudentWindow(QtWidgets.QMainWindow):
             row += 1
 
         # Stretch columns to fit nicely
-        table.horizontalHeader().setStretchLastSection(True)
-        table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
-        table.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Interactive)
-        table.setColumnWidth(1, 350) 
+        self.CurrentSchTable.horizontalHeader().setStretchLastSection(True)
+        self.CurrentSchTable.resizeColumnToContents(1)
+        table.setColumnWidth(1, 350)
+        table.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Fixed)        
 
+
+    # __________Courses Tab__________
     def load_available_courses(self):
         table = self.Available_CoursesTable
-        table.clear()
+        table.clearContents()
+
 
         table.setColumnCount(6)
         table.setHorizontalHeaderLabels(
@@ -408,7 +477,9 @@ class StudentWindow(QtWidgets.QMainWindow):
     def load_current_courses_table(self):
 
         table = self.Current_CoursesTable
-        table.clear()
+        table.clearContents()
+
+
 
         # Same header layout as Available_CoursesTable
         table.setColumnCount(6)
