@@ -114,7 +114,11 @@ class StudentWindow(QtWidgets.QMainWindow):
         ui_path = os.path.join(os.path.dirname(__file__), "Student_Window.ui")
         uic.loadUi(ui_path, self)
 
+<<<<<<< HEAD
+        self.setFixedWidth(1216)    
+=======
         self.setFixedWidth(1248)    
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
         self.setFixedHeight(966)
 
         self.student_id = sid
@@ -365,7 +369,11 @@ class StudentWindow(QtWidgets.QMainWindow):
         table.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Fixed)        
 
 
+<<<<<<< HEAD
+    # __________Courses Tab__________
+=======
     # __________Add/Remove Tab__________
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
     def load_available_courses(self):
         table = self.Available_CoursesTable
         table.clearContents()

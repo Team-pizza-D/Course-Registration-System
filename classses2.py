@@ -118,10 +118,10 @@ class user:
     
     def generate_unique_id(self):  # generates unique user ID
         existing_ids_row = users_db.execute("SELECT id FROM admins UNION SELECT id FROM instructors UNION SELECT id FROM students", fetchall=True)
-        existing_ids = {row[0] for row in existing_ids_row}
-        id = random.randint(1000000000, 9999999999)
+        existing_ids = {row[0].strip() for row in existing_ids_row}
+        id = str(random.randint(1000000, 9999999)).strip()
         while id in existing_ids:
-            id = random.randint(1000000000, 9999999999)
+            id = str(random.randint(1000000, 9999999)).strip()
         return id
     
     def generate_email(self):  # generates email based on username and ID
@@ -179,7 +179,7 @@ class subject:  ### Data base team said that this is currently not needed but i 
 
     def already_graded(self, student_id):  # to check if student has already been graded in the section
         row= users_db.execute("SELECT numeric_grade FROM grades WHERE student_id = ? AND course = ?", (student_id, self.subject_name,), fetchone=True)
-        if row==None or row[0]==None:
+        if row==None or row[0]==None or len(row[0])==0:
             return False
         else:
             return True
@@ -565,6 +565,8 @@ class section(subject):
             return False , f"student with ID {student_id} is not enrolled in section {self.section_name}"
         if not self.section_is_existing():
             return False , f"section {self.section_name} does not exist"
+        if self.already_taken_subject(student_id):
+            return False , f"student with ID {student_id} has already completed subject {self.subject}"
         if self.already_graded(student_id):
             return False , f"student with ID {student_id} has already been graded in subject {self.subject}"
         users_db.execute("DELETE FROM enrollments WHERE student_id = ? AND section = ?", (student_id, self.section_name,), commit=True)
@@ -625,8 +627,8 @@ class student(user):
         if self.database:
             try:
                 users_db.execute(
-                    "INSERT INTO students (username, password, email, Id,major) VALUES (?, ?, ?, ?, ?)",
-                    (self.username, self.password, self.email, self.id,self.major),
+                    "INSERT INTO students (username, password, email, id,major,term) VALUES (?, ?, ?, ?, ?, ?)",
+                    (self.username, self.password, self.email, self.id,self.major,1),
                     commit=True,
                     )
             except sqlite3.IntegrityError:
@@ -862,8 +864,6 @@ class instructor(user):
             )
     def display_info(self):
         return super().display_info() + f", Subject: {self.subject}"     
-    def __add_grade(self, student_id, section_code, grade):  # to add grade for a student in a section
-        pass
     def show_students(self,section_code):  # to show all students in a section
         self.section= section(section_name=section_code)
         self.section.view_enrolled_students()
@@ -955,6 +955,9 @@ class admin(user):
                 if course_row:
                     course_code = course_row[0]
                     all_available[section] = course_code
+        else:
+            all_available= f"Student with ID {id} does not exist."            
+
             return all_available
 
             
@@ -1014,7 +1017,12 @@ class admin(user):
         else:
             letter_grade = "F"
             users_db.execute("UPDATE grades SET numeric_grade = ?, letter_grade = ? WHERE student_id = ? AND course = ?", (grade, letter_grade, student_id, course_code), commit=True)
+            users_db.execute("DELETE FROM enrollments WHERE student_id = ? AND course = ?", (student_id, course_code), commit=True)
         return f"Grade {grade} ({letter_grade}) added for student ID {student_id} in course {course_code}."
+    def add_student(self,first_name,last_name,major):
+        full_name= first_name + " " + last_name
+        st=student(username=full_name,major=major,database=True)
+        return True , f"Student {full_name} added with ID {st.id} and password {st.password}."   
 
 
 

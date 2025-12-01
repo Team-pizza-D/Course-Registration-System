@@ -521,7 +521,11 @@ QScrollBar::sub-page:horizontal {
      <widget class="QLabel" name="welcomeLabel_2">
       <property name="geometry">
        <rect>
+<<<<<<< HEAD
+        <x>150</x>
+=======
         <x>160</x>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
         <y>50</y>
         <width>301</width>
         <height>41</height>
@@ -554,7 +558,11 @@ QScrollBar::sub-page:horizontal {
       <property name="geometry">
        <rect>
         <x>870</x>
+<<<<<<< HEAD
+        <y>530</y>
+=======
         <y>630</y>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
         <width>111</width>
         <height>31</height>
        </rect>
@@ -567,7 +575,11 @@ QScrollBar::sub-page:horizontal {
       <property name="geometry">
        <rect>
         <x>230</x>
+<<<<<<< HEAD
+        <y>530</y>
+=======
         <y>630</y>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
         <width>111</width>
         <height>31</height>
        </rect>
@@ -579,10 +591,17 @@ QScrollBar::sub-page:horizontal {
      <widget class="QTableWidget" name="Available_CoursesTable">
       <property name="geometry">
        <rect>
+<<<<<<< HEAD
+        <x>610</x>
+        <y>130</y>
+        <width>591</width>
+        <height>361</height>
+=======
         <x>630</x>
         <y>130</y>
         <width>591</width>
         <height>481</height>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
        </rect>
       </property>
       <property name="styleSheet">
@@ -650,7 +669,11 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
      <widget class="QLabel" name="welcomeLabel_6">
       <property name="geometry">
        <rect>
+<<<<<<< HEAD
+        <x>720</x>
+=======
         <x>730</x>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
         <y>50</y>
         <width>331</width>
         <height>41</height>
@@ -682,10 +705,17 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
      <widget class="QTableWidget" name="Current_CoursesTable">
       <property name="geometry">
        <rect>
+<<<<<<< HEAD
+        <x>10</x>
+        <y>130</y>
+        <width>591</width>
+        <height>361</height>
+=======
         <x>20</x>
         <y>130</y>
         <width>591</width>
         <height>481</height>
+>>>>>>> 310dab90c8c135f52c96c815263fec06efd4c3bb
        </rect>
       </property>
       <property name="styleSheet">
