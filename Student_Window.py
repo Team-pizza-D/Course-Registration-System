@@ -7,7 +7,7 @@ from PyQt5.QtGui import QKeySequence
 from classses2 import Database,  student, admin, user, subject, section, instructor
 
 class StudentWindow(QtWidgets.QMainWindow):
-    def __init__(self, sid, sname, smajor):
+    def __init__(self, sid=2430020, sname=None, smajor=None):
         super().__init__()
         ui_path = os.path.join(os.path.dirname(__file__), "Student_Window.ui")
         uic.loadUi(ui_path, self)
@@ -119,7 +119,6 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.infoTable.setItem(0, 2, QtWidgets.QTableWidgetItem(self.student_major))
 
         # Make columns stretch evenly
-        self.infoTable.horizontalHeader().setStretchLastSection(True)
         self.infoTable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
         # Center align header text
@@ -133,15 +132,16 @@ class StudentWindow(QtWidgets.QMainWindow):
     def update_GPA_table(self, gpa):
         self.GpaTable.setRowCount(1)
         self.GpaTable.setColumnCount(1)
-        self.GpaTable.setHorizontalHeaderLabels(["GPA"])
+        self.GpaTable.setHorizontalHeaderLabels(["GPA","Test"])
 
         item = QtWidgets.QTableWidgetItem(str(gpa))
         item.setTextAlignment(QtCore.Qt.AlignCenter)
         self.GpaTable.setItem(0, 0, item)
 
         # Clean look
+        self.GpaTable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         self.GpaTable.verticalHeader().setVisible(False)
-        self.GpaTable.horizontalHeader().setStretchLastSection(True)
+
     
     def load_transcript_tables(self):
 
@@ -605,3 +605,9 @@ class StudentWindow(QtWidgets.QMainWindow):
             self.refresh_all_tables()
         else:
             QtWidgets.QMessageBox.warning(self, "Remove Course", msg)
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    win = StudentWindow()  # Replace sid, sname, smajor with actual values
+    win.show()
+    sys.exit(app.exec_())

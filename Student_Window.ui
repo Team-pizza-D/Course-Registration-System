@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1237</width>
-    <height>960</height>
+    <width>1236</width>
+    <height>996</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -148,7 +148,7 @@ QPushButton {
       <x>0</x>
       <y>100</y>
       <width>1251</width>
-      <height>1061</height>
+      <height>966</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -735,7 +735,7 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1237</width>
+     <width>1236</width>
      <height>26</height>
     </rect>
    </property>
