@@ -95,7 +95,6 @@ class LoginWindow(QMainWindow):
 
         QtWidgets.QMessageBox.warning(self, "Login Failed", "Invalid ID or Password.")
 
-
     def openStudentWindow(self, sid, sname, smajor):
         self.hide()
         self.main_window = StudentWindow(sid, sname, smajor)
@@ -131,6 +130,7 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.WeeklySchTable.hide()
         self.SignOutButton.clicked.connect(self.sign_out)
         
+      
         # Call the GPA function from classses2.py
         self.student_obj = student(self.student_id)
         gpa_value = self.student_obj.calculate_GPA()
@@ -156,8 +156,10 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.load_available_courses()
         # Load current courses
         self.load_current_courses_table()
-        
-    
+        # Load total credit
+        self.load_total_credit()
+        # Setup weekly schedule header
+        self.setup_weekly_header()
     # __________General__________
     def setup_current_courses_table(self):
         table = self.Current_CoursesTable
@@ -238,7 +240,8 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.load_available_courses()
         self.load_current_courses_table()
         self.load_weekly_schedule()
-
+        self.load_total_credit() 
+   
     # __________Transcript Tab__________
     def load_info_table(self):
         # Prepare table
@@ -339,7 +342,6 @@ class StudentWindow(QtWidgets.QMainWindow):
             table.horizontalHeader().setStretchLastSection(True)
             table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
     
-
     # __________Schedule Tab__________
     def load_current_schedule(self):
 
@@ -406,11 +408,27 @@ class StudentWindow(QtWidgets.QMainWindow):
     def load_weekly_schedule(self):
         table = self.WeeklySchTable
         table.clear()
+        table.resizeRowsToContents()
+
 
         days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"]
         table.setColumnCount(len(days) + 1)
         table.setHorizontalHeaderLabels(["Time"] + days)
         table.verticalHeader().setVisible(False)
+
+        # Chronological master list (start at 8:00 always)
+        ALL_TIME_SLOTS = [
+            "8:00-8:50", "8:00-9:15",
+            "9:00-9:50", "9:00-9:15",
+            "9:30-10:45",
+            "10:00-10:50",
+            "11:00-11:50", "11:00-12:15", "11:00-12:50",
+            "1:00-1:50", "1:00-2:15",
+            "2:00-4:50",
+            "5:00-5:50",
+            "6:00-6:50",
+            "7:00-7:50"
+        ]
 
         schedule = self.student_obj.view_enrolled_subjects()
 
@@ -418,18 +436,19 @@ class StudentWindow(QtWidgets.QMainWindow):
             table.setRowCount(0)
             return
 
-        time_slots = set()
-        parsed = []
+        time_slots_found = set()
+        parsed_subjects = []
 
-        # Extract schedule info
-        for section, (course_code, course_name, time_days, credit, section_name, instructor) in schedule.items():
+        # Parse schedule
+        for section, (course_code, course_name, time_days,
+                    credit, section_name, instructor) in schedule.items():
 
             # "9:00-9:50 , S T U"
             time_part, days_part = time_days.split(",")
             time_range = time_part.strip()
             letters = days_part.strip().split()
 
-            # Map S M T W U → full names
+            # Map letters → full day names
             map_days = {
                 "S": "Sunday",
                 "M": "Monday",
@@ -439,21 +458,31 @@ class StudentWindow(QtWidgets.QMainWindow):
             }
             full_days = [map_days[d] for d in letters]
 
-            time_slots.add(time_range)
-            parsed.append((course_code, section, full_days, time_range))
+            time_slots_found.add(time_range)
+            parsed_subjects.append((course_code, section, full_days, time_range))
 
-        time_slots = sorted(list(time_slots))
+        # Build CHRONOLOGICAL time order
+        time_slots = []
+        for t in ALL_TIME_SLOTS:
+            if any(t in slot for slot in time_slots_found):
+                time_slots.append(t)
+
+        # Row count
         table.setRowCount(len(time_slots))
 
-        # Insert time labels
+        # Set time labels
         for r, t in enumerate(time_slots):
             item = QtWidgets.QTableWidgetItem(t)
             item.setTextAlignment(QtCore.Qt.AlignCenter)
             table.setItem(r, 0, item)
 
-        # Fill subjects
-        for course_code, section, full_days, time_range in parsed:
-            row = time_slots.index(time_range)
+        # Insert subjects in correct cells
+        for course_code, section, full_days, time_range in parsed_subjects:
+            row = 0
+            for i, slot in enumerate(time_slots):
+                if time_range.startswith(slot.split("-")[0]):
+                    row = i
+                    break
 
             for d in full_days:
                 col = days.index(d) + 1
@@ -466,9 +495,64 @@ class StudentWindow(QtWidgets.QMainWindow):
 
                 table.setItem(row, col, item)
 
-        # Stretch nicely
+        # Stretch columns
         for c in range(table.columnCount()):
             table.horizontalHeader().setSectionResizeMode(c, QtWidgets.QHeaderView.Stretch)
+        
+        # Allow wrapping inside cells
+        self.WeeklySchTable.setWordWrap(True)
+        
+        # Automatically resize all rows to fit text (multiline)
+        self.WeeklySchTable.resizeRowsToContents()
+        
+        # Minimum height so blocks look clean
+        for r in range(self.WeeklySchTable.rowCount()):
+            self.WeeklySchTable.setRowHeight(r, max(self.WeeklySchTable.rowHeight(r), 45))
+
+    def load_total_credit(self):
+            table = self.TotalCreditTable
+
+            total = 0
+            schedule = self.student_obj.view_enrolled_subjects()
+            if isinstance(schedule, dict):
+                for sec, (course_code, course_name, time_days,
+                        section_name, credit, instructor) in schedule.items():
+                    total += credit
+
+            # Configure header and structure
+            table.setColumnCount(2)
+            table.setRowCount(1)
+            table.setHorizontalHeaderLabels(["Total Credit", str(total)])
+            table.verticalHeader().setVisible(False)
+
+            # Stretch layout
+            table.horizontalHeader().setStretchLastSection(True)
+            table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+
+    def setup_weekly_header(self):
+        table = self.WeeklySchTable
+
+        # Only headers, no rows
+        table.setRowCount(0)
+
+        # Set 6 columns
+        table.setColumnCount(6)
+        table.setHorizontalHeaderLabels([
+            "Time", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"
+        ])
+
+        # Stretch all columns to fill full width
+        header = table.horizontalHeader()
+        for col in range(table.columnCount()):
+            header.setSectionResizeMode(col, QtWidgets.QHeaderView.Stretch)
+
+        # Disable all user editing
+        table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        table.setSelectionMode(QtWidgets.QAbstractItemView.NoSelection)
+        table.setFocusPolicy(QtCore.Qt.NoFocus)
+
+        # Hide vertical rows (since there are none)
+        table.verticalHeader().setVisible(False)
 
     # __________Add/Remove Tab__________
     def load_available_courses(self):
@@ -622,7 +706,7 @@ class StudentWindow(QtWidgets.QMainWindow):
 
         row = 0
         for section, (course_code, course_name, time_days,
-                    credit, section_name, instructor) in schedule.items():
+                    section_name,credit, instructor) in schedule.items():
 
             # time_days example: "9:00-9:50 , S T U"
             try:
