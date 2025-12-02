@@ -1053,6 +1053,13 @@ class admin(user):
         full_name= first_name + " " + last_name
         st=student(username=full_name,major=major,database=True)
         return True , f"Student {full_name} added with ID {st.id} and password {st.password}."   
+    def delete_student(self, student_id):
+        if not student(student_id).is_student():
+            return False , f"Student with ID {student_id} does not exist."
+        users_db.execute("DELETE FROM students WHERE id = ?", (student_id,), commit=True)
+        users_db.execute("DELETE FROM enrollments WHERE student_id = ?", (student_id,), commit=True)
+        users_db.execute("DELETE FROM grades WHERE student_id = ?", (student_id,), commit=True)
+        return True , f"Student with ID {student_id} deleted from the database."
 
 
 
