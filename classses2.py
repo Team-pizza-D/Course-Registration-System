@@ -118,7 +118,7 @@ class user:
     
     def generate_unique_id(self):  # generates unique user ID
         existing_ids_row = users_db.execute("SELECT id FROM admins UNION SELECT id FROM instructors UNION SELECT id FROM students", fetchall=True)
-        existing_ids = {row[0].strip() for row in existing_ids_row}
+        existing_ids = {row[0] for row in existing_ids_row}
         id = str(random.randint(1000000, 9999999)).strip()
         while id in existing_ids:
             id = str(random.randint(1000000, 9999999)).strip()
@@ -481,7 +481,7 @@ class section(subject):
         return True , "All prerequisites met."    
 
     def student_is_existing(self, student_id):  # to check if student is already enrolled in the section
-        if student_id in self.student_id_in_section:
+        if str(student_id) in self.student_id_in_section:
             return True
         else:
             return False
@@ -518,8 +518,8 @@ class section(subject):
             return False , f"student with ID {student_id} is already enrolled in section {self.section_name}"
         if not self.section_is_existing():
             return False , f"section {self.section_name} does not exist"
-        # if self.already_taken_subject(student_id):
-        #     return False , f"student with ID {student_id} has already completed subject {self.subject}"
+        if self.already_taken_subject(student_id):
+            return False , f"student with ID {student_id} has already completed subject {self.subject}"
         okay,message= self.one_section_for_subject(student_id)
         if  okay:
             return False , message
@@ -565,13 +565,13 @@ class section(subject):
             return False , f"student with ID {student_id} is not enrolled in section {self.section_name}"
         if not self.section_is_existing():
             return False , f"section {self.section_name} does not exist"
-        # if self.already_taken_subject(student_id):
-        #     return False , f"student with ID {student_id} has already completed subject {self.subject}"
+        if self.already_taken_subject(student_id):
+            return False , f"student with ID {student_id} has already completed subject {self.subject}"
         if self.already_graded(student_id):
             return False , f"student with ID {student_id} has already been graded in subject {self.subject}"
         users_db.execute("DELETE FROM enrollments WHERE student_id = ? AND section = ?", (student_id, self.section_name,), commit=True)
         users_db.execute("DELETE FROM grades WHERE student_id = ? AND course = ?", (student_id, self.subject,), commit=True)
-        index = self.student_id_in_section.index(student_id)
+        index = self.student_id_in_section.index(str(student_id))
         self.enrolled_students.pop(index)
         self.student_id_in_section.pop(index)
         return True , f"Student with ID {student_id} successfully dropped from section {self.section_name}."
@@ -584,11 +584,11 @@ class section(subject):
         try:
             new_capacity = int(new_capacity)
         except: 
-            return "Capacity must be an integer."
+            return f"Capacity must be an integer."
         if new_capacity < len(self.student_id_in_section):
-            return "New capacity cannot be less than the number of enrolled students."
+            return f"New capacity cannot be less than the number of enrolled students."
         self.capacity = new_capacity
-        courses_db.execute("UPDATE sections SET capacity = ? WHERE sections = ?", (self.capacity, self.section_name), commit=True)
+        courses_db.execute("UPDATE Courses SET capacity = ? WHERE section = ?", (self.capacity, self.section_name), commit=True)
         return f"Section {self.section_name} capacity updated to {self.capacity}."
 
         ### can be used by admin to increase capacity
@@ -616,8 +616,6 @@ class student(user):
         majors_row=users_db.execute("SELECT major fROM students WHERE id = ?", (self.id,), fetchone=True)
         if  self.is_student():
             self.major=majors_row[0]
-        else:    
-            self.major=major
         
         if GPA is None:
             self.GPA = self.calculate_GPA()
@@ -625,6 +623,8 @@ class student(user):
         ### set database to true if you want to insert this student into database upon creation
         ### eg. student = student("azad", database=True)
         if self.database:
+            super().__init__(username, password, email, id)
+            self.major=major
             try:
                 users_db.execute(
                     "INSERT INTO students (username, password, email, id,major,term) VALUES (?, ?, ?, ?, ?, ?)",
@@ -633,6 +633,12 @@ class student(user):
                     )
             except sqlite3.IntegrityError:
                 print(f"Student with ID {self.id} already exists in the database.")
+        else:
+             majors_row=users_db.execute("SELECT major fROM students WHERE id = ?", (self.id,), fetchone=True)
+             self.major=majors_row[0].strip()
+             enrolled_subjects_row= users_db.execute("SELECT course FROM enrollments WHERE student_id = ?", (self.id,), fetchall=True)
+             self.enrolled_subjects= [r[0].strip() for r in enrolled_subjects_row]
+
         # else:
         #     row=users_db.execute(
         #         "SELECT username, password, email, Id, major FROM students WHERE Id = ?", (self.id,), fetchone=True
@@ -641,19 +647,30 @@ class student(user):
         #     self.password = row[1]
         #     self.email = row[2]
         #     self.major = row[4]
-            pass ### I will do this later to select student data from database if database is false         
+            ### I will do this later to select student data from database if database is false         
     def return_id(self):
         return self.id
     
     def display_info(self):  # to display student information
         return super().display_info() + f", Major: {self.major}, GPA: {self.GPA} "
-    def already_taken_subject(self, subject_code):  # to check if student has already completed the subject
-        row= users_db.execute("SELECT course FROM grades WHERE student_id = ?", (self.id,), fetchall=True)
-        completed_courses = [r[0] for r in row]
+    def already_taken_subject(self, subject_code,with_out_grade=False):  # to check if student has already completed the subject
+        row= users_db.execute("SELECT course, numeric_grade FROM grades WHERE student_id = ?", (self.id,), fetchall=True)
+        course_with_grades= {}
+        for cours, numeric_grade in row:
+            if numeric_grade==None:
+                continue
+            course_with_grades[cours]= numeric_grade
+            
+        completed_courses_list = list(course_with_grades.keys())
+        completed_courses= [course.strip().upper() for course in completed_courses_list]
+        subject_code= subject_code.strip().upper()
+        print(completed_courses)
+        print(subject_code)
         if subject_code in completed_courses:
             return True
         else:
             return False
+        
 
     def enroll_subject(self, section_code):  # to enroll student in a subject section
         sec=section(section_name=section_code)
@@ -873,20 +890,29 @@ class instructor(user):
 # _______________________________________________________________________________________________________________
 
 class admin(user):
-    def __init__(self, username=None, password=None, email=None, id=None, database=False):
-        super().__init__(username, password, email, id)
+    def __init__(self,id=None,username=None ,password=None, email=None, database=False):
+       
         # self.password = chr(random.randint(97,97+25)) + str(random.randint(1000000,9999999))
         self.database= database
         ### set database to true if you want to insert this admin into database upon creation
         ### eg. admin = admin("azad", database=True)
 
         if self.database == True:
+            super().__init__(username, password, email, id)
             
             users_db.execute(
                 "INSERT INTO admins (username, password, email, id) VALUES (?, ?, ?, ?)",
                 (self.username, self.password, self.email,self.id),
                 commit=True,
             )
+        else:
+            info_row= users_db.execute("SELECT username, password, email, id FROM admins WHERE id = ?", (id,), fetchone=True)
+            if info_row is None:
+                raise ValueError(f"Admin with ID {id} does not exist in the database.")
+            self.username= info_row[0]
+            self.password= info_row[1]
+            self.email= info_row[2]
+            self.id= info_row[3]
         
 
             
@@ -984,15 +1010,18 @@ class admin(user):
         sec=section(section_name=section_code)
         massege= sec.new_capacity(new_capacity)
         return massege
-    def add_grade(self, student_id, course_code, grade):  # to add grade for a student in a section
+    def add_grade(self, student_id, course_code, grade,):  # to add grade for a student in a section
+        course_code=course_code.strip().upper()
         sub=subject(course_code)
         stu=student(id=student_id)
         if not stu.is_student():
             return f"Student with ID {student_id} does not exist."
         if not sub.is_existing():
             return f"Subject with code {course_code} does not exist."
-        if not stu.already_taken_subject(course_code):
+        if not stu.already_taken_subject(course_code) and course_code not in stu.enrolled_subjects:
             return f"Student with ID {student_id} has not completed subject {course_code}."
+        # if stu.already_taken_subject(course_code):
+        #     return f"Student with ID {student_id} has already been graded in subject {course_code}."
          # Validate and convert grade to letter grade
         try :
             grade = float(grade)
@@ -1018,8 +1047,8 @@ class admin(user):
             letter_grade = "D"
         else:
             letter_grade = "F"
-            users_db.execute("UPDATE grades SET numeric_grade = ?, letter_grade = ? WHERE student_id = ? AND course = ?", (grade, letter_grade, student_id, course_code), commit=True)
-            users_db.execute("DELETE FROM enrollments WHERE student_id = ? AND course = ?", (student_id, course_code), commit=True)
+        users_db.execute("UPDATE grades SET numeric_grade = ?, letter_grade = ? WHERE student_id = ? AND course = ?", (grade, letter_grade, student_id, course_code), commit=True)
+        users_db.execute("DELETE FROM enrollments WHERE student_id = ? AND course = ?", (student_id, course_code), commit=True)
         return f"Grade {grade} ({letter_grade}) added for student ID {student_id} in course {course_code}."
     def add_student(self,first_name,last_name,major):
         full_name= first_name + " " + last_name
