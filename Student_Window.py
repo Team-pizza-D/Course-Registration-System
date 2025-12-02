@@ -7,13 +7,13 @@ from PyQt5.QtGui import QKeySequence
 from classses2 import Database,  student, admin, user, subject, section, instructor
 
 class StudentWindow(QtWidgets.QMainWindow):
-    def __init__(self, sid=2430020, sname=None, smajor=None):
+    def __init__(self, sid="2430020", sname=None, smajor=None):
         super().__init__()
         ui_path = os.path.join(os.path.dirname(__file__), "Student_Window.ui")
         uic.loadUi(ui_path, self)
 
         self.setFixedWidth(1248)    
-        self.setFixedHeight(966)
+        self.setFixedHeight(975)
 
         self.student_id = sid
         self.student_name = sname
@@ -47,8 +47,10 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.load_available_courses()
         # Load current courses
         self.load_current_courses_table()
+        # Sign out button
+        self.SignOutButton.clicked.connect(self.sign_out)
     
-    # __________General Table Setup__________
+    # __________General__________
     def setup_current_courses_table(self):
         table = self.Current_CoursesTable
 
@@ -105,6 +107,22 @@ class StudentWindow(QtWidgets.QMainWindow):
         for col in [0, 2, 3, 4]:
             table.horizontalHeader().setSectionResizeMode(col, QtWidgets.QHeaderView.Stretch)
 
+    def sign_out(self):
+        msg = QtWidgets.QMessageBox(self)
+        msg.setWindowTitle("Sign Out")
+        msg.setText("Are you sure you want to sign out?")
+        msg.setIcon(QtWidgets.QMessageBox.Question)
+
+        yes_button = msg.addButton("Yes", QtWidgets.QMessageBox.YesRole)
+        cancel_button = msg.addButton("Cancel", QtWidgets.QMessageBox.RejectRole)
+
+        msg.exec_()
+
+        if msg.clickedButton() == yes_button:
+            self.close()          # close admin window
+            self.login = LoginWindow()  # return to login
+            self.login.show()
+
 
     # __________Transcript Tab__________
     def load_info_table(self):
@@ -119,6 +137,7 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.infoTable.setItem(0, 2, QtWidgets.QTableWidgetItem(self.student_major))
 
         # Make columns stretch evenly
+        self.infoTable.horizontalHeader().setStretchLastSection(True)
         self.infoTable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
         # Center align header text
@@ -132,16 +151,15 @@ class StudentWindow(QtWidgets.QMainWindow):
     def update_GPA_table(self, gpa):
         self.GpaTable.setRowCount(1)
         self.GpaTable.setColumnCount(1)
-        self.GpaTable.setHorizontalHeaderLabels(["GPA","Test"])
+        self.GpaTable.setHorizontalHeaderLabels(["GPA"])
 
         item = QtWidgets.QTableWidgetItem(str(gpa))
         item.setTextAlignment(QtCore.Qt.AlignCenter)
         self.GpaTable.setItem(0, 0, item)
 
         # Clean look
-        self.GpaTable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         self.GpaTable.verticalHeader().setVisible(False)
-
+        self.GpaTable.horizontalHeader().setStretchLastSection(True)
     
     def load_transcript_tables(self):
 
@@ -415,7 +433,7 @@ class StudentWindow(QtWidgets.QMainWindow):
 
         row = 0
         for section, (course_code, course_name, time_days,
-                    section_name, credit, instructor) in schedule.items():
+                    credit, section_name, instructor) in schedule.items():
 
             # time_days example: "9:00-9:50 , S T U"
             try:
@@ -587,8 +605,7 @@ class StudentWindow(QtWidgets.QMainWindow):
         if not selected_section:
             QtWidgets.QMessageBox.warning(self, "Remove Course", "Please select a course to remove.")
             return
-
-        # Use section.remove_student_from_section to get (ok, msg)
+        
         try:
             self.student_obj = student(self.student_id)  # Refresh student object
             ok, msg = self.student_obj.drop_subject(selected_section)
@@ -605,6 +622,7 @@ class StudentWindow(QtWidgets.QMainWindow):
             self.refresh_all_tables()
         else:
             QtWidgets.QMessageBox.warning(self, "Remove Course", msg)
+    
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

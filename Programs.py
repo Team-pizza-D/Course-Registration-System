@@ -345,7 +345,7 @@ def all_courses(x1, y1, z1, p1, a1, a2, i1, t1):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS courses')
-    cr.execute('CREATE TABLE IF NOT EXISTS Courses (course_code TEXT, course_name TEXT, credit INTEGER, section TEXT, instructor INTEGER, capacity TEXT, time TEXT, prerequisites TEXT)')
+    cr.execute('CREATE TABLE IF NOT EXISTS Courses (course_code TEXT, course_name TEXT, credit INTEGER, section TEXT, instructor INTEGER, capacity TEXT, time TEXT, lab_time TEXT, prerequisites TEXT)')
     for i in range(len(x1)):
         cr.execute('INSERT INTO Courses (course_code, course_name, credit, prerequisites, section, capacity, instructor, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
                (x1[i] , y1[i], z1[i], p1[i], a1[i], 25, i1[i], t1[i]))
@@ -525,3 +525,12 @@ all_courses(All_Courses,
             L1, L2, 
             loop_dict_value(last_teacher_for_course),
             build_course_dict(L,Last_Dict))
+
+#============================================================#
+lab_dic = {"AV":"3:00-4:50 , M", "DR":"3:00-4:50 , W", "AW":"3:00-4:50 , T", "DS":"3:00-4:50 , U"}
+db = sqlite3.connect("courses.db")
+cr = db.cursor()
+for key, value in lab_dic.items():
+    cr.execute("UPDATE Courses SET lab_time = ? WHERE section = ?", (value, key))
+db.commit()
+db.close()

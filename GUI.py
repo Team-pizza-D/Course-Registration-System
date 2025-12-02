@@ -7,7 +7,9 @@ from PyQt5.QtGui import QKeySequence
 from classses2 import Database,  student, admin, user, subject, section, instructor
 
 
-
+# _____________________________________________________________
+#                        LOGIN WINDOW
+# _____________________________________________________________
 class LoginWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -115,7 +117,7 @@ class StudentWindow(QtWidgets.QMainWindow):
         uic.loadUi(ui_path, self)
 
         self.setFixedWidth(1248)    
-        self.setFixedHeight(966)
+        self.setFixedHeight(975)
 
         self.student_id = sid
         self.student_name = sname
@@ -149,8 +151,10 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.load_available_courses()
         # Load current courses
         self.load_current_courses_table()
+        # Sign out button
+        self.SignOutButton.clicked.connect(self.sign_out)
     
-    # __________General Table Setup__________
+    # __________General__________
     def setup_current_courses_table(self):
         table = self.Current_CoursesTable
 
@@ -206,6 +210,22 @@ class StudentWindow(QtWidgets.QMainWindow):
         # Other columns stretch
         for col in [0, 2, 3, 4]:
             table.horizontalHeader().setSectionResizeMode(col, QtWidgets.QHeaderView.Stretch)
+
+    def sign_out(self):
+        msg = QtWidgets.QMessageBox(self)
+        msg.setWindowTitle("Sign Out")
+        msg.setText("Are you sure you want to sign out?")
+        msg.setIcon(QtWidgets.QMessageBox.Question)
+
+        yes_button = msg.addButton("Yes", QtWidgets.QMessageBox.YesRole)
+        cancel_button = msg.addButton("Cancel", QtWidgets.QMessageBox.RejectRole)
+
+        msg.exec_()
+
+        if msg.clickedButton() == yes_button:
+            self.close()          # close admin window
+            self.login = LoginWindow()  # return to login
+            self.login.show()
 
 
     # __________Transcript Tab__________
@@ -517,7 +537,7 @@ class StudentWindow(QtWidgets.QMainWindow):
 
         row = 0
         for section, (course_code, course_name, time_days,
-                    section_name, credit, instructor) in schedule.items():
+                    credit, section_name, instructor) in schedule.items():
 
             # time_days example: "9:00-9:50 , S T U"
             try:
@@ -711,8 +731,6 @@ class StudentWindow(QtWidgets.QMainWindow):
 
 
 
-
-
 # _____________________________________________________________
 #                        ADMIN WINDOW
 # _____________________________________________________________
@@ -721,6 +739,8 @@ class AdminWindow(QtWidgets.QMainWindow):
         super().__init__()
         ui_path = os.path.join(os.path.dirname(__file__), "Admin_Window.ui")
         uic.loadUi(ui_path, self)
+
+
 
 
 # _____________________________________________________________
