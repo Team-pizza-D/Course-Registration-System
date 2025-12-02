@@ -518,8 +518,8 @@ class section(subject):
             return False , f"student with ID {student_id} is already enrolled in section {self.section_name}"
         if not self.section_is_existing():
             return False , f"section {self.section_name} does not exist"
-        if self.already_taken_subject(student_id):
-            return False , f"student with ID {student_id} has already completed subject {self.subject}"
+        # if self.already_taken_subject(student_id):
+        #     return False , f"student with ID {student_id} has already completed subject {self.subject}"
         okay,message= self.one_section_for_subject(student_id)
         if  okay:
             return False , message
@@ -565,8 +565,8 @@ class section(subject):
             return False , f"student with ID {student_id} is not enrolled in section {self.section_name}"
         if not self.section_is_existing():
             return False , f"section {self.section_name} does not exist"
-        if self.already_taken_subject(student_id):
-            return False , f"student with ID {student_id} has already completed subject {self.subject}"
+        # if self.already_taken_subject(student_id):
+        #     return False , f"student with ID {student_id} has already completed subject {self.subject}"
         if self.already_graded(student_id):
             return False , f"student with ID {student_id} has already been graded in subject {self.subject}"
         users_db.execute("DELETE FROM enrollments WHERE student_id = ? AND section = ?", (student_id, self.section_name,), commit=True)

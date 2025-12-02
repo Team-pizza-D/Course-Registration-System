@@ -245,7 +245,7 @@ QTabBar::tab {
 </string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <property name="iconSize">
      <size>
@@ -495,7 +495,7 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
       <property name="font">
        <font>
         <family>Consolas,Courier New,monospace</family>
-        <pointsize>10</pointsize>
+        <pointsize>-1</pointsize>
        </font>
       </property>
       <property name="styleSheet">
@@ -635,7 +635,7 @@ background-color: rgb(0, 17n 29);</string>
     <property name="font">
      <font>
       <family>Consolas,Courier New,monospace</family>
-      <pointsize>10</pointsize>
+      <pointsize>-1</pointsize>
      </font>
     </property>
     <property name="styleSheet">

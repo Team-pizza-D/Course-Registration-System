@@ -156,7 +156,7 @@ QPushButton {
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>100</y>
+      <y>90</y>
       <width>1251</width>
       <height>966</height>
      </rect>
@@ -242,7 +242,7 @@ QTabBar::tab {
 </string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="icon">
@@ -256,7 +256,55 @@ QTabBar::tab {
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>40</y>
+        <y>60</y>
+        <width>1131</width>
+        <height>721</height>
+       </rect>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="showGrid">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="AcademicRadio">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>20</y>
+        <width>111</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string>Academic View</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="WeeklyRadio">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>20</y>
+        <width>101</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string>Weekly View</string>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="WeeklySchTable">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>60</y>
         <width>1131</width>
         <height>721</height>
        </rect>
@@ -775,7 +823,7 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>20</y>
+      <y>10</y>
       <width>891</width>
       <height>71</height>
      </rect>
