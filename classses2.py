@@ -653,7 +653,7 @@ class student(user):
     
     def display_info(self):  # to display student information
         return super().display_info() + f", Major: {self.major}, GPA: {self.GPA} "
-    def already_taken_subject(self, subject_code,with_out_grade=False):  # to check if student has already completed the subject
+    def already_taken_subject(self, subject_code):  # to check if student has already completed the subject
         row= users_db.execute("SELECT course, numeric_grade FROM grades WHERE student_id = ?", (self.id,), fetchall=True)
         course_with_grades= {}
         for cours, numeric_grade in row:
@@ -664,8 +664,7 @@ class student(user):
         completed_courses_list = list(course_with_grades.keys())
         completed_courses= [course.strip().upper() for course in completed_courses_list]
         subject_code= subject_code.strip().upper()
-        print(completed_courses)
-        print(subject_code)
+    
         if subject_code in completed_courses:
             return True
         else:
