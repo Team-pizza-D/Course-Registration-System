@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1236</width>
-    <height>996</height>
+    <height>1008</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,6 +18,10 @@
   </property>
   <property name="windowTitle">
    <string>Student</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../Downloads/prime--calendar-clock.svg</normaloff>../../Downloads/prime--calendar-clock.svg</iconset>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
@@ -141,6 +145,12 @@ QPushButton {
     color: white;
 }</string>
   </property>
+  <property name="iconSize">
+   <size>
+    <width>30</width>
+    <height>30</height>
+   </size>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
@@ -180,12 +190,65 @@ QPushButton {
 
         QTabBar::tab:hover {
             background: #E0E0E0;
-        }</string>
+        }
+
+QTabWidget::pane {
+    border: 1px solid #0E1A25;
+    top:-1px;
+}
+
+QTabBar::tab {
+    background: #00111d;
+    color: #d1d1d1;
+    padding: 10px 20px;
+    font: 14px &quot;Segoe UI&quot;;
+    border: 1px solid #0E1A25;
+    border-bottom: 2px solid transparent;
+    margin-right: 2px;
+}
+
+QTabBar::tab:hover {
+    background: #002033;
+    color: white;
+}
+
+QTabBar::tab:selected {
+    background: #00385a;
+    color: white;
+    border-bottom: 2px solid #00b4ff;
+}
+
+QTabBar::tab:!selected {
+    margin-top: 2px;
+}
+
+/* Optional rounded corners */
+QTabBar::tab {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+QTabBar::tab {
+    padding-left: 30px;  /* space for icons */
+}
+
+QTabWidget::tab-bar {
+    left: 5px;  /* move tabs slightly */
+}
+QTabBar::tab {
+    width: 165px;
+    height: 30px;
+    padding-left: 30px;
+}
+</string>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
+     <attribute name="icon">
+      <iconset>
+       <normaloff>../../Downloads/prime--calendar-clock.svg</normaloff>../../Downloads/prime--calendar-clock.svg</iconset>
+     </attribute>
      <attribute name="title">
       <string>Current Schedule</string>
      </attribute>
@@ -207,6 +270,10 @@ QPushButton {
      </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
+     <attribute name="icon">
+      <iconset>
+       <normaloff>../../Downloads/heroicons-solid--document-text.svg</normaloff>../../Downloads/heroicons-solid--document-text.svg</iconset>
+     </attribute>
      <attribute name="title">
       <string>Transcript</string>
      </attribute>
@@ -214,7 +281,7 @@ QPushButton {
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>30</y>
+        <y>10</y>
         <width>1161</width>
         <height>81</height>
        </rect>
@@ -251,7 +318,7 @@ QTableWidget::item:selected {
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>130</y>
+        <y>110</y>
         <width>241</width>
         <height>81</height>
        </rect>
@@ -270,7 +337,7 @@ QTableWidget::item:selected {
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>230</y>
+        <y>210</y>
         <width>1161</width>
         <height>581</height>
        </rect>
@@ -515,6 +582,10 @@ QScrollBar::sub-page:horizontal {
      </widget>
     </widget>
     <widget class="QWidget" name="tab_3">
+     <attribute name="icon">
+      <iconset>
+       <normaloff>../../Downloads/basil--add-outline (1).svg</normaloff>../../Downloads/basil--add-outline (1).svg</iconset>
+     </attribute>
      <attribute name="title">
       <string>Add / Remove Courses</string>
      </attribute>
@@ -705,7 +776,7 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
      <rect>
       <x>20</x>
       <y>20</y>
-      <width>1041</width>
+      <width>891</width>
       <height>71</height>
      </rect>
     </property>
@@ -727,6 +798,37 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
     </property>
     <property name="text">
      <string>Welcome</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="SignOutButton">
+    <property name="geometry">
+     <rect>
+      <x>1090</x>
+      <y>30</y>
+      <width>121</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Consolas,Courier New,monospace</family>
+      <pointsize>-1</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">selection-background-color: rgb(0, 17, 28);
+alternate-background-color: rgb(0, 17, 29);
+background-color: rgb(0, 17n 29);</string>
+    </property>
+    <property name="text">
+     <string>Sign Out</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../../Downloads/si--arrow-left-circle-fill.svg</normaloff>../../Downloads/si--arrow-left-circle-fill.svg</iconset>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
     </property>
    </widget>
   </widget>
