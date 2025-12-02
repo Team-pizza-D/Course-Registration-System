@@ -21,9 +21,13 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.infoTable.verticalHeader().setVisible(False)
         self.AddButton.clicked.connect(self.add_selected_course)
         self.RemoveButton.clicked.connect(self.remove_selected_course)
-
-
+        self.AcademicRadio.toggled.connect(self.switch_schedule_view)
+        self.WeeklyRadio.toggled.connect(self.switch_schedule_view)
+        self.AcademicRadio.setChecked(True)
+        self.WeeklySchTable.hide()
+        self.SignOutButton.clicked.connect(self.sign_out)
         
+      
         # Call the GPA function from classses2.py
         self.student_obj = student(self.student_id)
         gpa_value = self.student_obj.calculate_GPA()
@@ -32,7 +36,7 @@ class StudentWindow(QtWidgets.QMainWindow):
 
         # Set welcome text
         self.welcomeLabel.setText(f"Welcome, {self.student_name}")
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         
         # General table setup
         self.setup_current_courses_table()
@@ -43,12 +47,14 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.load_transcript_tables()
         # Load current schedule
         self.load_current_schedule()
+        # Load weekly schedule
+        self.load_weekly_schedule()
         # Load available courses
         self.load_available_courses()
         # Load current courses
         self.load_current_courses_table()
-        # Sign out button
-        self.SignOutButton.clicked.connect(self.sign_out)
+        # Load total credit
+        self.load_total_credit()
     
     # __________General__________
     def setup_current_courses_table(self):
@@ -123,7 +129,15 @@ class StudentWindow(QtWidgets.QMainWindow):
             self.login = LoginWindow()  # return to login
             self.login.show()
 
-
+    def refresh_all_tables(self):
+        self.load_info_table()
+        self.load_transcript_tables()
+        self.load_current_schedule()
+        self.load_available_courses()
+        self.load_current_courses_table()
+        self.load_weekly_schedule()
+        self.load_total_credit() 
+   
     # __________Transcript Tab__________
     def load_info_table(self):
         # Prepare table
@@ -224,7 +238,6 @@ class StudentWindow(QtWidgets.QMainWindow):
             table.horizontalHeader().setStretchLastSection(True)
             table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
     
-
     # __________Schedule Tab__________
     def load_current_schedule(self):
 
@@ -278,8 +291,127 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.CurrentSchTable.horizontalHeader().setStretchLastSection(True)
         self.CurrentSchTable.resizeColumnToContents(1)
         table.setColumnWidth(1, 350)
-        table.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Fixed)        
+        table.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Fixed)
+        
+    def switch_schedule_view(self):
+        if self.AcademicRadio.isChecked():
+            self.CurrentSchTable.show()
+            self.WeeklySchTable.hide()
+        else:
+            self.CurrentSchTable.hide()
+            self.WeeklySchTable.show()
 
+    def load_weekly_schedule(self):
+        table = self.WeeklySchTable
+        table.clear()
+
+        days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"]
+        table.setColumnCount(len(days) + 1)
+        table.setHorizontalHeaderLabels(["Time"] + days)
+        table.verticalHeader().setVisible(False)
+
+        # Chronological master list (start at 8:00 always)
+        ALL_TIME_SLOTS = [
+            "8:00-8:50", "8:00-9:15",
+            "9:00-9:50", "9:00-9:15",
+            "9:30-10:45",
+            "10:00-10:50",
+            "11:00-11:50", "11:00-12:15", "11:00-12:50",
+            "1:00-1:50", "1:00-2:15",
+            "2:00-4:50",
+            "5:00-5:50",
+            "6:00-6:50",
+            "7:00-7:50"
+        ]
+
+        schedule = self.student_obj.view_enrolled_subjects()
+
+        if isinstance(schedule, str):
+            table.setRowCount(0)
+            return
+
+        time_slots_found = set()
+        parsed_subjects = []
+
+        # Parse schedule
+        for section, (course_code, course_name, time_days,
+                    credit, section_name, instructor) in schedule.items():
+
+            # "9:00-9:50 , S T U"
+            time_part, days_part = time_days.split(",")
+            time_range = time_part.strip()
+            letters = days_part.strip().split()
+
+            # Map letters → full day names
+            map_days = {
+                "S": "Sunday",
+                "M": "Monday",
+                "T": "Tuesday",
+                "W": "Wednesday",
+                "U": "Thursday"
+            }
+            full_days = [map_days[d] for d in letters]
+
+            time_slots_found.add(time_range)
+            parsed_subjects.append((course_code, section, full_days, time_range))
+
+        # Build CHRONOLOGICAL time order
+        time_slots = []
+        for t in ALL_TIME_SLOTS:
+            if any(t in slot for slot in time_slots_found):
+                time_slots.append(t)
+
+        # Row count
+        table.setRowCount(len(time_slots))
+
+        # Set time labels
+        for r, t in enumerate(time_slots):
+            item = QtWidgets.QTableWidgetItem(t)
+            item.setTextAlignment(QtCore.Qt.AlignCenter)
+            table.setItem(r, 0, item)
+
+        # Insert subjects in correct cells
+        for course_code, section, full_days, time_range in parsed_subjects:
+            row = 0
+            for i, slot in enumerate(time_slots):
+                if time_range.startswith(slot.split("-")[0]):
+                    row = i
+                    break
+
+            for d in full_days:
+                col = days.index(d) + 1
+
+                text = f"{course_code}\n({section})"
+                item = QtWidgets.QTableWidgetItem(text)
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                item.setBackground(QtGui.QColor("#00334e"))
+                item.setForeground(QtGui.QColor("white"))
+
+                table.setItem(row, col, item)
+
+        # Stretch columns
+        for c in range(table.columnCount()):
+            table.horizontalHeader().setSectionResizeMode(c, QtWidgets.QHeaderView.Stretch)
+
+    def load_total_credit(self):
+        table = self.TotalCreditTable
+
+        total = 0
+        schedule = self.student_obj.view_enrolled_subjects()
+        if isinstance(schedule, dict):
+            for sec, (course_code, course_name, time_days,
+                    section_name, credit, instructor) in schedule.items():
+                total += credit
+
+        # Configure header and structure
+        table.setColumnCount(2)
+        table.setRowCount(1)
+        table.setHorizontalHeaderLabels(["Total Credit", str(total)])
+        table.verticalHeader().setVisible(False)
+
+        # Stretch layout
+        table.horizontalHeader().setStretchLastSection(True)
+        table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
     # __________Add/Remove Tab__________
     def load_available_courses(self):
@@ -433,7 +565,7 @@ class StudentWindow(QtWidgets.QMainWindow):
 
         row = 0
         for section, (course_code, course_name, time_days,
-                    credit, section_name, instructor) in schedule.items():
+                    section_name,credit, instructor) in schedule.items():
 
             # time_days example: "9:00-9:50 , S T U"
             try:
@@ -583,13 +715,6 @@ class StudentWindow(QtWidgets.QMainWindow):
         else:
             QtWidgets.QMessageBox.warning(self, "Enrollment", msg)
 
-    def refresh_all_tables(self):
-        self.load_info_table()
-        self.load_transcript_tables()
-        self.load_current_schedule()
-        self.load_available_courses()
-        self.load_current_courses_table()
-
     def remove_selected_course(self):
         table = self.Current_CoursesTable
 
@@ -605,7 +730,8 @@ class StudentWindow(QtWidgets.QMainWindow):
         if not selected_section:
             QtWidgets.QMessageBox.warning(self, "Remove Course", "Please select a course to remove.")
             return
-        
+
+        # Use section.remove_student_from_section to get (ok, msg)
         try:
             self.student_obj = student(self.student_id)  # Refresh student object
             ok, msg = self.student_obj.drop_subject(selected_section)

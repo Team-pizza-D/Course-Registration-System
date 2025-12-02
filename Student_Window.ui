@@ -256,7 +256,7 @@ QTabBar::tab {
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>60</y>
+        <y>80</y>
         <width>1131</width>
         <height>721</height>
        </rect>
@@ -272,7 +272,7 @@ QTabBar::tab {
       <property name="geometry">
        <rect>
         <x>60</x>
-        <y>20</y>
+        <y>30</y>
         <width>111</width>
         <height>20</height>
        </rect>
@@ -288,7 +288,7 @@ QTabBar::tab {
       <property name="geometry">
        <rect>
         <x>230</x>
-        <y>20</y>
+        <y>30</y>
         <width>101</width>
         <height>20</height>
        </rect>
@@ -304,10 +304,32 @@ QTabBar::tab {
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>60</y>
+        <y>80</y>
         <width>1131</width>
         <height>721</height>
        </rect>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="textElideMode">
+       <enum>Qt::ElideNone</enum>
+      </property>
+      <property name="showGrid">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="TotalCreditTable">
+      <property name="geometry">
+       <rect>
+        <x>850</x>
+        <y>20</y>
+        <width>331</width>
+        <height>44</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
       </property>
       <property name="editTriggers">
        <set>QAbstractItemView::NoEditTriggers</set>
