@@ -114,13 +114,18 @@ class AdminWindow(QtWidgets.QMainWindow):
                 if item:
                     item.setTextAlignment(QtCore.Qt.AlignCenter)
 
-
+        # Load Tab 1 student table initially
+        self.load_tab1_students()
         # Load Tab 3 table initially
         self.load_capacity_table()
         # Load Tab 4 grade table initially
         self.load_tab4_grade_table()
 
         # ---------- Connections ----------
+        # Tab 1: add/delete student
+        self.Tab1_AddStudent.clicked.connect(self.tab1_add_student)
+        self.Tab1_DeleteStudent.clicked.connect(self.tab1_delete_student)
+
         # Tab 2: submit student
         self.pushButton.clicked.connect(self.handle_submit_student)
 
@@ -141,7 +146,78 @@ class AdminWindow(QtWidgets.QMainWindow):
     # =========================================================
     # TAB 1 - Student Add/Delete
     # =========================================================
+    def tab1_add_student(self):
+        first = self.Tab1_FirstName.text().strip()
+        last = self.Tab1_LastName.text().strip()
 
+        if not first or not last:
+            QtWidgets.QMessageBox.warning(self, "Error", "Please fill both first and last name.")
+            return
+
+        # Default major (change if needed)
+        major = "Electrical communication and electronics engineering"
+
+        ok, msg = self.admin_obj.add_student(first, last, major)
+
+        QtWidgets.QMessageBox.information(self, "Add Student", msg)
+
+        self.load_tab1_students()
+
+        self.Tab1_FirstName.clear()
+        self.Tab1_LastName.clear()
+
+
+    def tab1_delete_student(self):
+        student_id = self.Tab1_Student_ID.text().strip()
+
+        if not student_id.isdigit():
+            QtWidgets.QMessageBox.warning(self, "Error", "Please enter a valid numeric student ID.")
+            return
+
+        ok, msg = self.admin_obj.delete_student(student_id)
+
+        QtWidgets.QMessageBox.information(self, "Delete Student", msg)
+
+        self.load_tab1_students()
+
+        self.Tab1_Student_ID.clear()
+
+    def load_tab1_students(self):
+        from classses2 import users_db
+
+        rows = users_db.execute(
+            "SELECT id, username, email FROM students",
+            fetchall=True
+        )
+
+        table = self.Tab1_StudentTable
+        table.setRowCount(0)
+        table.setColumnCount(3)
+        table.setHorizontalHeaderLabels(["Student ID", "Name", "Email Address"])
+
+        if not rows:
+            return
+        for r_index, (stu_id, name, email) in enumerate(rows):
+            table.insertRow(r_index)
+
+            item_id = QtWidgets.QTableWidgetItem(str(stu_id))
+            item_name = QtWidgets.QTableWidgetItem(name)
+            item_email = QtWidgets.QTableWidgetItem(email)
+
+            item_id.setTextAlignment(QtCore.Qt.AlignCenter)
+            item_name.setTextAlignment(QtCore.Qt.AlignCenter)
+            item_email.setTextAlignment(QtCore.Qt.AlignCenter)
+
+            table.setItem(r_index, 0, item_id)
+            table.setItem(r_index, 1, item_name)
+            table.setItem(r_index, 2, item_email)
+
+        header = table.horizontalHeader()
+        for col in range(table.columnCount()):
+            header.setSectionResizeMode(col, QtWidgets.QHeaderView.Stretch)
+
+        table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        table.verticalHeader().setVisible(False)
 
 
     # =========================================================
