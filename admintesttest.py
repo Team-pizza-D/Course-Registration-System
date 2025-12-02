@@ -108,6 +108,13 @@ class AdminWindow(QtWidgets.QMainWindow):
             table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
             table.verticalHeader().setVisible(False)
 
+        def center_row_items(self, table, row):
+            for col in range(table.columnCount()):
+                item = table.item(row, col)
+                if item:
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+
+
         # Load Tab 3 table initially
         self.load_capacity_table()
         # Load Tab 4 grade table initially
@@ -132,7 +139,13 @@ class AdminWindow(QtWidgets.QMainWindow):
 
 
     # =========================================================
-    # TAB 2 — Submit student ID
+    # TAB 1 - Student Add/Delete
+    # =========================================================
+
+
+
+    # =========================================================
+    # TAB 2 — Subject Enrollment
     # =========================================================
     def handle_submit_student(self):
         self.EnrollmentMessege.setText("")
@@ -163,9 +176,6 @@ class AdminWindow(QtWidgets.QMainWindow):
         self.StudentCourseTable.setRowCount(0)
         self.Tab2_SubjectsTable.setRowCount(0)
 
-    # =========================================================
-    # TAB 2 — Available subjects table (right)
-    # =========================================================
     def load_available_subjects_table(self):
         table = self.Tab2_SubjectsTable
         table.clear()
@@ -286,9 +296,6 @@ class AdminWindow(QtWidgets.QMainWindow):
                     item.setBackground(QtGui.QColor("#001622"))
                     item.setForeground(QtGui.QColor("white"))
 
-    # =========================================================
-    # TAB 2 — Current courses table (left)
-    # =========================================================
     def load_student_current_courses_table(self):
         table = self.StudentCourseTable
         table.clear()
@@ -415,9 +422,6 @@ class AdminWindow(QtWidgets.QMainWindow):
                     item.setBackground(QtGui.QColor("#001622"))
                     item.setForeground(QtGui.QColor("white"))
 
-    # =========================================================
-    # TAB 2 — Add / Remove course (using admin functions)
-    # =========================================================
     def add_selected_course(self):
         if self.current_student is None:
             QtWidgets.QMessageBox.warning(
@@ -494,7 +498,6 @@ class AdminWindow(QtWidgets.QMainWindow):
             self.load_available_subjects_table()
         else:
             QtWidgets.QMessageBox.warning(self, "Remove Course", msg)
-
     # =========================================================
     # TAB 3 — Expand capacity
     # =========================================================
@@ -541,16 +544,22 @@ class AdminWindow(QtWidgets.QMainWindow):
 
         for r_index, (code, section, cap) in enumerate(row):
             self.CapacityTable.insertRow(r_index)
-            self.CapacityTable.setItem(r_index, 0, QtWidgets.QTableWidgetItem(str(code)))
-            self.CapacityTable.setItem(r_index, 1, QtWidgets.QTableWidgetItem(str(section)))
-            self.CapacityTable.setItem(r_index, 2, QtWidgets.QTableWidgetItem(str(cap)))
 
-        self.CapacityTable.horizontalHeader().setStretchLastSection(True)
-        self.CapacityTable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
-        self.CapacityTable.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.CapacityTable.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
-        self.CapacityTable.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+            item_code = QtWidgets.QTableWidgetItem(str(code))
+            item_sec = QtWidgets.QTableWidgetItem(str(section))
+            item_cap = QtWidgets.QTableWidgetItem(str(cap))
 
+            # 🔹 CENTER the text
+            item_code.setTextAlignment(QtCore.Qt.AlignCenter)
+            item_sec.setTextAlignment(QtCore.Qt.AlignCenter)
+            item_cap.setTextAlignment(QtCore.Qt.AlignCenter)
+
+            self.CapacityTable.setItem(r_index, 0, item_code)
+            self.CapacityTable.setItem(r_index, 1, item_sec)
+            self.CapacityTable.setItem(r_index, 2, item_cap)
+        header = self.CapacityTable.horizontalHeader()
+        for col in range(self.CapacityTable.columnCount()):
+            header.setSectionResizeMode(col, QtWidgets.QHeaderView.Stretch)
     # =========================================================
     # TAB 4 — Grading
     # =========================================================
@@ -596,24 +605,25 @@ class AdminWindow(QtWidgets.QMainWindow):
         self.Tab4_Course_code_2.clear()
 
     def load_tab4_grade_table(self):
-        from classses2 import users_db, courses_db  # use your DB class
+        from classses2 import users_db, courses_db
 
-        # Fetch all grades
         rows = users_db.execute(
-            "SELECT student_id, course, letter_grade FROM grades",
+            "SELECT student_id, course, Letter_grade FROM grades",
             fetchall=True
         )
 
-        self.StudentGradeTable_4.setRowCount(0)
-        self.StudentGradeTable_4.setColumnCount(4)
-        self.StudentGradeTable_4.setHorizontalHeaderLabels(
+        table = self.StudentGradeTable_4
+        table.setRowCount(0)
+        table.setColumnCount(4)
+        table.setHorizontalHeaderLabels(
             ["Student ID", "Course ID", "Course Name", "Course Grade"]
         )
 
         if not rows:
             return
 
-        for i, (student_id, course_code, letter_grade) in enumerate(rows):
+        for r_index, (student_id, course_code, letter_grade) in enumerate(rows):
+
             # Fetch course name
             cname = courses_db.execute(
                 "SELECT course_name FROM Courses WHERE course_code = ?",
@@ -622,16 +632,34 @@ class AdminWindow(QtWidgets.QMainWindow):
             )
             course_name = cname[0] if cname else "Unknown"
 
-            self.StudentGradeTable_4.insertRow(i)
-            self.StudentGradeTable_4.setItem(i, 0, QtWidgets.QTableWidgetItem(str(student_id)))
-            self.StudentGradeTable_4.setItem(i, 1, QtWidgets.QTableWidgetItem(course_code))
-            self.StudentGradeTable_4.setItem(i, 2, QtWidgets.QTableWidgetItem(course_name))
-            self.StudentGradeTable_4.setItem(i, 3, QtWidgets.QTableWidgetItem(letter_grade))
+            table.insertRow(r_index)
 
-        # Formatting
-        self.StudentGradeTable_4.horizontalHeader().setStretchLastSection(True)
-        self.StudentGradeTable_4.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
-        self.StudentGradeTable_4.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+            # Create table items
+            item_stu = QtWidgets.QTableWidgetItem(str(student_id))
+            item_code = QtWidgets.QTableWidgetItem(course_code)
+            item_name = QtWidgets.QTableWidgetItem(course_name)
+            item_grade = QtWidgets.QTableWidgetItem(letter_grade)
+
+            # Center alignment
+            for item in (item_stu, item_code, item_name, item_grade):
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+
+            # Set items
+            table.setItem(r_index, 0, item_stu)
+            table.setItem(r_index, 1, item_code)
+            table.setItem(r_index, 2, item_name)
+            table.setItem(r_index, 3, item_grade)
+
+        # Make ALL columns stretch
+        header = table.horizontalHeader()
+        for col in range(table.columnCount()):
+            header.setSectionResizeMode(col, QtWidgets.QHeaderView.Stretch)
+
+        # Disable editing
+        table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        table.verticalHeader().setVisible(False)
+
+
 
 
 
