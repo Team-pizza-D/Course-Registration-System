@@ -548,7 +548,7 @@ class section(subject):
         self.enrolled_students.append(f"{student_id} - {student_name}")
         self.student_id_in_section.append(student_id)
         self.student_name_in_section.append(student_name)
-        # users_db.execute("INSERT INTO grades (student_id, course) VALUES (?, ?)", (student_id, self.subject), commit=True)
+        users_db.execute("INSERT INTO grades (student_id, course) VALUES (?, ?)", (student_id, self.subject), commit=True)
 
         return True , f"Student with ID {student_id} successfully enrolled in section {self.section_name}."
 
@@ -789,6 +789,8 @@ class student(user):
         total_credits = 0
         total_points = 0
         for course, letter_grade, credit in rows:
+            if letter_grade not in grade_map :
+                continue  # skip invalid grades
             grade_point = grade_map.get(letter_grade, 0)
             total_credits += credit
             total_points += grade_point * credit
