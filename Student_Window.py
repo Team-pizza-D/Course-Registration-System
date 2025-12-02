@@ -7,7 +7,7 @@ from PyQt5.QtGui import QKeySequence
 from classses2 import Database,  student, admin, user, subject, section, instructor
 
 class StudentWindow(QtWidgets.QMainWindow):
-    def __init__(self, sid="2430020", sname=None, smajor=None):
+    def __init__(self, sid="2430020", sname="tarif alqahtani", smajor="Electrical communication and electronics engineering"):
         super().__init__()
         ui_path = os.path.join(os.path.dirname(__file__), "Student_Window.ui")
         uic.loadUi(ui_path, self)
@@ -35,7 +35,7 @@ class StudentWindow(QtWidgets.QMainWindow):
 
 
         # Set welcome text
-        self.welcomeLabel.setText(f"Welcome, {self.student_name}")
+        self.welcomeLabel.setText(f"Welcome, {self.student_name}!")
         self.tabWidget.setCurrentIndex(0)
         
         # General table setup
