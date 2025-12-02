@@ -95,7 +95,6 @@ class LoginWindow(QMainWindow):
 
         QtWidgets.QMessageBox.warning(self, "Login Failed", "Invalid ID or Password.")
 
-
     def openStudentWindow(self, sid, sname, smajor):
         self.hide()
         self.main_window = StudentWindow(sid, sname, smajor)
@@ -159,7 +158,8 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.load_current_courses_table()
         # Load total credit
         self.load_total_credit()
-    
+        # Setup weekly schedule header
+        self.setup_weekly_header()
     # __________General__________
     def setup_current_courses_table(self):
         table = self.Current_CoursesTable
@@ -528,6 +528,31 @@ class StudentWindow(QtWidgets.QMainWindow):
             # Stretch layout
             table.horizontalHeader().setStretchLastSection(True)
             table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+
+    def setup_weekly_header(self):
+        table = self.WeeklySchTable
+
+        # Only headers, no rows
+        table.setRowCount(0)
+
+        # Set 6 columns
+        table.setColumnCount(6)
+        table.setHorizontalHeaderLabels([
+            "Time", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"
+        ])
+
+        # Stretch all columns to fill full width
+        header = table.horizontalHeader()
+        for col in range(table.columnCount()):
+            header.setSectionResizeMode(col, QtWidgets.QHeaderView.Stretch)
+
+        # Disable all user editing
+        table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        table.setSelectionMode(QtWidgets.QAbstractItemView.NoSelection)
+        table.setFocusPolicy(QtCore.Qt.NoFocus)
+
+        # Hide vertical rows (since there are none)
+        table.verticalHeader().setVisible(False)
 
     # __________Add/Remove Tab__________
     def load_available_courses(self):
