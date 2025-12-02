@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1236</width>
+    <width>1230</width>
     <height>966</height>
    </rect>
   </property>
@@ -181,57 +181,99 @@ QLineEdit::focus
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>50</y>
+      <y>60</y>
       <width>1381</width>
-      <height>871</height>
+      <height>861</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">        QTabWidget::tab-bar {
+            alignment: left; /* or left, right */
+        }
+
+        QTabBar::tab {
+            background: lightgray;
+            border: 1px solid gray;
+            border-bottom-color: #C2C7CB; /* same as the pane color */
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            min-width: 8ex;
+            padding: 2px;
+        }
+
+        QTabBar::tab:selected {
+            background: white;
+            border-color: #9B9B9B;
+            border-bottom-color: white; /* make the selected tab look like it's part of the pane */
+        }
+
+        QTabBar::tab:hover {
+            background: #E0E0E0;
+        }
+
+QTabWidget::pane {
+    border: 1px solid #0E1A25;
+    top:-1px;
+}
+
+QTabBar::tab {
+    background: #00111d;
+    color: #d1d1d1;
+    padding: 10px 20px;
+    font: 14px &quot;Segoe UI&quot;;
+    border: 1px solid #0E1A25;
+    border-bottom: 2px solid transparent;
+    margin-right: 2px;
+}
+
+QTabBar::tab:hover {
+    background: #002033;
+    color: white;
+}
+
+QTabBar::tab:selected {
+    background: #00385a;
+    color: white;
+    border-bottom: 2px solid #00b4ff;
+}
+
+QTabBar::tab:!selected {
+    margin-top: 2px;
+}
+
+/* Optional rounded corners */
+QTabBar::tab {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+QTabBar::tab {
+    padding-left: 30px;  /* space for icons */
+}
+
+QTabWidget::tab-bar {
+    left: 5px;  /* move tabs slightly */
+}
+QTabBar::tab {
+    width: 165px;
+    height: 30px;
+    padding-left: 30px;
+}
+</string>
+    </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
-      <string>Add Student / Delete Student</string>
+      <string>Add / Delete Student</string>
      </attribute>
-     <widget class="QFrame" name="frame">
-      <property name="geometry">
-       <rect>
-        <x>50</x>
-        <y>30</y>
-        <width>1141</width>
-        <height>81</height>
-       </rect>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-      <widget class="QLabel" name="label">
-       <property name="geometry">
-        <rect>
-         <x>290</x>
-         <y>12</y>
-         <width>551</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 75 24pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>Students Add/Remove System</string>
-       </property>
-      </widget>
-     </widget>
      <widget class="QFrame" name="frame_2">
       <property name="geometry">
        <rect>
         <x>60</x>
-        <y>130</y>
+        <y>30</y>
         <width>1141</width>
-        <height>171</height>
+        <height>371</height>
        </rect>
       </property>
       <property name="frameShape">
@@ -243,9 +285,9 @@ QLineEdit::focus
       <widget class="QLineEdit" name="Tab1_LastName">
        <property name="geometry">
         <rect>
-         <x>750</x>
-         <y>70</y>
-         <width>261</width>
+         <x>810</x>
+         <y>100</y>
+         <width>221</width>
          <height>41</height>
         </rect>
        </property>
@@ -253,14 +295,18 @@ QLineEdit::focus
       <widget class="QLabel" name="label_9">
        <property name="geometry">
         <rect>
-         <x>50</x>
-         <y>70</y>
-         <width>131</width>
+         <x>440</x>
+         <y>40</y>
+         <width>171</width>
          <height>41</height>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+        <string notr="true">QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 20pt;
+}</string>
        </property>
        <property name="text">
         <string>First Name:</string>
@@ -269,14 +315,18 @@ QLineEdit::focus
       <widget class="QLabel" name="label_10">
        <property name="geometry">
         <rect>
-         <x>640</x>
-         <y>80</y>
-         <width>101</width>
-         <height>21</height>
+         <x>840</x>
+         <y>40</y>
+         <width>171</width>
+         <height>31</height>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+        <string notr="true">QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 20pt;
+}</string>
        </property>
        <property name="text">
         <string>Last Name :</string>
@@ -285,40 +335,58 @@ QLineEdit::focus
       <widget class="QLineEdit" name="Tab1_FirstName">
        <property name="geometry">
         <rect>
-         <x>160</x>
-         <y>70</y>
-         <width>261</width>
+         <x>420</x>
+         <y>100</y>
+         <width>221</width>
          <height>41</height>
         </rect>
        </property>
       </widget>
-     </widget>
-     <widget class="QFrame" name="frame_3">
-      <property name="geometry">
-       <rect>
-        <x>50</x>
-        <y>310</y>
-        <width>1141</width>
-        <height>81</height>
-       </rect>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
+      <widget class="QLabel" name="label_11">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>40</y>
+         <width>191</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 20pt;
+}</string>
+       </property>
+       <property name="text">
+        <string>Student ID :</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="Tab1_Student_ID">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>100</y>
+         <width>221</width>
+         <height>41</height>
+        </rect>
+       </property>
+      </widget>
       <widget class="QPushButton" name="Tab1_AddStudent">
        <property name="geometry">
         <rect>
-         <x>250</x>
-         <y>20</y>
+         <x>210</x>
+         <y>220</y>
          <width>231</width>
          <height>41</height>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true"/>
+        <string notr="true">QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 20pt;
+}</string>
        </property>
        <property name="text">
         <string>Add</string>
@@ -327,8 +395,8 @@ QLineEdit::focus
       <widget class="QPushButton" name="Tab1_DeleteStudent">
        <property name="geometry">
         <rect>
-         <x>630</x>
-         <y>20</y>
+         <x>600</x>
+         <y>220</y>
          <width>241</width>
          <height>41</height>
         </rect>
@@ -344,7 +412,7 @@ QLineEdit::focus
         <x>50</x>
         <y>410</y>
         <width>1141</width>
-        <height>331</height>
+        <height>471</height>
        </rect>
       </property>
       <property name="frameShape">
@@ -449,20 +517,24 @@ QLineEdit::focus
         <x>-1</x>
         <y>-1</y>
         <width>1381</width>
-        <height>711</height>
+        <height>881</height>
        </rect>
       </property>
       <widget class="QLabel" name="label_3">
        <property name="geometry">
         <rect>
-         <x>70</x>
-         <y>70</y>
-         <width>151</width>
+         <x>50</x>
+         <y>10</y>
+         <width>181</width>
          <height>41</height>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">font: 75 16pt &quot;MS Shell Dlg 2&quot;;</string>
+        <string notr="true">QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 20pt;
+}</string>
        </property>
        <property name="text">
         <string>Student ID : </string>
@@ -471,8 +543,8 @@ QLineEdit::focus
       <widget class="QLineEdit" name="Tab2_StudentID">
        <property name="geometry">
         <rect>
-         <x>220</x>
-         <y>70</y>
+         <x>260</x>
+         <y>20</y>
          <width>211</width>
          <height>41</height>
         </rect>
@@ -481,8 +553,8 @@ QLineEdit::focus
       <widget class="QPushButton" name="Tab2_AddCourse">
        <property name="geometry">
         <rect>
-         <x>980</x>
-         <y>640</y>
+         <x>880</x>
+         <y>680</y>
          <width>131</width>
          <height>41</height>
         </rect>
@@ -494,8 +566,8 @@ QLineEdit::focus
       <widget class="QPushButton" name="Tab2_DeleteCourse">
        <property name="geometry">
         <rect>
-         <x>700</x>
-         <y>640</y>
+         <x>220</x>
+         <y>680</y>
          <width>131</width>
          <height>41</height>
         </rect>
@@ -504,24 +576,11 @@ QLineEdit::focus
         <string>Remove</string>
        </property>
       </widget>
-      <widget class="QLabel" name="EnrollmentMessege">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>640</y>
-         <width>671</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
       <widget class="QTableWidget" name="StudentCourseTable">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>130</y>
+         <y>170</y>
          <width>591</width>
          <height>481</height>
         </rect>
@@ -568,7 +627,7 @@ QLineEdit::focus
        <property name="geometry">
         <rect>
          <x>620</x>
-         <y>130</y>
+         <y>170</y>
          <width>591</width>
          <height>481</height>
         </rect>
@@ -614,16 +673,108 @@ QLineEdit::focus
       <widget class="QPushButton" name="pushButton">
        <property name="geometry">
         <rect>
-         <x>460</x>
-         <y>80</y>
-         <width>111</width>
-         <height>21</height>
+         <x>500</x>
+         <y>20</y>
+         <width>121</width>
+         <height>31</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">selection-background-color: rgb(0, 17, 28);
+alternate-background-color: rgb(0, 17, 29);
+background-color: rgb(0, 17n 29);</string>
        </property>
        <property name="text">
         <string>Submit</string>
        </property>
       </widget>
+      <widget class="QLabel" name="welcomeLabel_2">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>100</y>
+         <width>301</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Consolas,Courier New,monospace</family>
+         <pointsize>20</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 20pt;
+}</string>
+       </property>
+       <property name="text">
+        <string>Current Courses</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="welcomeLabel_6">
+       <property name="geometry">
+        <rect>
+         <x>740</x>
+         <y>100</y>
+         <width>331</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Consolas,Courier New,monospace</family>
+         <pointsize>20</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 20pt;
+}</string>
+       </property>
+       <property name="text">
+        <string>Available Courses</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="EnrollmentMessege">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>260</y>
+         <width>81</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+      <zorder>EnrollmentMessege</zorder>
+      <zorder>label_3</zorder>
+      <zorder>Tab2_StudentID</zorder>
+      <zorder>Tab2_AddCourse</zorder>
+      <zorder>Tab2_DeleteCourse</zorder>
+      <zorder>StudentCourseTable</zorder>
+      <zorder>Tab2_SubjectsTable</zorder>
+      <zorder>pushButton</zorder>
+      <zorder>welcomeLabel_2</zorder>
+      <zorder>welcomeLabel_6</zorder>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_4">
@@ -766,9 +917,9 @@ QLineEdit::focus
      <widget class="QLabel" name="label_16">
       <property name="geometry">
        <rect>
-        <x>440</x>
+        <x>420</x>
         <y>40</y>
-        <width>131</width>
+        <width>141</width>
         <height>41</height>
        </rect>
       </property>
@@ -782,7 +933,7 @@ QLineEdit::focus
      <widget class="QLabel" name="label_17">
       <property name="geometry">
        <rect>
-        <x>840</x>
+        <x>820</x>
         <y>40</y>
         <width>141</width>
         <height>41</height>
@@ -798,7 +949,7 @@ QLineEdit::focus
      <widget class="QLineEdit" name="Tab4_Student_ID">
       <property name="geometry">
        <rect>
-        <x>202</x>
+        <x>150</x>
         <y>41</y>
         <width>231</width>
         <height>41</height>
@@ -808,7 +959,7 @@ QLineEdit::focus
      <widget class="QLineEdit" name="Tab4_Course_code">
       <property name="geometry">
        <rect>
-        <x>580</x>
+        <x>560</x>
         <y>40</y>
         <width>231</width>
         <height>41</height>
@@ -819,9 +970,9 @@ QLineEdit::focus
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>250</y>
+        <y>200</y>
         <width>1161</width>
-        <height>441</height>
+        <height>521</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -865,8 +1016,8 @@ QLineEdit::focus
      <widget class="QPushButton" name="Tab4_Confirm">
       <property name="geometry">
        <rect>
-        <x>490</x>
-        <y>180</y>
+        <x>480</x>
+        <y>130</y>
         <width>271</width>
         <height>51</height>
        </rect>
@@ -878,7 +1029,7 @@ QLineEdit::focus
      <widget class="QLineEdit" name="Tab4_Course_code_2">
       <property name="geometry">
        <rect>
-        <x>990</x>
+        <x>980</x>
         <y>40</y>
         <width>201</width>
         <height>41</height>
@@ -887,16 +1038,50 @@ QLineEdit::focus
      </widget>
     </widget>
    </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1236</width>
-     <height>21</height>
-    </rect>
-   </property>
+   <widget class="QLabel" name="welcomeLabel">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>641</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Welcome </string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="SignOutButton">
+    <property name="geometry">
+     <rect>
+      <x>1080</x>
+      <y>20</y>
+      <width>121</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Consolas,Courier New,monospace</family>
+      <pointsize>-1</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">selection-background-color: rgb(0, 17, 28);
+alternate-background-color: rgb(0, 17, 29);
+background-color: rgb(0, 17n 29);</string>
+    </property>
+    <property name="text">
+     <string>Sign Out</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../../Downloads/si--arrow-left-circle-fill.svg</normaloff>../../Downloads/si--arrow-left-circle-fill.svg</iconset>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

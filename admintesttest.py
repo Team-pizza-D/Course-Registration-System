@@ -59,15 +59,16 @@ class LoginWindow(QMainWindow):
         admin_data = self.check_admin(UniID, password)
         if admin_data:
             admin_id, admin_name = admin_data
-            self.openAdminWindow(admin_id)
+            self.openAdminWindow(admin_id, admin_name)
             return
 
         QtWidgets.QMessageBox.warning(self, "Login Failed", "Invalid ID or Password.")
 
-    def openAdminWindow(self, admin_id):
+    def openAdminWindow(self, admin_id, admin_name):
         self.hide()
-        self.main_window = AdminWindow(admin_id=admin_id)
+        self.main_window = AdminWindow(admin_id=admin_id, admin_name=admin_name)
         self.main_window.show()
+
 
 import sys
 import os
@@ -77,20 +78,19 @@ from classses2 import student, admin  # backend classes
 
 
 class AdminWindow(QtWidgets.QMainWindow):
-    def __init__(self, admin_id):
+    def __init__(self, admin_id, admin_name):
         super().__init__()
         ui_path = os.path.join(os.path.dirname(__file__), "Admin_Window.ui")
         uic.loadUi(ui_path, self)
-
-        # Fixed size
+        
         self.setFixedWidth(1236)
         self.setFixedHeight(966)
-
-        # Store admin and create admin object (ID comes from LoginWindow)
+        self.adminName = admin_name
         self.admin_id = admin_id
         self.admin_obj = admin(id=self.admin_id)
 
-        # Tab 2 state
+        self.welcomeLabel.setText(f"Welcome, {self.adminName}!")
+        self.tabWidget.setCurrentIndex(0)
         self.current_student = None
         self.available_section_map = {}   # row -> section (right table)
         self.current_section_map = {}     # row -> section (left table)
