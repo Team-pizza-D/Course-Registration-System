@@ -1,5 +1,6 @@
 import sqlite3
-from classses2 import admin, student,section,subject,instructor,Database
+import bcrypt
+from classses2 import admin, student,section,subject,instructor,Database, user
 
 
 # db = sqlite3.connect("Users.db")
@@ -255,3 +256,43 @@ db.close()
 #     else:
 #         print("class is full")        
 #
+db = sqlite3.connect("test.db")
+cr = db.cursor()
+cr.execute("CREATE TABLE IF NOT EXISTS test (id TEXT PRIMARY KEY, username TEXT, email TEXT, major TEXT, password TEXT, current_term INTEGER)") 
+db.commit()
+db.close()
+class signup(user):
+    def __init__(self, username, password, email=None, id=None):
+        super().__init__(username=username, password=password, email=email, id=id)
+        if self.id is None:
+            self.id = self.generate_unique_id()
+        if self.email is None:
+            self.email = self.generate_email()
+    def register(self):
+        self.email = self.generate_email()
+        self.hashed = bcrypt.hashpw(self.password.encode(), bcrypt.gensalt()).decode()
+        db = sqlite3.connect("test.db")
+        cr = db.cursor()
+        cr.execute(
+        "INSERT INTO test (id, username, email, password) VALUES (?, ?, ?, ?)",
+        (self.id, self.username, self.email, self.hashed))
+        db.commit()
+        db.close()  
+    def checking(self):
+        print("ID I'm searching for:", self.id)
+        checker = input("Enter your password: ")
+        new_hashed = bcrypt.hashpw(checker.encode(), bcrypt.gensalt()).decode()
+        print(checker)
+        print(new_hashed)
+        print(self.hashed)
+        if bcrypt.checkpw(checker.encode(), self.hashed.encode()):
+            print("Same")
+        else:
+            print("Not same")
+test_obj = signup(username="Abdulaziz aa", password="mypass")
+test_obj.register()
+# a = input("Enter username: ")
+# b = input("Enter password: ")
+# test_obj2 = signup(username=a, password=b)
+# test_obj2.register()
+test_obj.checking()
