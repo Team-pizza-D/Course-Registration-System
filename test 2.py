@@ -2,7 +2,14 @@ import sqlite3
 from classses2 import admin, student,section,subject,instructor,Database
 
 
-
+# db = sqlite3.connect("Users.db")
+# cr = db.cursor()
+# cr.execute("DROP TABLE IF EXISTS enrollments")
+# cr.execute("DROP TABLE IF EXISTS admins")
+# cr.execute("CREATE TABLE IF NOT EXISTS admins (id TEXT, username TEXT, password TEXT, email TEXT, status TEXT)")
+# cr.execute("CREATE TABLE IF NOT EXISTS enrollments (section TEXT, instructor TEXT, course TEXT, student_id TEXT, student_name TEXT, time TEXT, credit TEXT)")
+# db.commit()
+# db.close()
 # tariq = student( id=2430020)
 # print("--------------------------------")
 # print(tariq.view_available_subjects())

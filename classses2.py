@@ -125,10 +125,11 @@ class user:
         return id
     
     def generate_email(self):  # generates email based on username and ID
+        new_username = self.username.replace(" ", "")
         if self.is_student():
-            email = f"{self.username}{self.id}@stu.kau.edu.sa"
+            email = f"{new_username}{self.id}@stu.kau.edu.sa"
         else:
-            email = f"{self.username}{self.id}@kau.edu.sa"
+            email = f"{new_username}{self.id}@kau.edu.sa"
         return email
     
     def generate_password(self):  # generates random password
