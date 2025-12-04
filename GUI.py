@@ -8,7 +8,7 @@ from classses2 import Database,  student, admin, user, subject, section, instruc
 
 
 # _____________________________________________________________
-#                         WINDOW
+#                         Login WINDOW
 # _____________________________________________________________
 class LoginWindow(QMainWindow):
     def __init__(self):
@@ -19,6 +19,7 @@ class LoginWindow(QMainWindow):
         self.setFixedHeight(650)
 
         self.loginButton.clicked.connect(self.loginfunction)
+        self.SignUpButton.clicked.connect(self.signupfunction)
 
         # Enter triggers login
         QShortcut(QKeySequence("Return"), self, self.loginButton.click)
@@ -105,6 +106,50 @@ class LoginWindow(QMainWindow):
         self.main_window = AdminWindow()
         self.main_window.show()
 
+    def signupfunction(self):
+        self.hide()
+        self.signup_window = SignUpWindow()
+        self.signup_window.show()
+        self.signup_window.destroyed.connect(self.show)
+
+
+# _____________________________________________________________
+#                        SIGN UP WINDOW
+# _____________________________________________________________
+class SignUpWindow(QtWidgets.QMainWindow):
+    def __init__(self):
+        super().__init__()
+        ui_path = os.path.join(os.path.dirname(__file__), "SignUp.ui")
+        uic.loadUi(ui_path, self)
+
+        self.setFixedWidth(585)
+        self.setFixedHeight(820)
+        self.checkBox_show1.stateChanged.connect(self.toggle_password)
+        self.checkBox_show2.stateChanged.connect(self.toggle_password)
+        self.BackButton.clicked.connect(self.go_back)
+
+        # Example: You can rename SignUp button inside SignUp.ui if needed
+        # self.CreateButton.clicked.connect(self.create_account)
+
+    def toggle_password(self):
+        if self.checkBox_show1.isChecked():
+            self.NewPassLineEdit.setEchoMode(QtWidgets.QLineEdit.Normal)
+        else:
+            self.NewPassLineEdit.setEchoMode(QtWidgets.QLineEdit.Password)
+        if self.checkBox_show2.isChecked():
+            self.ConfirmPassLineEdit.setEchoMode(QtWidgets.QLineEdit.Normal)
+        else:
+            self.ConfirmPassLineEdit.setEchoMode(QtWidgets.QLineEdit.Password)
+
+    def go_back(self):
+            self.close()
+            self.login = LoginWindow()
+            self.login.show()
+
+    def create_account(self):
+        # TODO — Write your signup logic here
+        QtWidgets.QMessageBox.information(self, "Success", "Account created successfully!")
+
 
 # _____________________________________________________________
 #                        STUDENT WINDOW
@@ -160,6 +205,10 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.load_total_credit()
         # Setup weekly schedule header
         self.setup_weekly_header()
+        # Load student information tab
+        self.load_student_information()
+
+
     # __________General__________
     def setup_current_courses_table(self):
         table = self.Current_CoursesTable
@@ -889,7 +938,71 @@ class StudentWindow(QtWidgets.QMainWindow):
             self.refresh_all_tables()
         else:
             QtWidgets.QMessageBox.warning(self, "Remove Course", msg)
-    
+  
+    # __________Student Information Tab__________
+    def load_student_information(self):
+
+        # student object (comes from classses2.py)
+        s = self.student_obj
+
+        self.sinfoTable.setColumnCount(4)
+        self.sinfoTable.setRowCount(1)
+        self.sinfoTable.setHorizontalHeaderLabels(["Name", "ID", "Major","Email"])
+
+        # Insert data
+        self.sinfoTable.setItem(0, 0, QtWidgets.QTableWidgetItem(self.student_name))
+        self.sinfoTable.setItem(0, 1, QtWidgets.QTableWidgetItem(str(self.student_id)))
+        self.sinfoTable.setItem(0, 2, QtWidgets.QTableWidgetItem(self.student_major))
+        self.sinfoTable.setItem(0, 3, QtWidgets.QTableWidgetItem(s.email))
+
+        # Adjust column widths
+        self.sinfoTable.setColumnWidth(0, 180)   # Name
+        self.sinfoTable.setColumnWidth(1, 180)    # ID  (smaller)
+        self.sinfoTable.setColumnWidth(2, 500)   # Major (bigger)
+        self.sinfoTable.setColumnWidth(3, 200)   # Email
+
+        # Allow columns to stretch after setting min widths
+        for col in range(4):
+            self.sinfoTable.horizontalHeader().setSectionResizeMode(col, QtWidgets.QHeaderView.Interactive)
+
+
+        # Make columns stretch evenly
+        self.sinfoTable.horizontalHeader().setStretchLastSection(True)
+        self.sinfoTable.verticalHeader().setVisible(False)
+        
+
+        # Center align header text
+        header = self.sinfoTable.horizontalHeader()
+        header.setDefaultAlignment(QtCore.Qt.AlignCenter)
+
+        # Center align all cell text
+        for col in range(4):
+            self.sinfoTable.item(0, col).setTextAlignment(QtCore.Qt.AlignCenter)
+            
+        # ---------------- Term Table ----------------
+        self.TermTable.setRowCount(1)
+        self.TermTable.setColumnCount(1)
+        self.TermTable.setHorizontalHeaderLabels(["Term"])
+
+        # Fetch term from database
+        import sqlite3
+        conn = sqlite3.connect("Users.db")
+        cur = conn.cursor()
+        row = cur.execute("SELECT term FROM students WHERE id = ?", (s.id,)).fetchone()
+        conn.close()
+
+        term_value = row[0] if row else "?"
+
+        item = QtWidgets.QTableWidgetItem(str(term_value))
+        item.setTextAlignment(QtCore.Qt.AlignCenter)
+        self.TermTable.setItem(0, 0, item)
+        self.TermTable.verticalHeader().setVisible(False)
+        self.TermTable.horizontalHeader().setStretchLastSection(True)
+
+
+
+
+
 
 
 
@@ -901,8 +1014,6 @@ class AdminWindow(QtWidgets.QMainWindow):
         super().__init__()
         ui_path = os.path.join(os.path.dirname(__file__), "Admin_Window.ui")
         uic.loadUi(ui_path, self)
-
-
 
 
 # _____________________________________________________________
