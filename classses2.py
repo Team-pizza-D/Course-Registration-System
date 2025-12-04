@@ -101,6 +101,9 @@ class user:
         else:
             return False
 
+    def return_id(self):
+        return self.id
+
     def is_student(self):  # to check if user is student
         # This will later be known by which table is the information in (student or admin)
         row = users_db.execute("SELECT id FROM students WHERE id = ?", (self.id,), fetchone=True)
@@ -660,7 +663,7 @@ class student(user):
         self.enrolled_subjects = enrolled_subjects if enrolled_subjects is not None else [] # list of section codes the student is currently enrolled in
         self.completed_subjects = completed_subjects if completed_subjects is not None else []  # list of subject codes the student has completed
         self.current_credits = 0 ### total credits of current enrolled subjects for checking max credits allowed per semester not current total subjects
-        self.email = f"{self.username}{self.id}@stu.kau.edu.sa" if email is None else email
+        # self.email = f"{self.username}{self.id}@stu.kau.edu.sa" if email is None else email
         majors_row=users_db.execute("SELECT major fROM students WHERE id = ?", (self.id,), fetchone=True)
         if  self.is_student():
             self.major=majors_row[0]
@@ -1374,7 +1377,29 @@ def enforce_strong_password(new_password): # this method is checking the new pas
 
     return cond1 and cond2 and cond3 and cond4
 
+def signup(FN, LN, Npassword, M): # FN = first name , LN = last name
+    db = sqlite3.connect("Users.db")
+    cr = db.cursor()
+    cr.execute("SELECT id FROM students WHERE term = ?", (1,))
+    FYID1 = cr.fetchall()
 
+    cr.execute("SELECT id FROM students WHERE term = ?", (2,))
+    FYID2 = cr.fetchall()
+
+    All_ids_FY2 = [x[0] for x in FYID2]
+    All_ids_FY1 = [x[0] for x in FYID1]
+    All_ids_FY = All_ids_FY1 + All_ids_FY2
+    highest_id = (max(All_ids_FY))
+    stu_id = int(highest_id) + 1
+
+    
+    Tusername = FN.strip() + " " + LN.strip()
+    s = student(id = stu_id, username=Tusername, major=M, email= f"{FN}{stu_id}@stu.kau.edu.sa", password=Npassword, database=True)
+
+    db.commit()
+    db.close()
+
+    return s
 
 # Example test (from original file) - commented to avoid running automatically
 # st1 = student('ABDULAZIZ', 1234, 'Electrical communication and electronics engineering', Id=2490248)

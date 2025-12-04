@@ -1,10 +1,11 @@
 import sys
 import os
 import sqlite3
+import bcrypt
 from PyQt5 import uic, QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QShortcut
 from PyQt5.QtGui import QKeySequence
-from classses2 import Database,  student, admin, user, subject, section, instructor, enforce_strong_password
+from classses2 import Database,  student, admin, user, subject, section, instructor, enforce_strong_password, signup
 
 
 # _____________________________________________________________
@@ -125,8 +126,12 @@ class LoginWindow(QMainWindow):
 
             self.setFixedWidth(585)
             self.setFixedHeight(820)
+
             self.checkBox_show1.stateChanged.connect(self.toggle_password)
             self.BackButton.clicked.connect(self.go_back)
+
+            # CONNECT SIGNUP BUTTON
+            self.CreateButton.clicked.connect(self.process_signup)
 
         def toggle_password(self):
             if self.checkBox_show1.isChecked():
@@ -141,9 +146,80 @@ class LoginWindow(QMainWindow):
                 self.login = LoginWindow()
                 self.login.show()
 
-        def create_account(self):
-            # TODO — Write your signup logic here
-            QtWidgets.QMessageBox.information(self, "Success", "Account created successfully!")
+        # _____________________________________________________________
+        #                SIGN UP PROCESS USING signup()
+        # _____________________________________________________________
+
+        def process_signup(self):
+            FN = self.FirstNameLineEdit.text().strip()
+            LN = self.LastNameLineEdit.text().strip()
+            new_pass = self.NewPassLineEdit.text().strip()
+            confirm_pass = self.ConfirmPassLineEdit.text().strip()
+
+            MAJOR_MAP = {
+                "Power & Machines" : "Electrical power and machines engineering",
+                "Communication" : "Electrical communication and electronics engineering",
+                "Computer" : "Electrical computer engineering",
+                "Biomedical" : "Electrical biomedical engineering"
+            }
+
+
+            # ========== CHECK EMPTY FIELDS ==========
+            if not FN or not LN or not new_pass or not confirm_pass:
+                QtWidgets.QMessageBox.warning(self, "Error", "All fields are required.")
+                return
+
+            # ========== CHECK PASSWORD MATCH ==========
+            if new_pass != confirm_pass:
+                QtWidgets.QMessageBox.warning(self, "Error", "Passwords do not match.")
+                return
+
+            # ========== CHECK PASSWORD STRENGTH ==========
+            from classses2 import enforce_strong_password, signup
+
+            if not enforce_strong_password(new_pass):
+                QtWidgets.QMessageBox.warning(
+                    self,
+                    "Weak Password",
+                    "Password must:\n"
+                    "- Have 1 special character\n"
+                    "- Be at least 8 characters\n"
+                    "- Contain an uppercase letter\n"
+                    "- Not contain 3 consecutive numbers"
+                )
+                return
+            
+
+            # ===== GET SELECTED MAJOR =====
+            selected_major_ui = self.MajorComboBox.currentText()
+            if selected_major_ui not in MAJOR_MAP:
+                QtWidgets.QMessageBox.warning(self, "Error", "Please select a valid major.")
+                return
+            
+            selected_major = MAJOR_MAP[selected_major_ui]
+
+            
+            # ========== PERFORM SIGNUP ==========
+            try:
+                lines = signup(FN, LN, new_pass, selected_major)
+                QtWidgets.QMessageBox.information(
+                    self,
+                    "Success",
+                    "Account created successfully! You may now log in."
+                    f"\nYour University ID is: {lines.return_id()}"
+                )
+                self.close()
+                self.login = LoginWindow()
+                self.login.show()
+
+            except Exception as e:
+                QtWidgets.QMessageBox.critical(
+                    self,
+                    "Signup Failed",
+                    f"An error occurred:\n{e}"
+                )
+
+
 
 
 # _____________________________________________________________
@@ -986,7 +1062,6 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.TermTable.setHorizontalHeaderLabels(["Current Term"])
 
         # Fetch term from database
-        import sqlite3
         conn = sqlite3.connect("Users.db")
         cur = conn.cursor()
         row = cur.execute("SELECT term FROM students WHERE id = ?", (s.id,)).fetchone()
@@ -1057,7 +1132,6 @@ class StudentWindow(QtWidgets.QMainWindow):
                 if not stu.correct_password(old_pass):
                     QtWidgets.QMessageBox.warning(self, "Error", "Old password is incorrect.")
                     return
-
                 # Change password using classses2.py
                 ok, msg = stu.change_password(old_pass, new_pass)
 
@@ -1067,7 +1141,16 @@ class StudentWindow(QtWidgets.QMainWindow):
                 else:
                     QtWidgets.QMessageBox.warning(self, "Error", msg)
             else: 
-                QtWidgets.QMessageBox.warning(self, "Error", "The password didn't meet the requirements")
+                QtWidgets.QMessageBox.warning(
+                    self,
+                    "Weak Password",
+                    "Password must:\n"
+                    "- Have 1 special character\n"
+                    "- Be at least 8 characters\n"
+                    "- Contain an uppercase letter\n"
+                    "- Not contain 3 consecutive numbers"
+                )
+                return
 
             
 # _____________________________________________________________

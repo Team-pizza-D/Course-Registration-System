@@ -179,7 +179,7 @@ QPushButton {
     <property name="font">
      <font>
       <family>Consolas,Courier New,monospace</family>
-      <pointsize>-1</pointsize>
+      <pointsize>20</pointsize>
      </font>
     </property>
     <property name="mouseTracking">
@@ -293,7 +293,7 @@ QPushButton:pressed {
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>240</x>
+      <x>270</x>
       <y>50</y>
       <width>151</width>
       <height>151</height>

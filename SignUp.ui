@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>585</width>
-    <height>820</height>
+    <height>859</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -156,7 +156,7 @@ QPushButton {
     <property name="geometry">
      <rect>
       <x>240</x>
-      <y>710</y>
+      <y>730</y>
       <width>131</width>
       <height>41</height>
      </rect>
@@ -164,7 +164,7 @@ QPushButton {
     <property name="font">
      <font>
       <family>Consolas,Courier New,monospace</family>
-      <pointsize>10</pointsize>
+      <pointsize>20</pointsize>
      </font>
     </property>
     <property name="mouseTracking">
@@ -253,7 +253,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>80</x>
-      <y>460</y>
+      <y>530</y>
       <width>221</width>
       <height>31</height>
      </rect>
@@ -289,7 +289,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>360</x>
-      <y>450</y>
+      <y>520</y>
       <width>191</width>
       <height>51</height>
      </rect>
@@ -315,31 +315,6 @@ QPushButton:pressed {
     </property>
     <property name="scaledContents">
      <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="checkBox_show1">
-    <property name="geometry">
-     <rect>
-      <x>360</x>
-      <y>610</y>
-      <width>131</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QCheckBox
-{
-	color: #b1b1b1;
-    background-color: #00111d;
-    width: 12px;
-    height: 12px;
-
-}
-
-</string>
-    </property>
-    <property name="text">
-     <string>Show Passwords</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="LastNameLineEdit">
@@ -382,7 +357,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>360</x>
-      <y>540</y>
+      <y>610</y>
       <width>191</width>
       <height>51</height>
      </rect>
@@ -395,7 +370,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>550</y>
+      <y>620</y>
       <width>291</width>
       <height>31</height>
      </rect>
@@ -429,7 +404,7 @@ QPushButton:pressed {
     <property name="font">
      <font>
       <family>Consolas,Courier New,monospace</family>
-      <pointsize>10</pointsize>
+      <pointsize>20</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -446,6 +421,106 @@ background-color: rgb(0, 17n 29);</string>
     </property>
     <property name="flat">
      <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>450</y>
+      <width>221</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Consolas,Courier New,monospace</family>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 20pt;
+}</string>
+    </property>
+    <property name="text">
+     <string>Choose Major</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="MajorComboBox">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>440</y>
+      <width>191</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QComboBox {
+    background-color: #082336;
+    color: white;
+    border: 1px solid #082336;
+	font-size: 10pt
+}
+
+QComboBox QAbstractItemView {
+    background-color: #082336;
+    color: white;
+    font-weight: bold;
+}
+
+QComboBox QAbstractItemView::item:hover {
+    background-color: #0a2d44; /* slightly lighter hover */
+}
+</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>Power &amp; Machines</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Communication</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Computer</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Biomedical</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_show1">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>680</y>
+      <width>131</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QCheckBox
+{
+	color: #b1b1b1;
+    background-color: #00111d;
+    width: 12px;
+    height: 12px;
+
+}
+
+</string>
+    </property>
+    <property name="text">
+     <string>Show Password</string>
     </property>
    </widget>
   </widget>
@@ -466,7 +541,6 @@ background-color: rgb(0, 17n 29);</string>
   <tabstop>LastNameLineEdit</tabstop>
   <tabstop>NewPassLineEdit</tabstop>
   <tabstop>ConfirmPassLineEdit</tabstop>
-  <tabstop>checkBox_show1</tabstop>
   <tabstop>CreateButton</tabstop>
   <tabstop>BackButton</tabstop>
  </tabstops>

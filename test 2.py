@@ -11,9 +11,11 @@ from classses2 import admin, student,section,subject,instructor,Database, user
 # cr.execute("CREATE TABLE IF NOT EXISTS enrollments (section TEXT, instructor TEXT, course TEXT, student_id TEXT, student_name TEXT, time TEXT, credit TEXT)")
 # db.commit()
 # db.close()
-# tariq = student( id=2430020)
+tariq = student( id=2430020)
 # print("--------------------------------")
 # print(tariq.view_available_subjects())
+print(tariq.email)
+print(tariq.display_info())
 # print("--------------------------------")
 # print(tariq.view_enrolled_subjects())
 # print("--------------------------------")
@@ -358,3 +360,4 @@ def signup(FN, LN, Npassword): # FN = first name , LN = last name
 # b = input()
 # c = input()
 # signup(a,b,c)
+
