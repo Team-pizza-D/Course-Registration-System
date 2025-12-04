@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>585</width>
-    <height>820</height>
+    <width>665</width>
+    <height>705</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -30,7 +30,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Sign Up</string>
+   <string>Change Password</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QWidget
@@ -152,12 +152,12 @@ QPushButton {
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="CreateButton">
+   <widget class="QPushButton" name="ConfirmButton">
     <property name="geometry">
      <rect>
-      <x>240</x>
-      <y>710</y>
-      <width>131</width>
+      <x>290</x>
+      <y>620</y>
+      <width>101</width>
       <height>41</height>
      </rect>
     </property>
@@ -220,15 +220,15 @@ QPushButton:pressed {
 </string>
     </property>
     <property name="text">
-     <string>Create User</string>
+     <string>Confirm</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
       <x>100</x>
-      <y>280</y>
-      <width>181</width>
+      <y>270</y>
+      <width>221</width>
       <height>31</height>
      </rect>
     </property>
@@ -246,14 +246,14 @@ QPushButton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string>First Name</string>
+     <string>Old Password</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>460</y>
+      <x>90</x>
+      <y>360</y>
       <width>221</width>
       <height>31</height>
      </rect>
@@ -275,21 +275,11 @@ QPushButton:pressed {
      <string>New Password</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="FirstNameLineEdit">
+   <widget class="QLineEdit" name="PasslineEditNew">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>270</y>
-      <width>191</width>
-      <height>51</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="NewPassLineEdit">
-    <property name="geometry">
-     <rect>
-      <x>360</x>
-      <y>450</y>
+      <x>390</x>
+      <y>350</y>
       <width>191</width>
       <height>51</height>
      </rect>
@@ -297,13 +287,16 @@ QPushButton:pressed {
     <property name="echoMode">
      <enum>QLineEdit::Password</enum>
     </property>
+    <property name="placeholderText">
+     <string/>
+    </property>
    </widget>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>240</x>
+      <x>280</x>
       <y>50</y>
-      <width>141</width>
+      <width>151</width>
       <height>151</height>
      </rect>
     </property>
@@ -311,17 +304,20 @@ QPushButton:pressed {
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../Downloads/add-user-name-1.png</pixmap>
+     <pixmap>../../Downloads/change-password-5.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
     </property>
+    <property name="wordWrap">
+     <bool>false</bool>
+    </property>
    </widget>
-   <widget class="QCheckBox" name="checkBox_show1">
+   <widget class="QCheckBox" name="checkBox_showNew">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>610</y>
+      <x>390</x>
+      <y>510</y>
       <width>131</width>
       <height>17</height>
      </rect>
@@ -342,47 +338,11 @@ QPushButton:pressed {
      <string>Show Passwords</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="LastNameLineEdit">
+   <widget class="QLineEdit" name="PassLineEditConfirm">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>360</y>
-      <width>191</width>
-      <height>51</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>370</y>
-      <width>161</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Consolas,Courier New,monospace</family>
-      <pointsize>20</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QLabel{
-    font-family: Consolas, &quot;Courier New&quot;, monospace;
-	color: rgb(232, 232, 232);
-	font: 20pt;
-}</string>
-    </property>
-    <property name="text">
-     <string>Last Name</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="ConfirmPassLineEdit">
-    <property name="geometry">
-     <rect>
-      <x>360</x>
-      <y>540</y>
+      <x>390</x>
+      <y>440</y>
       <width>191</width>
       <height>51</height>
      </rect>
@@ -391,11 +351,11 @@ QPushButton:pressed {
      <enum>QLineEdit::Password</enum>
     </property>
    </widget>
-   <widget class="QLabel" name="label_5">
+   <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>550</y>
+      <x>60</x>
+      <y>450</y>
       <width>291</width>
       <height>31</height>
      </rect>
@@ -417,35 +377,17 @@ QPushButton:pressed {
      <string>Confirm Password</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="BackButton">
+   <widget class="QLineEdit" name="OldLineEdit">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>30</y>
-      <width>111</width>
-      <height>41</height>
+      <x>390</x>
+      <y>260</y>
+      <width>191</width>
+      <height>51</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <family>Consolas,Courier New,monospace</family>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">selection-background-color: rgb(0, 17, 28);
-alternate-background-color: rgb(0, 17, 29);
-background-color: rgb(0, 17n 29);</string>
-    </property>
-    <property name="text">
-     <string>Back</string>
-    </property>
-    <property name="icon">
-     <iconset>
-      <normaloff>../../Downloads/si--arrow-left-circle-fill.svg</normaloff>../../Downloads/si--arrow-left-circle-fill.svg</iconset>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
+    <property name="echoMode">
+     <enum>QLineEdit::Password</enum>
     </property>
    </widget>
   </widget>
@@ -454,7 +396,7 @@ background-color: rgb(0, 17n 29);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>585</width>
+     <width>665</width>
      <height>26</height>
     </rect>
    </property>
@@ -462,13 +404,11 @@ background-color: rgb(0, 17n 29);</string>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <tabstops>
-  <tabstop>FirstNameLineEdit</tabstop>
-  <tabstop>LastNameLineEdit</tabstop>
-  <tabstop>NewPassLineEdit</tabstop>
-  <tabstop>ConfirmPassLineEdit</tabstop>
-  <tabstop>checkBox_show1</tabstop>
-  <tabstop>CreateButton</tabstop>
-  <tabstop>BackButton</tabstop>
+  <tabstop>OldLineEdit</tabstop>
+  <tabstop>PasslineEditNew</tabstop>
+  <tabstop>PassLineEditConfirm</tabstop>
+  <tabstop>checkBox_showNew</tabstop>
+  <tabstop>ConfirmButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>

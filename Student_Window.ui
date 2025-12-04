@@ -915,10 +915,10 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
        <bool>false</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="SignOutButton_2">
+     <widget class="QPushButton" name="ChangePassButton">
       <property name="geometry">
        <rect>
-        <x>990</x>
+        <x>980</x>
         <y>150</y>
         <width>141</width>
         <height>31</height>
