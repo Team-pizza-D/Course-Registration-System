@@ -19,10 +19,6 @@
   <property name="windowTitle">
    <string>Student</string>
   </property>
-  <property name="windowIcon">
-   <iconset>
-    <normaloff>../../Downloads/prime--calendar-clock.svg</normaloff>../../Downloads/prime--calendar-clock.svg</iconset>
-  </property>
   <property name="autoFillBackground">
    <bool>false</bool>
   </property>
@@ -145,12 +141,6 @@ QPushButton {
     color: white;
 }</string>
   </property>
-  <property name="iconSize">
-   <size>
-    <width>30</width>
-    <height>30</height>
-   </size>
-  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
@@ -242,7 +232,7 @@ QTabBar::tab {
 </string>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>3</number>
     </property>
     <property name="iconSize">
      <size>
@@ -898,6 +888,86 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="tab_4">
+     <attribute name="icon">
+      <iconset>
+       <normaloff>../../Downloads/solar--user-id-linear.svg</normaloff>../../Downloads/solar--user-id-linear.svg</iconset>
+     </attribute>
+     <attribute name="title">
+      <string>Student Information</string>
+     </attribute>
+     <widget class="QTableWidget" name="sinfoTable">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>50</y>
+        <width>1161</width>
+        <height>81</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="showGrid">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="SignOutButton_2">
+      <property name="geometry">
+       <rect>
+        <x>990</x>
+        <y>150</y>
+        <width>141</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>MS Shell Dlg 2</family>
+        <pointsize>8</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+        <underline>true</underline>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">selection-background-color: rgb(0, 17, 28);
+alternate-background-color: rgb(0, 17, 29);
+background-color: rgb(0, 17n 29);
+font: 8pt &quot;MS Shell Dlg 2&quot;;
+border-color: rgb(0, 17, 29);</string>
+      </property>
+      <property name="text">
+       <string>Change Password</string>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="TermTable">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>160</y>
+        <width>121</width>
+        <height>81</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="showGrid">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </widget>
    </widget>
    <widget class="QLabel" name="welcomeLabel">
     <property name="geometry">
@@ -940,7 +1010,7 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
     <property name="font">
      <font>
       <family>Consolas,Courier New,monospace</family>
-      <pointsize>-1</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="styleSheet">

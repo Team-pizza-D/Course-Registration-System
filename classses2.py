@@ -145,9 +145,7 @@ class user:
         return password == password_in_db
 
 
-    
-        
-    
+
 
 class subject:  ### Data base team said that this is currently not needed but i think its better to have it for future use
     def __init__(self, subject_name, subject_code=None, prerequisites=None):
@@ -1138,7 +1136,7 @@ class admin(user):
             prerequisites=r[4]
             courses_info[course_code]=(course_name,credit,term,prerequisites)
         return courses_info
-    def add_course(self,course_code,course_name,credit,sections,instructor_id,capacity,term,prerequisites):
+    def add_course(self,course_code,course_name,credit,sections,instructor_id,capacity,term,prerequisites): #done
         if not 10>=term>=1:
             return False , "Term must be between 1 and 10."
         course_code=course_code.strip().upper()
@@ -1289,7 +1287,7 @@ class admin(user):
 
         courses_db.execute("INSERT INTO Courses (course_code, course_name, credit, section, instructor, capacity, time,prerequisites) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (course_code, sub.subject_name, credit, section_name, instructor_id, capacity,time, prerequisites), commit=True)
         return True , f"Section {section_name} added successfully to course {course_code}."
-    def remove_section(self,section_name):
+    def remove_section(self,section_name): #done
         sect=section(section_name=section_name)
         if not sect.section_is_existing():
             return False , f"Section {section_name} does not exist."
