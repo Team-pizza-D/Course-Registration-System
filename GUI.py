@@ -4,7 +4,7 @@ import sqlite3
 from PyQt5 import uic, QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QShortcut
 from PyQt5.QtGui import QKeySequence
-from classses2 import Database,  student, admin, user, subject, section, instructor
+from classses2 import Database,  student, admin, user, subject, section, instructor, enforce_strong_password
 
 
 # _____________________________________________________________
@@ -1009,7 +1009,7 @@ class StudentWindow(QtWidgets.QMainWindow):
             ui_path = os.path.join(os.path.dirname(__file__), "ChangePass.ui")
             uic.loadUi(ui_path, self)
 
-            self.setFixedWidth(665)
+            self.setFixedWidth(664)
             self.setFixedHeight(705)
 
             # Store student ID
@@ -1043,28 +1043,31 @@ class StudentWindow(QtWidgets.QMainWindow):
                 QtWidgets.QMessageBox.warning(self, "Error", "All fields are required.")
                 return
 
-            # Match check
-            if new_pass != confirm_pass:
-                QtWidgets.QMessageBox.warning(self, "Error", "New password and confirmation do not match.")
-                return
 
-            # Student object
-            stu = student(self.student_id)
+            if enforce_strong_password(new_pass):
+                # Match check
+                if new_pass != confirm_pass:
+                    QtWidgets.QMessageBox.warning(self, "Error", "New password and confirmation do not match.")
+                    return
 
-            # Verify old password
-            if not stu.correct_password(old_pass):
-                QtWidgets.QMessageBox.warning(self, "Error", "Old password is incorrect.")
-                return
+                # Student object
+                stu = student(self.student_id)
 
-            # Change password using classses2.py
-            ok, msg = stu.change_password(old_pass, new_pass)
+                # Verify old password
+                if not stu.correct_password(old_pass):
+                    QtWidgets.QMessageBox.warning(self, "Error", "Old password is incorrect.")
+                    return
 
-            if ok:
-                QtWidgets.QMessageBox.information(self, "Success", msg)
-                self.close()
-            else:
-                QtWidgets.QMessageBox.warning(self, "Error", msg)
-                
+                # Change password using classses2.py
+                ok, msg = stu.change_password(old_pass, new_pass)
+
+                if ok:
+                    QtWidgets.QMessageBox.information(self, "Success", msg)
+                    self.close()
+                else:
+                    QtWidgets.QMessageBox.warning(self, "Error", msg)
+            else: 
+                QtWidgets.QMessageBox.warning(self, "Error", "The password didn't meet the requirements")
 
             
 # _____________________________________________________________
