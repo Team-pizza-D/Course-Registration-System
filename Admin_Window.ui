@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1471</width>
+    <width>1469</width>
     <height>966</height>
    </rect>
   </property>
@@ -170,7 +170,9 @@ QLineEdit::focus
 }
 
 
-
+QMessageBox {
+    color: white;
+}
 
 
 
@@ -183,7 +185,7 @@ QLineEdit::focus
       <x>0</x>
       <y>60</y>
       <width>1461</width>
-      <height>861</height>
+      <height>951</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -258,10 +260,14 @@ QTabBar::tab {
     height: 30px;
     padding-left: 30px;
 }
+
+QMessageBox {
+    color: white;
+}
 </string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -270,10 +276,10 @@ QTabBar::tab {
      <widget class="QFrame" name="frame_2">
       <property name="geometry">
        <rect>
-        <x>60</x>
+        <x>180</x>
         <y>30</y>
         <width>1141</width>
-        <height>371</height>
+        <height>301</height>
        </rect>
       </property>
       <property name="frameShape">
@@ -290,6 +296,9 @@ QTabBar::tab {
          <width>221</width>
          <height>41</height>
         </rect>
+       </property>
+       <property name="placeholderText">
+        <string>Enter last name </string>
        </property>
       </widget>
       <widget class="QLabel" name="label_9">
@@ -341,6 +350,9 @@ QTabBar::tab {
          <height>41</height>
         </rect>
        </property>
+       <property name="placeholderText">
+        <string>Enter first name </string>
+       </property>
       </widget>
       <widget class="QLabel" name="label_11">
        <property name="geometry">
@@ -370,6 +382,9 @@ QTabBar::tab {
          <width>221</width>
          <height>41</height>
         </rect>
+       </property>
+       <property name="placeholderText">
+        <string>Enter student ID </string>
        </property>
       </widget>
       <widget class="QPushButton" name="Tab1_AddStudent">
@@ -409,10 +424,10 @@ QTabBar::tab {
      <widget class="QFrame" name="frame_4">
       <property name="geometry">
        <rect>
-        <x>50</x>
-        <y>410</y>
+        <x>170</x>
+        <y>340</y>
         <width>1141</width>
-        <height>471</height>
+        <height>541</height>
        </rect>
       </property>
       <property name="frameShape">
@@ -424,10 +439,10 @@ QTabBar::tab {
       <widget class="QTableWidget" name="Tab1_StudentTable">
        <property name="geometry">
         <rect>
-         <x>60</x>
+         <x>80</x>
          <y>0</y>
          <width>1001</width>
-         <height>331</height>
+         <height>421</height>
         </rect>
        </property>
        <property name="styleSheet">
@@ -470,6 +485,8 @@ QTabBar::tab {
        </property>
       </widget>
      </widget>
+     <zorder>frame_4</zorder>
+     <zorder>frame_2</zorder>
     </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
@@ -488,7 +505,7 @@ QTabBar::tab {
        <property name="geometry">
         <rect>
          <x>170</x>
-         <y>10</y>
+         <y>20</y>
          <width>181</width>
          <height>41</height>
         </rect>
@@ -512,6 +529,9 @@ QTabBar::tab {
          <width>211</width>
          <height>41</height>
         </rect>
+       </property>
+       <property name="placeholderText">
+        <string>Enter student ID </string>
        </property>
       </widget>
       <widget class="QPushButton" name="Tab2_AddCourse">
@@ -770,6 +790,9 @@ background-color: rgb(0, 17n 29);</string>
         <height>41</height>
        </rect>
       </property>
+      <property name="placeholderText">
+       <string>Enter section code </string>
+      </property>
      </widget>
      <widget class="QLabel" name="label_21">
       <property name="geometry">
@@ -796,11 +819,14 @@ background-color: rgb(0, 17n 29);</string>
         <height>41</height>
        </rect>
       </property>
+      <property name="placeholderText">
+       <string>Enter new capacity </string>
+      </property>
      </widget>
      <widget class="QTableWidget" name="CapacityTable">
       <property name="geometry">
        <rect>
-        <x>150</x>
+        <x>180</x>
         <y>210</y>
         <width>1141</width>
         <height>521</height>
@@ -847,7 +873,7 @@ background-color: rgb(0, 17n 29);</string>
      <widget class="QPushButton" name="Tab3_Confirm">
       <property name="geometry">
        <rect>
-        <x>630</x>
+        <x>660</x>
         <y>140</y>
         <width>181</width>
         <height>41</height>
@@ -919,6 +945,9 @@ background-color: rgb(0, 17n 29);</string>
         <height>41</height>
        </rect>
       </property>
+      <property name="placeholderText">
+       <string>Enter student ID </string>
+      </property>
      </widget>
      <widget class="QLineEdit" name="Tab4_Course_code">
       <property name="geometry">
@@ -928,6 +957,9 @@ background-color: rgb(0, 17n 29);</string>
         <width>231</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="placeholderText">
+       <string>Enter course code </string>
       </property>
      </widget>
      <widget class="QTableWidget" name="StudentGradeTable_4">
@@ -999,11 +1031,14 @@ background-color: rgb(0, 17n 29);</string>
         <height>41</height>
        </rect>
       </property>
+      <property name="placeholderText">
+       <string>Enter course grade </string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_5">
      <attribute name="title">
-      <string>Courses</string>
+      <string>Courses Mangment</string>
      </attribute>
      <widget class="QLabel" name="label">
       <property name="geometry">
@@ -1204,17 +1239,17 @@ background-color: rgb(0, 17n 29);</string>
      <widget class="QLabel" name="label_13">
       <property name="geometry">
        <rect>
-        <x>200</x>
+        <x>220</x>
         <y>10</y>
-        <width>151</width>
+        <width>111</width>
         <height>41</height>
        </rect>
       </property>
       <property name="text">
-       <string>Add course</string>
+       <string>Courses</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_2">
+     <widget class="QPushButton" name="Tab5_CourseAdd">
       <property name="geometry">
        <rect>
         <x>30</x>
@@ -1258,15 +1293,15 @@ background-color: rgb(0, 17n 29);</string>
        <rect>
         <x>1150</x>
         <y>70</y>
-        <width>171</width>
+        <width>181</width>
         <height>31</height>
        </rect>
       </property>
       <property name="text">
-       <string>Course Name</string>
+       <string>prerequisite</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_9">
+     <widget class="QLineEdit" name="Tab5_Prerequistie_CourseCode">
       <property name="geometry">
        <rect>
         <x>770</x>
@@ -1276,7 +1311,7 @@ background-color: rgb(0, 17n 29);</string>
        </rect>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_10">
+     <widget class="QLineEdit" name="Tab5_PrerequistieCode">
       <property name="geometry">
        <rect>
         <x>1150</x>
@@ -1286,7 +1321,7 @@ background-color: rgb(0, 17n 29);</string>
        </rect>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_3">
+     <widget class="QPushButton" name="Tab5_PrerequistieAdd">
       <property name="geometry">
        <rect>
         <x>800</x>
@@ -1299,7 +1334,7 @@ background-color: rgb(0, 17n 29);</string>
        <string>Add</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_4">
+     <widget class="QPushButton" name="Tab5_PrerequistieRemove">
       <property name="geometry">
        <rect>
         <x>1190</x>
@@ -1338,19 +1373,6 @@ background-color: rgb(0, 17n 29);</string>
        <string>Course Code</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_24">
-      <property name="geometry">
-       <rect>
-        <x>1210</x>
-        <y>340</y>
-        <width>211</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Course Section</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_25">
       <property name="geometry">
        <rect>
@@ -1361,14 +1383,14 @@ background-color: rgb(0, 17n 29);</string>
        </rect>
       </property>
       <property name="text">
-       <string>Section Name</string>
+       <string>Section Code</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_26">
       <property name="geometry">
        <rect>
         <x>1230</x>
-        <y>480</y>
+        <y>340</y>
         <width>171</width>
         <height>31</height>
        </rect>
@@ -1380,8 +1402,8 @@ background-color: rgb(0, 17n 29);</string>
      <widget class="QLabel" name="label_27">
       <property name="geometry">
        <rect>
-        <x>970</x>
-        <y>600</y>
+        <x>1220</x>
+        <y>480</y>
         <width>201</width>
         <height>31</height>
        </rect>
@@ -1390,7 +1412,7 @@ background-color: rgb(0, 17n 29);</string>
        <string>Instructor ID</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_11">
+     <widget class="QLineEdit" name="Tab5_Section_CourseCord">
       <property name="geometry">
        <rect>
         <x>960</x>
@@ -1400,70 +1422,37 @@ background-color: rgb(0, 17n 29);</string>
        </rect>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_12">
+     <widget class="QLineEdit" name="Tab5_Section_SectionName">
       <property name="geometry">
        <rect>
         <x>960</x>
-        <y>540</y>
+        <y>530</y>
         <width>171</width>
         <height>41</height>
        </rect>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_13">
+     <widget class="QLineEdit" name="Tab5_Section_Capacity">
       <property name="geometry">
        <rect>
         <x>1230</x>
-        <y>390</y>
+        <y>400</y>
         <width>171</width>
         <height>41</height>
        </rect>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_14">
+     <widget class="QLineEdit" name="Tab5_Section_Instructor">
       <property name="geometry">
        <rect>
-        <x>1230</x>
-        <y>540</y>
+        <x>1240</x>
+        <y>530</y>
         <width>171</width>
         <height>41</height>
        </rect>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_15">
-      <property name="geometry">
-       <rect>
-        <x>960</x>
-        <y>640</y>
-        <width>171</width>
-        <height>41</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_28">
-      <property name="geometry">
-       <rect>
-        <x>1230</x>
-        <y>590</y>
-        <width>171</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Section ID</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEdit_16">
-      <property name="geometry">
-       <rect>
-        <x>1230</x>
-        <y>630</y>
-        <width>171</width>
-        <height>41</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButton_5">
+     <widget class="QPushButton" name="Tab5_SectionAdd">
       <property name="geometry">
        <rect>
         <x>750</x>
@@ -1476,11 +1465,11 @@ background-color: rgb(0, 17n 29);</string>
        <string>Add</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_6">
+     <widget class="QPushButton" name="Tab5_SectionRemove">
       <property name="geometry">
        <rect>
-        <x>1260</x>
-        <y>700</y>
+        <x>1270</x>
+        <y>590</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -1489,7 +1478,7 @@ background-color: rgb(0, 17n 29);</string>
        <string>Remove</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_7">
+     <widget class="QPushButton" name="Tab5_CourseUpdate">
       <property name="geometry">
        <rect>
         <x>370</x>
@@ -1502,11 +1491,11 @@ background-color: rgb(0, 17n 29);</string>
        <string>Update</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_8">
+     <widget class="QPushButton" name="Tab5_SectionUpdate">
       <property name="geometry">
        <rect>
-        <x>1000</x>
-        <y>700</y>
+        <x>990</x>
+        <y>590</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -1554,7 +1543,7 @@ background-color: rgb(0, 17n 29);</string>
        <string>Day</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="comboBox">
+     <widget class="QComboBox" name="comboBox_Day">
       <property name="geometry">
        <rect>
         <x>710</x>
@@ -1608,7 +1597,7 @@ QComboBox QAbstractItemView::item:hover {
        </property>
       </item>
      </widget>
-     <widget class="QComboBox" name="comboBox_2">
+     <widget class="QComboBox" name="comboBox_End">
       <property name="geometry">
        <rect>
         <x>710</x>
@@ -1692,7 +1681,7 @@ QComboBox QAbstractItemView::item:hover {
        </property>
       </item>
      </widget>
-     <widget class="QComboBox" name="comboBox_3">
+     <widget class="QComboBox" name="comboBox_Start">
       <property name="geometry">
        <rect>
         <x>710</x>
@@ -1830,6 +1819,55 @@ background-color: rgb(0, 17n 29);</string>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <tabstops>
+  <tabstop>Tab1_Student_ID</tabstop>
+  <tabstop>Tab1_FirstName</tabstop>
+  <tabstop>Tab1_LastName</tabstop>
+  <tabstop>Tab1_AddStudent</tabstop>
+  <tabstop>Tab1_DeleteStudent</tabstop>
+  <tabstop>Tab2_StudentID</tabstop>
+  <tabstop>pushButton</tabstop>
+  <tabstop>StudentCourseTable</tabstop>
+  <tabstop>Tab2_SubjectsTable</tabstop>
+  <tabstop>Tab3_Section_Code</tabstop>
+  <tabstop>Tab3_Capacity</tabstop>
+  <tabstop>Tab3_Confirm</tabstop>
+  <tabstop>CapacityTable</tabstop>
+  <tabstop>Tab4_Student_ID</tabstop>
+  <tabstop>Tab4_Course_code</tabstop>
+  <tabstop>Tab4_Course_code_2</tabstop>
+  <tabstop>Tab4_Confirm</tabstop>
+  <tabstop>StudentGradeTable_4</tabstop>
+  <tabstop>Tab5_Course_code</tabstop>
+  <tabstop>Tab5_Course_name</tabstop>
+  <tabstop>Tab5_Instructor_ID</tabstop>
+  <tabstop>Tab5_Capacity</tabstop>
+  <tabstop>Tab5_Credit</tabstop>
+  <tabstop>Tab5_section</tabstop>
+  <tabstop>Tab5_term</tabstop>
+  <tabstop>Tab5_prerequisite</tabstop>
+  <tabstop>Tab5_CourseAdd</tabstop>
+  <tabstop>Tab5_CourseUpdate</tabstop>
+  <tabstop>Tab5_Prerequistie_CourseCode</tabstop>
+  <tabstop>Tab5_PrerequistieCode</tabstop>
+  <tabstop>Tab5_PrerequistieAdd</tabstop>
+  <tabstop>Tab5_PrerequistieRemove</tabstop>
+  <tabstop>comboBox_Start</tabstop>
+  <tabstop>Tab5_Section_CourseCord</tabstop>
+  <tabstop>Tab5_Section_Capacity</tabstop>
+  <tabstop>comboBox_End</tabstop>
+  <tabstop>Tab5_Section_SectionName</tabstop>
+  <tabstop>Tab5_Section_Instructor</tabstop>
+  <tabstop>comboBox_Day</tabstop>
+  <tabstop>Tab5_SectionUpdate</tabstop>
+  <tabstop>Tab5_SectionRemove</tabstop>
+  <tabstop>Tab5_SectionAdd</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>SignOutButton</tabstop>
+  <tabstop>Tab2_DeleteCourse</tabstop>
+  <tabstop>Tab1_StudentTable</tabstop>
+  <tabstop>Tab2_AddCourse</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

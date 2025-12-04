@@ -1,7 +1,7 @@
 import os
 import sys
 from PyQt5 import uic, QtWidgets, QtCore, QtGui
-from PyQt5.QtWidgets import QApplication, QMainWindow,QShortcut
+from PyQt5.QtWidgets import QApplication, QMainWindow,QShortcut,QMessageBox
 from PyQt5.QtGui import QKeySequence
 from classses2 import admin       
 from Admin_Window import AdminWindow  
@@ -81,7 +81,6 @@ class AdminWindow(QtWidgets.QMainWindow):
         self.adminName = admin_name
         self.admin_id = admin_id
         self.admin_obj = admin(id=self.admin_id)
-
         self.welcomeLabel.setText(f"Welcome, {self.adminName}!")
         self.tabWidget.setCurrentIndex(0)
         self.current_student = None
@@ -115,6 +114,7 @@ class AdminWindow(QtWidgets.QMainWindow):
         self.load_tab4_grade_table()
 
         # ---------- Connections ----------
+        self.SignOutButton.clicked.connect(self.sign_out)
         # Tab 1: add/delete student
         self.Tab1_AddStudent.clicked.connect(self.tab1_add_student)
         self.Tab1_DeleteStudent.clicked.connect(self.tab1_delete_student)
@@ -132,8 +132,37 @@ class AdminWindow(QtWidgets.QMainWindow):
         #Tab 4 : Grades
         self.Tab4_Confirm.clicked.connect(self.handle_tab4_grading)
 
+        # Tab 5: Courses Management
+        self.Tab5_CourseAdd.clicked.connect(self.tab5_add_course)
+        self.Tab5_CourseUpdate.clicked.connect(self.tab5_update_course)
+        self.Tab5_PrerequistieAdd.clicked.connect(self.tab5_add_prerequisite)
+        self.Tab5_PrerequistieRemove.clicked.connect(self.tab5_remove_prerequisite)
+        self.Tab5_SectionAdd.clicked.connect(self.tab5_add_section)
+        self.Tab5_SectionUpdate.clicked.connect(self.tab5_update_section)
+        self.Tab5_SectionRemove.clicked.connect(self.tab5_remove_section)
+
+
         # Enrollment message label
         self.EnrollmentMessege.setText("")
+    # =========================================================
+    # General 
+    # =========================================================
+    def sign_out(self):
+        msg = QtWidgets.QMessageBox(self)
+        msg.setWindowTitle("Sign Out")
+        msg.setText("Are you sure you want to sign out?")
+        msg.setIcon(QtWidgets.QMessageBox.Question)
+
+        yes_button = msg.addButton("Yes", QtWidgets.QMessageBox.YesRole)
+        cancel_button = msg.addButton("Cancel", QtWidgets.QMessageBox.RejectRole)
+
+        msg.exec_()
+
+        if msg.clickedButton() == yes_button:
+            self.close()          # close admin window
+            self.login = LoginWindow()  # return to login
+            self.login.show()
+
 
     # =========================================================
     # TAB 1 - Student Add/Delete
@@ -730,6 +759,170 @@ class AdminWindow(QtWidgets.QMainWindow):
         # Disable editing
         table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         table.verticalHeader().setVisible(False)
+   
+    # =========================================================
+    # TAB 5 — Courses Management
+    # =========================================================
+    # ---------------------- ADD COURSE ----------------------
+    def tab5_add_course(self):
+        code = self.Tab5_Course_code.text().strip()
+        name = self.Tab5_Course_name.text().strip()
+        instructor = self.Tab5_Instructor_ID.text().strip()
+        capacity = self.Tab5_Capacity.text().strip()
+        credit = self.Tab5_Credit.text().strip()
+        section = self.Tab5_section.text().strip()
+        term = self.Tab5_term.text().strip()
+        prereq = self.Tab5_prerequisite.text().strip()
+
+        if not all([code, name, instructor, capacity, credit, section, term, prereq]):
+            return QtWidgets.QMessageBox.warning(self, "Error", "Please fill all fields.")
+
+        try:
+            credit = int(credit)
+            capacity = int(capacity)
+            term = int(term)
+        except:
+            return QtWidgets.QMessageBox.warning(self, "Error", "Credit, Capacity and Term must be numbers.")
+
+        ok, msg = self.admin_obj.add_course(code, name, credit, section, instructor, capacity, term, prereq)
+
+        if ok:
+            QtWidgets.QMessageBox.information(self, "Add Course", msg)
+        else:
+            QtWidgets.QMessageBox.warning(self, "Add Course", msg)
+
+
+    # ---------------------- UPDATE COURSE ----------------------
+    def tab5_update_course(self):
+        code = self.Tab5_Course_code.text().strip()
+        if code == "":
+            return QtWidgets.QMessageBox.warning(self, "Error", "Course Code is required.")
+
+        name = self.Tab5_Course_name.text().strip() or None
+        credit = self.Tab5_Credit.text().strip() or None
+        term = self.Tab5_term.text().strip() or None
+        prereq = self.Tab5_prerequisite.text().strip() or None
+
+        try:
+            if credit: credit = int(credit)
+            if term: term = int(term)
+        except:
+            return QtWidgets.QMessageBox.warning(self, "Error", "Credit and Term must be numbers.")
+
+        ok, msg = self.admin_obj.update_course(code, name, credit, term, prereq)
+
+        if ok:
+            QtWidgets.QMessageBox.information(self, "Update Course", msg)
+        else:
+            QtWidgets.QMessageBox.warning(self, "Update Course", msg)
+
+
+    # ---------------------- ADD PREREQUISITE ----------------------
+    def tab5_add_prerequisite(self):
+        code = self.Tab5_Prerequistie_CourseCode.text().strip()
+        prereq = self.Tab5_PrerequistieCode.text().strip()
+
+        if not code or not prereq:
+            return QtWidgets.QMessageBox.warning(self, "Error", "Please fill all fields.")
+
+        ok, msg = self.admin_obj.add_prerequisite_to_course(code, prereq)
+
+        if ok:
+            QtWidgets.QMessageBox.information(self, "Add Prerequisite", msg)
+        else:
+            QtWidgets.QMessageBox.warning(self, "Add Prerequisite", msg)
+
+
+    # ---------------------- REMOVE PREREQUISITE ----------------------
+    def tab5_remove_prerequisite(self):
+        code = self.Tab5_Prerequistie_CourseCode.text().strip()
+        prereq = self.Tab5_PrerequistieCode.text().strip()
+
+        if not code or not prereq:
+            return QtWidgets.QMessageBox.warning(self, "Error", "Please fill all fields.")
+
+        ok, msg = self.admin_obj.remove_prerequisite_from_course(code, prereq)
+
+        if ok:
+            QtWidgets.QMessageBox.information(self, "Remove Prerequisite", msg)
+        else:
+            QtWidgets.QMessageBox.warning(self, "Remove Prerequisite", msg)
+
+
+    # ---------------------- ADD SECTION ----------------------
+    def tab5_add_section(self):
+        course_code = self.Tab5_Section_CourseCord.text().strip()
+        section = self.Tab5_Section_CourseName.text().strip()
+        name = self.Tab5_Section_SectionName.text().strip()
+        capacity = self.Tab5_Section_Capacity.text().strip()
+        instructor = self.Tab5_Section_Instructor.text().strip()
+
+        start = self.comboBox_Start.currentText()
+        end = self.comboBox_End.currentText()
+        day = self.comboBox_Day.currentText()
+        time = f"{start}-{end} , {day}"
+
+        if not all([course_code, section, name, capacity, instructor]):
+            return QtWidgets.QMessageBox.warning(self, "Error", "Please fill all fields.")
+
+        try:
+            capacity = int(capacity)
+        except:
+            return QtWidgets.QMessageBox.warning(self, "Error", "Capacity must be a number.")
+
+        ok, msg = self.admin_obj.add_section(course_code, section, capacity, instructor, time)
+
+        if ok:
+            QtWidgets.QMessageBox.information(self, "Add Section", msg)
+        else:
+            QtWidgets.QMessageBox.warning(self, "Add Section", msg)
+
+
+    # ---------------------- UPDATE SECTION ----------------------
+    def tab5_update_section(self):
+        course_code = self.Tab5_Section_CourseCord.text().strip()
+        section = self.Tab5_Section_CourseName.text().strip()
+
+        if not section:
+            return QtWidgets.QMessageBox.warning(self, "Error", "Section Code is required.")
+
+        name = self.Tab5_Section_SectionName.text().strip()
+        capacity = self.Tab5_Section_Capacity.text().strip()
+        instructor = self.Tab5_Section_Instructor.text().strip()
+
+        start = self.comboBox_Start.currentText()
+        end = self.comboBox_End.currentText()
+        day = self.comboBox_Day.currentText()
+        time = f"{start}-{end} , {day}"
+
+        try:
+            if capacity:
+                capacity = int(capacity)
+        except:
+            return QtWidgets.QMessageBox.warning(self, "Error", "Capacity must be a number.")
+
+        ok, msg = self.admin_obj.update_section(course_code, section, capacity, instructor, time)
+
+        if ok:
+            QtWidgets.QMessageBox.information(self, "Update Section", msg)
+        else:
+            QtWidgets.QMessageBox.warning(self, "Update Section", msg)
+
+
+    # ---------------------- REMOVE SECTION ----------------------
+    def tab5_remove_section(self):
+        section = self.Tab5_Section_CourseName.text().strip()
+
+        if not section:
+            return QtWidgets.QMessageBox.warning(self, "Error", "Section Code is required.")
+
+        ok, msg = self.admin_obj.remove_section(section)
+
+        if ok:
+            QtWidgets.QMessageBox.information(self, "Remove Section", msg)
+        else:
+            QtWidgets.QMessageBox.warning(self, "Remove Section", msg)
+
 
 
 
