@@ -145,9 +145,7 @@ class user:
         return password == password_in_db
 
 
-    
-        
-    
+
 
 class subject:  ### Data base team said that this is currently not needed but i think its better to have it for future use
     def __init__(self, subject_name, subject_code=None, prerequisites=None):
@@ -1142,7 +1140,7 @@ class admin(user):
         if not 10>=term>=1:
             return False , "Term must be between 1 and 10."
         course_code=course_code.strip().upper()
-        sub=subject(course_code=course_code)
+        sub=subject(course_name=course_code)
         if sub.is_existing():
             return False , f"Course with code {course_code} already exists."
         if credit<=0:
@@ -1184,7 +1182,7 @@ class admin(user):
     
     def add_course_to_plane(self,course_code,plane_major):
         course_code=course_code.strip().upper()
-        sub=subject(course_code=course_code)
+        sub=subject(course_name=course_code)
         if not sub.is_existing():
             return False , f"Course with code {course_code} does not exist."
         row= courses_db.execute("SELECT course_code,terms,prerequisites,credit FROM Courses WHERE course_code = ?", (course_code,), fetchone=True)
@@ -1200,7 +1198,7 @@ class admin(user):
         return True , f"Course with code {course_code} added to {plane_major} plane successfully."
     def delete_course_from_plane(self,course_code,plane_major):
         course_code=course_code.strip().upper()
-        sub=subject(course_code=course_code)
+        sub=subject(course_name=course_code)
         sec=sub.get_all_sections()
         for section_name in sec:
             sect=section(section_name=section_name)
@@ -1217,14 +1215,14 @@ class admin(user):
         if plane_major.strip()=="Electrical biomedical engineering":
             courses_db.execute("DELETE FROM biomedical WHERE course_code = ?", (course_code,), commit=True)
         return True , f"Course with code {course_code} deleted from {plane_major} plane successfully."
-    def add_prerequisite_to_course(self,course_code,prerequisite): #done
-        sub=subject(course_code=course_code)
+    def add_prerequisite_to_course(self,course_code,prerequisite):
+        sub=subject(course_name=course_code)
         if not sub.is_existing():
             return False , f"Course with code {course_code} does not exist."
         okay,massege= sub.add_prerequisite(prerequisite)
         return okay, massege
-    def remove_prerequisite_from_course(self,course_code,prerequisite):#done
-        sub=subject(course_code=course_code)
+    def remove_prerequisite_from_course(self,course_code,prerequisite):
+        sub=subject(course_name=course_code)
         if not sub.is_existing():
             return False , f"Course with code {course_code} does not exist."
         okay,massege= sub.remove_prerequisite(prerequisite)
@@ -1249,8 +1247,8 @@ class admin(user):
                 "prerequisites": prerequisites
             }
         return subjects_info
-    def add_section(self,course_code,section_name,capacity,instructor_id,time): #done
-        sub=subject(course_code=course_code)
+    def add_section(self,course_code,section_name,capacity,instructor_id,time):
+        sub=subject(course_name=course_code)
         if not sub.is_existing():
             return False , f"Course with code {course_code} does not exist."
         if section(section_name).section_is_existing():
@@ -1269,6 +1267,48 @@ class admin(user):
             return False , f"Cannot delete section {section_name} because students are enrolled in it."
         courses_db.execute("DELETE FROM Courses WHERE section = ?", (section_name,), commit=True)
         return True , f"Section {section_name} deleted successfully."
+    def update_section(selfself,course_code=None,section_name=None,capacity=None,instructor_id=None,time=None):
+        sect=section(section_name=section_name)
+        if not sect.section_is_existing():
+            return False , f"Section {section_name} does not exist."
+        if course_code is not None:
+            sub=subject(course_name=course_code)
+            if not sub.is_existing():
+                return False , f"Course with code {course_code} does not exist."
+            courses_db.execute("UPDATE Courses SET course_code = ? WHERE section = ?", (course_code, section_name), commit=True)
+        if capacity is not None:
+           sect.new_capacity(capacity)
+        if instructor_id is not None:
+            if not instructor(instructor_id).is_existing():
+                return False , f"Instructor with ID {instructor_id} does not exist."
+            courses_db.execute("UPDATE Courses SET instructor = ? WHERE section = ?", (instructor_id, section_name), commit=True)
+        if time is not None:
+            courses_db.execute("UPDATE Courses SET time = ? WHERE section = ?", (time, section_name), commit=True)
+        return True , f"Section {section_name} updated successfully."
+    def update_course(self,course_code,course_name=None,credit=None,term=None,prerequisites=None):
+        sub=subject(course_name=course_code)
+        if not sub.is_existing():
+            return False , f"Course with code {course_code} does not exist."
+        if course_name is not None:
+            courses_db.execute("UPDATE Courses SET course_name = ? WHERE course_code = ?", (course_name, course_code), commit=True)
+        if credit is not None:
+            if credit<=0:
+                return False , "Credit must be a positive integer."
+            courses_db.execute("UPDATE Courses SET credit = ? WHERE course_code = ?", (credit, course_code), commit=True)
+        if term is not None:
+            if not 10>=term>=1:
+                return False , "Term must be between 1 and 10."
+            major_table_map = {
+                'Electrical communication and electronics engineering': "communication",
+                'Electrical computer engineering': "computer",
+                'Electrical power and machines engineering': "power",
+                'Electrical biomedical engineering': "biomedical"
+            }
+            for major_table in major_table_map.values():
+                courses_db.execute("UPDATE {table} SET terms = ? WHERE course_code = ?".format(table=major_table), (term, course_code), commit=True)
+        if prerequisites is not None:
+            courses_db.execute("UPDATE Courses SET prerequisites = ? WHERE course_code = ?", (prerequisites, course_code), commit=True)
+        return True , f"Course {course_code} updated successfully."
         
 
 

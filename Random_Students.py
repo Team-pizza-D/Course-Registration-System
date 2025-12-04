@@ -1,4 +1,5 @@
 import sqlite3
+import bcrypt
 import random
 from classses2 import student
 from Programs import loop_dict_key, loop_dict_value
@@ -9,7 +10,7 @@ cr.execute("DROP TABLE IF EXISTS students")
 cr.execute("DROP TABLE IF EXISTS student")
 cr.execute("DROP TABLE IF EXISTS grades")
 cr.execute("DROP TABLE IF EXISTS test")
-cr.execute("CREATE TABLE IF NOT EXISTS students (id TEXT PRIMARY KEY, username TEXT, email TEXT, major TEXT, password TEXT, current_term INTEGER)") 
+cr.execute("CREATE TABLE IF NOT EXISTS students (id TEXT PRIMARY KEY, username TEXT, email TEXT, major TEXT, password TEXT, hashed_password TEXT, term INTEGER)") 
 cr.execute("CREATE TABLE IF NOT EXISTS grades (id INTEGER PRIMARY KEY AUTOINCREMENT, student_id TEXT, course TEXT, letter_grade TEXT, numeric_grade INTEGER, FOREIGN KEY(student_id) REFERENCES students(student_id))")
 db.commit()
 db.close()
@@ -1062,7 +1063,7 @@ cr.executemany("INSERT INTO grades (student_id, course, letter_grade, numeric_gr
 cr.execute("SELECT id FROM students")
 student_ids = cr.fetchall()
 for i, j in zip(terms, student_ids):
-    cr.execute("UPDATE students SET current_term = ? WHERE Id = ?", (i, j[0]))
+    cr.execute("UPDATE students SET term = ? WHERE Id = ?", (i, j[0]))
 db.commit()
 db.close()
 
@@ -1391,6 +1392,17 @@ TT = t1 | t2 | t3 | t4 | t6 | t7 | t8 | t9 | t10
 db = sqlite3.connect("Users.db")
 cr = db.cursor()
 for i, j in zip(loop_dict_value(TT), loop_dict_key(TT)):
-    cr.execute("UPDATE students SET current_term = ? WHERE Id = ?", (i, j))
+    cr.execute("UPDATE students SET term = ? WHERE Id = ?", (i, j))
+db.commit()
+db.close()
+
+db = sqlite3.connect("Users.db")
+cr = db.cursor()
+cr.execute("SELECT password, id FROM students")
+all_students_ids = cr.fetchall()
+
+for i in all_students_ids:
+    hashed_password = bcrypt.hashpw(i[0].encode(), bcrypt.gensalt()).decode()
+    cr.execute("UPDATE students SET hashed_password = ? WHERE id = ?", (hashed_password,i[1]))
 db.commit()
 db.close()
