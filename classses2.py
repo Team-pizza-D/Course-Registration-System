@@ -145,9 +145,7 @@ class user:
         return password == password_in_db
 
 
-    
-        
-    
+
 
 class subject:  ### Data base team said that this is currently not needed but i think its better to have it for future use
     def __init__(self, subject_name, subject_code=None, prerequisites=None):
