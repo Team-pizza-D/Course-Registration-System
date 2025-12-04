@@ -673,7 +673,7 @@ class student(user):
         if self.database:
             # super().__init__(username, password, email, id) ### I closed this (Abdulaziz)
             self.major=major
-            hash_pass = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+            hash_pass = bcrypt.hashpw(self.password.encode(), bcrypt.gensalt()).decode()
             try:
                 users_db.execute(
                     "INSERT INTO students (username, password, email, id, major, term, hashed_password) VALUES (?, ?, ?, ?, ?, ?, ?)",
