@@ -144,6 +144,7 @@ class user:
         password_in_db = row[0] if row else None
         return password == password_in_db
 
+
     
         
     
@@ -152,8 +153,12 @@ class subject:  ### Data base team said that this is currently not needed but i 
     def __init__(self, subject_name, subject_code=None, prerequisites=None):
         self.subject_code = subject_code
         self.subject_name = subject_name
-        self.enrolled_students = []
-        self.prerequisites = prerequisites if prerequisites is not None else []
+        prerequisites_row= courses_db.execute("SELECT prerequisites FROM Courses WHERE course_code = ?", (self.subject_name,), fetchone=True)
+        if prerequisites_row==None or prerequisites_row[0]==None or prerequisites_row[0].strip()=="":
+            self.prerequisites = []
+        else:
+            prereq_str= prerequisites_row[0]
+            self.prerequisites = [prereq.strip() for prereq in prereq_str.split(",")]
         while True:
             subject_term= courses_db.execute("SELECT terms FROM computer WHERE course_code = ?", (self.subject_name,), fetchone=True)
             if subject_term == None:
@@ -190,7 +195,50 @@ class subject:  ### Data base team said that this is currently not needed but i 
             return False
         else:
             return True
-         ### I will need to inrolle some students in some sections to be able to do this
+    def remove_prerequisite(self, prerequisite):  # to remove a prerequisite from the subject
+        if prerequisite.find(",") != -1:
+            prereq_list= prerequisite.split(",")
+            for preq in prereq_list:
+                preq= preq.strip().upper()
+                if preq in self.prerequisites:
+                    self.prerequisites.remove(preq)
+                    courses_db.execute("UPDATE Courses SET prerequisites = ? WHERE course_code = ?", (", ".join(self.prerequisites), self.subject_name), commit=True)
+                    return True , f"Prerequisite {preq} removed from subject {self.subject_name}."
+                else:
+                    return False , f"Prerequisite {preq} not found in subject {self.subject_name}."
+        else:
+            prerequisite= prerequisite.strip()
+            if prerequisite in self.prerequisites:
+                self.prerequisites.remove(prerequisite)
+                courses_db.execute("UPDATE Courses SET prerequisites = ? WHERE course_code = ?", (", ".join(self.prerequisites), self.subject_name), commit=True)
+                return True , f"Prerequisite {prerequisite} removed from subject {self.subject_name}."
+            else:
+                return False , f"Prerequisite {prerequisite} not found in subject {self.subject_name}."
+        
+  
+        ### can be used by admin to remove prerequisite from subject
+    def add_prerequisite(self, prerequisite):  # to add a prerequisite to the subject
+        if prerequisite.find(",") != -1:
+            prereq_list= prerequisite.split(",")
+            for preq in prereq_list:
+                preq= preq.strip().upper()
+                if preq not in self.prerequisites:
+                    self.prerequisites.append(preq)
+                    courses_db.execute("UPDATE Courses SET prerequisites = ? WHERE course_code = ?", (", ".join(self.prerequisites), self.subject_name), commit=True)
+                return True , f"Prerequisites {', '.join(prereq_list)} added to subject {self.subject_name}."
+            else:
+                return False , f"Prerequisite {preq} already exists in subject {self.subject_name}."
+    def get_all_sections(self):  # to get all sections of the subject
+        row= courses_db.execute("SELECT section FROM Courses WHERE course_code = ?",(self.subject_name,),fetchall=True)
+        if row==None or len(row)==0:
+            return []
+        sections= [r[0] for r in row]
+        return sections
+        ### can be used to get list of all sections for this subject  
+
+        
+
+        
 
 ### notce that when considering database design, function will have to update the database instead of just removing from list
 
@@ -651,6 +699,12 @@ class student(user):
             ### I will do this later to select student data from database if database is false         
     def return_id(self):
         return self.id
+    def change_password(self, old_password, new_password):  # to change student's password
+        if not self.correct_password(old_password):
+            return False , "Old password is incorrect."
+        users_db.execute("UPDATE students SET password = ? WHERE id = ?", (new_password, self.id), commit=True)
+        self.password = new_password
+        return True , "Password changed successfully."
     
     def display_info(self):  # to display student information
         return super().display_info() + f", Major: {self.major}, GPA: {self.GPA} "
@@ -670,6 +724,13 @@ class student(user):
             return True
         else:
             return False
+    def determine_major(self):  # to determine student's major from database
+        row= users_db.execute("SELECT major FROM students WHERE id = ?", (self.id,), fetchone=True)
+        if row==None:
+            return f"{self.id}, Student not found"
+        self.major=row[0]
+        return self.major
+ 
         
 
     def enroll_subject(self, section_code):  # to enroll student in a subject section
@@ -887,6 +948,9 @@ class instructor(user):
         self.section= section(section_name=section_code)
         self.section.view_enrolled_students()
 
+    def is_existing(self):
+        pass
+
 # _______________________________________________________________________________________________________________
 
 class admin(user):
@@ -1061,6 +1125,151 @@ class admin(user):
         users_db.execute("DELETE FROM enrollments WHERE student_id = ?", (student_id,), commit=True)
         users_db.execute("DELETE FROM grades WHERE student_id = ?", (student_id,), commit=True)
         return True , f"Student with ID {student_id} deleted from the database."
+    def display_courses_by_plane_level(self,plane,Level):
+        row=courses_db.execute("SELECT course_code,course_name,credit,term,prerequisites FROM {plane} WHERE level = ?".format(plane=plane),(Level,),fetchall=True)
+        if row is None or len(row)==0:
+            return f"No courses found for level {Level} in plane {plane}."
+        courses_info= {}
+        for r in row:
+            course_code=r[0]
+            course_name=r[1]
+            credit=r[2]
+            term=r[3]
+            prerequisites=r[4]
+            courses_info[course_code]=(course_name,credit,term,prerequisites)
+        return courses_info
+    def add_course(self,course_code,course_name,credit,sections,instructor_id,capacity,term,prerequisites):
+        if not 10>=term>=1:
+            return False , "Term must be between 1 and 10."
+        course_code=course_code.strip().upper()
+        sub=subject(course_code=course_code)
+        if sub.is_existing():
+            return False , f"Course with code {course_code} already exists."
+        if credit<=0:
+            return False , "Credit must be a positive integer."
+        if not instructor(instructor_id).is_existing():
+            return False , f"Instructor with ID {instructor_id} does not exist."
+        sections=sections.strip().upper()
+        if section(sections).section_is_existing():
+            return False , f"Section {sections} already exists."
+        if capacity<=0:
+            return False , "Capacity must be a positive integer."
+        if prerequisites.find(",")!=-1:
+            prereq_list=[prereq.strip().upper() for prereq in prerequisites.split(",")]
+        else:
+            prereq_list= [prerequisites.strip().upper()]
+        for prereq in prereq_list:
+            pre_sub=subject(prereq)
+            if not pre_sub.is_existing():
+                return False , f"Prerequisite course with code {prereq} does not exist."
+        courses_db.execute("INSERT INTO Courses (course_code, course_name, credit, section, instructor, capacity, time) VALUES (?, ?, ?, ?, ?, ?, ?)", (course_code, course_name, credit, sections, instructor_id, capacity, "To be scheduled"), commit=True)
+        return True , f"Course {course_code} - {course_name} added successfully with section {sections}."
+    def courses_not_in_the_plane(self,plan_major):  # to display all subjects not in the plane_major 
+        if plan_major.strip()=="Electrical communication and electronics engineering":
+            row= courses_db.execute("SELECT course_code FROM communication",fetchall=True)
+        if plan_major.strip()=="Electrical computer engineering":
+            row= courses_db.execute("SELECT course_code FROM computer",fetchall=True)
+        if plan_major.strip()=="Electrical power and machines engineering":
+            row= courses_db.execute("SELECT course_code FROM power",fetchall=True)
+        if plan_major.strip()=="Electrical biomedical engineering":
+            row= courses_db.execute("SELECT course_code FROM biomedical",fetchall=True)
+            subjects_in_major= [r[0].strip().upper() for r in row]
+            all_courses_row= courses_db.execute("SELECT course_code FROM Courses",fetchall=True)
+            all_courses= [r[0].strip().upper() for r in all_courses_row]
+            not_in_plan= []
+        for course in all_courses:
+         if course not in subjects_in_major:
+            not_in_plan.append(course)
+        return not_in_plan
+    
+    def add_course_to_plane(self,course_code,plane_major):
+        course_code=course_code.strip().upper()
+        sub=subject(course_code=course_code)
+        if not sub.is_existing():
+            return False , f"Course with code {course_code} does not exist."
+        row= courses_db.execute("SELECT course_code,terms,prerequisites,credit FROM Courses WHERE course_code = ?", (course_code,), fetchone=True)
+        terms=row[1]
+        if plane_major.strip()=="Electrical communication and electronics engineering":
+            courses_db.execute("INSERT INTO communication (course_code, terms) VALUES (?, ?)", (course_code, terms), commit=True)
+        if plane_major.strip()=="Electrical computer engineering":
+            courses_db.execute("INSERT INTO computer (course_code, terms) VALUES (?, ?)", (course_code, terms), commit=True)
+        if plane_major.strip()=="Electrical power and machines engineering":
+            courses_db.execute("INSERT INTO power (course_code, terms) VALUES (?, ?)", (course_code, terms), commit=True)
+        if plane_major.strip()=="Electrical biomedical engineering":
+            courses_db.execute("INSERT INTO biomedical (course_code, terms) VALUES (?, ?)", (course_code, terms), commit=True)
+        return True , f"Course with code {course_code} added to {plane_major} plane successfully."
+    def delete_course_from_plane(self,course_code,plane_major):
+        course_code=course_code.strip().upper()
+        sub=subject(course_code=course_code)
+        sec=sub.get_all_sections()
+        for section_name in sec:
+            sect=section(section_name=section_name)
+            if len(sect.student_id_in_section)>0:
+                return False , f"Cannot delete course with code {course_code} from {plane_major} plane because students are enrolled in its sections."
+        if not sub.is_existing():
+            return False , f"Course with code {course_code} does not exist."
+        if plane_major.strip()=="Electrical communication and electronics engineering":
+            courses_db.execute("DELETE FROM communication WHERE course_code = ?", (course_code,), commit=True)
+        if plane_major.strip()=="Electrical computer engineering":
+            courses_db.execute("DELETE FROM computer WHERE course_code = ?", (course_code,), commit=True)
+        if plane_major.strip()=="Electrical power and machines engineering":
+            courses_db.execute("DELETE FROM power WHERE course_code = ?", (course_code,), commit=True)
+        if plane_major.strip()=="Electrical biomedical engineering":
+            courses_db.execute("DELETE FROM biomedical WHERE course_code = ?", (course_code,), commit=True)
+        return True , f"Course with code {course_code} deleted from {plane_major} plane successfully."
+    def add_prerequisite_to_course(self,course_code,prerequisite):
+        sub=subject(course_code=course_code)
+        if not sub.is_existing():
+            return False , f"Course with code {course_code} does not exist."
+        okay,massege= sub.add_prerequisite(prerequisite)
+        return okay, massege
+    def remove_prerequisite_from_course(self,course_code,prerequisite):
+        sub=subject(course_code=course_code)
+        if not sub.is_existing():
+            return False , f"Course with code {course_code} does not exist."
+        okay,massege= sub.remove_prerequisite(prerequisite)
+        return okay, massege
+    def display_subjects_by_major_plan(self, major):  # to display subjects by major plan
+        if major.strip()=="Electrical communication and electronics engineering":
+            row= courses_db.execute("SELECT course_code, course_name, terms,credit,prerequisites FROM communication ORDER BY terms",fetchall=True)
+        elif major.strip()=="Electrical computer engineering":
+            row= courses_db.execute("SELECT course_code, course_name, terms,credit,prerequisites FROM computer ORDER BY terms",fetchall=True)
+        elif major.strip()=="Electrical power and machines engineering":
+            row= courses_db.execute("SELECT course_code, course_name, terms,credit,prerequisites FROM power ORDER BY terms",fetchall=True)
+        elif major.strip()=="Electrical biomedical engineering":
+            row= courses_db.execute("SELECT course_code, course_name, terms,credit,prerequisites FROM biomedical ORDER BY terms",fetchall=True)
+        else:
+            return f"Major {major} not found."
+        subjects_info={}
+        for course_code, course_name, terms, credit, prerequisites in row:
+            subjects_info[course_code]={
+                "course_name": course_name,
+                "terms": terms,
+                "credit": credit,
+                "prerequisites": prerequisites
+            }
+        return subjects_info
+    def add_section(self,course_code,section_name,capacity,instructor_id,time):
+        sub=subject(course_code=course_code)
+        if not sub.is_existing():
+            return False , f"Course with code {course_code} does not exist."
+        if section(section_name).section_is_existing():
+            return False , f"Section {section_name} already exists."
+        if capacity<=0:
+            return False , "Capacity must be a positive integer."
+        if not instructor(instructor_id).is_existing():
+            return False , f"Instructor with ID {instructor_id} does not exist."
+        courses_db.execute("INSERT INTO Courses (course_code, course_name, credit, section, instructor, capacity, time) VALUES (?, ?, ?, ?, ?, ?, ?)", (course_code, sub.subject_name, sub.credit, section_name, instructor_id, capacity, "To be scheduled"), commit=True)
+        return True , f"Section {section_name} added successfully to course {course_code}."
+    def remove_section(self,section_name):
+        sect=section(section_name=section_name)
+        if not sect.section_is_existing():
+            return False , f"Section {section_name} does not exist."
+        if len(sect.student_id_in_section)>0:
+            return False , f"Cannot delete section {section_name} because students are enrolled in it."
+        courses_db.execute("DELETE FROM Courses WHERE section = ?", (section_name,), commit=True)
+        return True , f"Section {section_name} deleted successfully."
+        
 
 
 
