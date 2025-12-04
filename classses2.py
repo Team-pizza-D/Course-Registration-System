@@ -1142,7 +1142,7 @@ class admin(user):
         if not 10>=term>=1:
             return False , "Term must be between 1 and 10."
         course_code=course_code.strip().upper()
-        sub=subject(course_name=course_code)
+        sub=subject(course_code)
         if sub.is_existing():
             return False , f"Course with code {course_code} already exists."
         if credit<=0:
@@ -1184,7 +1184,7 @@ class admin(user):
     
     def add_course_to_plane(self,course_code,plane_major):
         course_code=course_code.strip().upper()
-        sub=subject(course_name=course_code)
+        sub=subject(course_code)
         if not sub.is_existing():
             return False , f"Course with code {course_code} does not exist."
         row= courses_db.execute("SELECT course_code,terms,prerequisites,credit FROM Courses WHERE course_code = ?", (course_code,), fetchone=True)
@@ -1200,7 +1200,7 @@ class admin(user):
         return True , f"Course with code {course_code} added to {plane_major} plane successfully."
     def delete_course_from_plane(self,course_code,plane_major):
         course_code=course_code.strip().upper()
-        sub=subject(course_name=course_code)
+        sub=subject(course_code)
         sec=sub.get_all_sections()
         for section_name in sec:
             sect=section(section_name=section_name)
@@ -1218,13 +1218,13 @@ class admin(user):
             courses_db.execute("DELETE FROM biomedical WHERE course_code = ?", (course_code,), commit=True)
         return True , f"Course with code {course_code} deleted from {plane_major} plane successfully."
     def add_prerequisite_to_course(self,course_code,prerequisite):
-        sub=subject(course_name=course_code)
+        sub=subject(course_code)
         if not sub.is_existing():
             return False , f"Course with code {course_code} does not exist."
         okay,massege= sub.add_prerequisite(prerequisite)
         return okay, massege
     def remove_prerequisite_from_course(self,course_code,prerequisite):
-        sub=subject(course_name=course_code)
+        sub=subject(course_code)
         if not sub.is_existing():
             return False , f"Course with code {course_code} does not exist."
         okay,massege= sub.remove_prerequisite(prerequisite)
@@ -1249,8 +1249,8 @@ class admin(user):
                 "prerequisites": prerequisites
             }
         return subjects_info
-    def add_section(self,course_code,section_name,capacity,instructor_id,time):
-        sub=subject(course_name=course_code)
+    def add_section(self,course_code,section_name,capacity,instructor_id,start_time,end_time,day):
+        sub=subject(course_code)
         if not sub.is_existing():
             return False , f"Course with code {course_code} does not exist."
         if section(section_name).section_is_existing():
@@ -1259,7 +1259,35 @@ class admin(user):
             return False , "Capacity must be a positive integer."
         if not instructor(instructor_id).is_existing():
             return False , f"Instructor with ID {instructor_id} does not exist."
-        courses_db.execute("INSERT INTO Courses (course_code, course_name, credit, section, instructor, capacity, time) VALUES (?, ?, ?, ?, ?, ?, ?)", (course_code, sub.subject_name, sub.credit, section_name, instructor_id, capacity, "To be scheduled"), commit=True)
+        if day == "Sunday":
+            day_code = "S"
+        elif day == "Monday":
+            day_code = "M"
+        elif day == "Tuesday":
+            day_code = "T"
+        elif day == "Wednesday":
+            day_code = "W"
+        elif day == "Thursday":
+            day_code = "U"
+        start_time_list = start_time.split(":")
+        end_time_list = end_time.split(":")
+        start_hour = int(start_time_list[0])
+        end_hour = int(end_time_list[0])
+        if start_hour == end_hour:
+            return False , "Start time and end time cannot be the same."
+        elif start_hour < end_hour:
+            return False , "The lecture time conflict with non-academic commitments."
+        elif start_hour - end_hour > 3:
+            return False , "Lecture duration cannot exceed 3 hours."
+        time = f"{day_code} {start_time}-{end_time}"
+        credit_prerequisite_row= courses_db.execute("SELECT credit, prerequisites FROM Courses WHERE course_code = ?", (course_code,), fetchone=True)
+        credit= credit_prerequisite_row[0]
+        if credit_prerequisite_row[1]==None or credit_prerequisite_row[1]=="":
+            prerequisites=""
+        else:
+            prerequisites= credit_prerequisite_row[1]
+
+        courses_db.execute("INSERT INTO Courses (course_code, course_name, credit, section, instructor, capacity, time,prerequisites) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (course_code, sub.subject_name, credit, section_name, instructor_id, capacity,time, prerequisites), commit=True)
         return True , f"Section {section_name} added successfully to course {course_code}."
     def remove_section(self,section_name):
         sect=section(section_name=section_name)
@@ -1269,12 +1297,12 @@ class admin(user):
             return False , f"Cannot delete section {section_name} because students are enrolled in it."
         courses_db.execute("DELETE FROM Courses WHERE section = ?", (section_name,), commit=True)
         return True , f"Section {section_name} deleted successfully."
-    def update_section(selfself,course_code=None,section_name=None,capacity=None,instructor_id=None,time=None):
+    def update_section(selfself,course_code=None,section_name=None,capacity=None,instructor_id=None,start_time=None,end_time=None,day=None):
         sect=section(section_name=section_name)
         if not sect.section_is_existing():
             return False , f"Section {section_name} does not exist."
         if course_code is not None:
-            sub=subject(course_name=course_code)
+            sub=subject(course_code)
             if not sub.is_existing():
                 return False , f"Course with code {course_code} does not exist."
             courses_db.execute("UPDATE Courses SET course_code = ? WHERE section = ?", (course_code, section_name), commit=True)
@@ -1288,7 +1316,7 @@ class admin(user):
             courses_db.execute("UPDATE Courses SET time = ? WHERE section = ?", (time, section_name), commit=True)
         return True , f"Section {section_name} updated successfully."
     def update_course(self,course_code,course_name=None,credit=None,term=None,prerequisites=None):
-        sub=subject(course_name=course_code)
+        sub=subject(course_code)
         if not sub.is_existing():
             return False , f"Course with code {course_code} does not exist."
         if course_name is not None:
