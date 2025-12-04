@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1230</width>
+    <width>1319</width>
     <height>966</height>
    </rect>
   </property>
@@ -261,7 +261,7 @@ QTabBar::tab {
 </string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -468,42 +468,6 @@ QTabBar::tab {
        <property name="cornerButtonEnabled">
         <bool>false</bool>
        </property>
-       <column>
-        <property name="text">
-         <string>Student ID</string>
-        </property>
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="textAlignment">
-         <set>AlignLeading|AlignVCenter</set>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Name</string>
-        </property>
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Email Address</string>
-        </property>
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-       </column>
       </widget>
      </widget>
     </widget>
@@ -1037,6 +1001,16 @@ background-color: rgb(0, 17n 29);</string>
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="tab_5">
+     <attribute name="title">
+      <string>Page</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tab_6">
+     <attribute name="title">
+      <string>Page</string>
+     </attribute>
+    </widget>
    </widget>
    <widget class="QLabel" name="welcomeLabel">
     <property name="geometry">
@@ -1054,8 +1028,8 @@ background-color: rgb(0, 17n 29);</string>
    <widget class="QPushButton" name="SignOutButton">
     <property name="geometry">
      <rect>
-      <x>1080</x>
-      <y>20</y>
+      <x>1190</x>
+      <y>10</y>
       <width>121</width>
       <height>41</height>
      </rect>

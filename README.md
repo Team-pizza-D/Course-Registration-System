@@ -15,9 +15,9 @@ Each part is created in a separate Python file and connected through the main fi
 
 ## Group Members and Contributions
 - **Faisal Ahmed Alidiny** — Creating the DataBase and README documentation  
-- **Azzam Wael Alsayed** — Creating The GUI  
+- **Azzam Wael Alsayed** — Creating The GUI And connecting it to the Admin Classes
 - **Azad Ayman Felemban** — Creating the Classes 
-- **Ammar Ehab Jeddawi** — Creating The GUI    
+- **Ammar Ehab Jeddawi** — Creating The GUI Creating the Classes connecting it to the Student Classes  
 - **Abdulkreem Mohammed Alghamdi** — Creating the Classes  
 - **Abdulaziz Qasim Alqahtani** — Creating the DataBase and connecting it to Classes
 
