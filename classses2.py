@@ -234,7 +234,8 @@ class subject:  ### Data base team said that this is currently not needed but i 
             return []
         sections= [r[0] for r in row]
         return sections
-        ### can be used to get list of all sections for this subject    
+        ### can be used to get list of all sections for this subject  
+
         
 
         
@@ -1228,7 +1229,26 @@ class admin(user):
             return False , f"Course with code {course_code} does not exist."
         okay,massege= sub.remove_prerequisite(prerequisite)
         return okay, massege
-
+    def display_subjects_by_major_plan(self, major):  # to display subjects by major plan
+        if major.strip()=="Electrical communication and electronics engineering":
+            row= courses_db.execute("SELECT course_code, course_name, terms,credit,prerequisites FROM communication ORDER BY terms",fetchall=True)
+        elif major.strip()=="Electrical computer engineering":
+            row= courses_db.execute("SELECT course_code, course_name, terms,credit,prerequisites FROM computer ORDER BY terms",fetchall=True)
+        elif major.strip()=="Electrical power and machines engineering":
+            row= courses_db.execute("SELECT course_code, course_name, terms,credit,prerequisites FROM power ORDER BY terms",fetchall=True)
+        elif major.strip()=="Electrical biomedical engineering":
+            row= courses_db.execute("SELECT course_code, course_name, terms,credit,prerequisites FROM biomedical ORDER BY terms",fetchall=True)
+        else:
+            return f"Major {major} not found."
+        subjects_info={}
+        for course_code, course_name, terms, credit, prerequisites in row:
+            subjects_info[course_code]={
+                "course_name": course_name,
+                "terms": terms,
+                "credit": credit,
+                "prerequisites": prerequisites
+            }
+        return subjects_info
         
         
 
