@@ -1249,7 +1249,26 @@ class admin(user):
                 "prerequisites": prerequisites
             }
         return subjects_info
-        
+    def add_section(self,course_code,section_name,capacity,instructor_id,time):
+        sub=subject(course_code=course_code)
+        if not sub.is_existing():
+            return False , f"Course with code {course_code} does not exist."
+        if section(section_name).section_is_existing():
+            return False , f"Section {section_name} already exists."
+        if capacity<=0:
+            return False , "Capacity must be a positive integer."
+        if not instructor(instructor_id).is_existing():
+            return False , f"Instructor with ID {instructor_id} does not exist."
+        courses_db.execute("INSERT INTO Courses (course_code, course_name, credit, section, instructor, capacity, time) VALUES (?, ?, ?, ?, ?, ?, ?)", (course_code, sub.subject_name, sub.credit, section_name, instructor_id, capacity, "To be scheduled"), commit=True)
+        return True , f"Section {section_name} added successfully to course {course_code}."
+    def remove_section(self,section_name):
+        sect=section(section_name=section_name)
+        if not sect.section_is_existing():
+            return False , f"Section {section_name} does not exist."
+        if len(sect.student_id_in_section)>0:
+            return False , f"Cannot delete section {section_name} because students are enrolled in it."
+        courses_db.execute("DELETE FROM Courses WHERE section = ?", (section_name,), commit=True)
+        return True , f"Section {section_name} deleted successfully."
         
 
 
