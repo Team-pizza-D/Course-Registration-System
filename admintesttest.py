@@ -76,7 +76,7 @@ class AdminWindow(QtWidgets.QMainWindow):
         ui_path = os.path.join(os.path.dirname(__file__), "Admin_Window.ui")
         uic.loadUi(ui_path, self)
         
-        self.setFixedWidth(1236)
+        self.setFixedWidth(1319)
         self.setFixedHeight(966)
         self.adminName = admin_name
         self.admin_id = admin_id
