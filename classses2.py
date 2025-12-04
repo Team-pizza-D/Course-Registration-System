@@ -1,6 +1,7 @@
 import random
 import sqlite3
 import os
+import bcrypt
 
 
 
@@ -659,7 +660,7 @@ class student(user):
         self.enrolled_subjects = enrolled_subjects if enrolled_subjects is not None else [] # list of section codes the student is currently enrolled in
         self.completed_subjects = completed_subjects if completed_subjects is not None else []  # list of subject codes the student has completed
         self.current_credits = 0 ### total credits of current enrolled subjects for checking max credits allowed per semester not current total subjects
-        # self.email = f"{self.username}{self.Id}@kau.edu.sa" if email is None else email
+        self.email = f"{self.username}{self.id}@stu.kau.edu.sa" if email is None else email
         majors_row=users_db.execute("SELECT major fROM students WHERE id = ?", (self.id,), fetchone=True)
         if  self.is_student():
             self.major=majors_row[0]
@@ -670,12 +671,13 @@ class student(user):
         ### set database to true if you want to insert this student into database upon creation
         ### eg. student = student("azad", database=True)
         if self.database:
-            super().__init__(username, password, email, id)
+            # super().__init__(username, password, email, id) ### I closed this (Abdulaziz)
             self.major=major
+            hash_pass = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
             try:
                 users_db.execute(
-                    "INSERT INTO students (username, password, email, id,major,term) VALUES (?, ?, ?, ?, ?, ?)",
-                    (self.username, self.password, self.email, self.id,self.major,1),
+                    "INSERT INTO students (username, password, email, id, major, term, hashed_password) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (self.username, self.password, self.email, self.id, self.major, 1, hash_pass),
                     commit=True,
                     )
             except sqlite3.IntegrityError:

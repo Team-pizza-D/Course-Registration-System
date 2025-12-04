@@ -331,3 +331,30 @@ def enforce_strong_password(new_password): # this method is checking the new pas
     cond4 = any(ch.isupper() for ch in new_password_splited) # Forth condition to have at least one capital letter
 
     return cond1 and cond2 and cond3 and cond4
+
+
+def signup(FN, LN, Npassword): # FN = first name , LN = last name
+    db = sqlite3.connect("Users.db")
+    cr = db.cursor()
+    cr.execute("SELECT id FROM students WHERE term = ?", (1,))
+    FYID1 = cr.fetchall()
+
+    cr.execute("SELECT id FROM students WHERE term = ?", (2,))
+    FYID2 = cr.fetchall()
+
+    All_ids_FY2 = [x[0] for x in FYID2]
+    All_ids_FY1 = [x[0] for x in FYID1]
+    All_ids_FY = All_ids_FY1 + All_ids_FY2
+    highest_id = (max(All_ids_FY))
+    stu_id = int(highest_id) + 1
+
+    Tusername = FN.strip() + " " + LN.strip()
+    s = student(id = stu_id, username=Tusername,email= f"{FN}{stu_id}@stu.kau.edu.sa", password=Npassword, major="preparatory engineering", database=True)
+
+    db.commit()
+    db.close()
+        
+# a = input()
+# b = input()
+# c = input()
+# signup(a,b,c)
