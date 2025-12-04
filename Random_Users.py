@@ -3,11 +3,11 @@ from classses2 import admin, instructor
 from Programs import All_Courses, L, L1, L2
 
 #------------5 Admins-----------------
-# admin5 = admin("Ahmed", database=True)
-# admin1 = admin("Mohammed", database=True)
-# admin2 = admin("Ayman", database=True)
-# admin3 = admin("Abdullah", database=True)
-# admin4 = admin("Ali", database=True)
+# admin5 = admin(username="Ahmed Alrajhi", database=True)
+# admin1 = admin(username="Mohammed Jeddawi", database=True)
+# admin2 = admin(username="Ayman Felemban", database=True)
+# admin3 = admin(username="Abdullah Alzahrani", database=True)
+# admin4 = admin(username="Ali Alqarni", database=True)  
 #------------74 Teachers--------------
 Teachers = ["Ahmed Alqahtani" , "Ali alqarni" , "Ayman Alharbi", "Khalid Hassan", "Mohammed Ajour",
             "Raad Alqarni", "Mohammed Alghamdi", "Salem Alotaibi", "Faisal Alzahrani", "Fahad Alharthi",
