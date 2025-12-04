@@ -1138,7 +1138,7 @@ class admin(user):
             prerequisites=r[4]
             courses_info[course_code]=(course_name,credit,term,prerequisites)
         return courses_info
-    def add_course(self,course_code,course_name,credit,sections,instructor_id,capacity,term,prerequisites):
+    def add_course(self,course_code,course_name,credit,sections,instructor_id,capacity,term,prerequisites): #done
         if not 10>=term>=1:
             return False , "Term must be between 1 and 10."
         course_code=course_code.strip().upper()
@@ -1217,13 +1217,13 @@ class admin(user):
         if plane_major.strip()=="Electrical biomedical engineering":
             courses_db.execute("DELETE FROM biomedical WHERE course_code = ?", (course_code,), commit=True)
         return True , f"Course with code {course_code} deleted from {plane_major} plane successfully."
-    def add_prerequisite_to_course(self,course_code,prerequisite):
+    def add_prerequisite_to_course(self,course_code,prerequisite): #done
         sub=subject(course_code=course_code)
         if not sub.is_existing():
             return False , f"Course with code {course_code} does not exist."
         okay,massege= sub.add_prerequisite(prerequisite)
         return okay, massege
-    def remove_prerequisite_from_course(self,course_code,prerequisite):
+    def remove_prerequisite_from_course(self,course_code,prerequisite):#done
         sub=subject(course_code=course_code)
         if not sub.is_existing():
             return False , f"Course with code {course_code} does not exist."
@@ -1249,7 +1249,7 @@ class admin(user):
                 "prerequisites": prerequisites
             }
         return subjects_info
-    def add_section(self,course_code,section_name,capacity,instructor_id,time):
+    def add_section(self,course_code,section_name,capacity,instructor_id,time): #done
         sub=subject(course_code=course_code)
         if not sub.is_existing():
             return False , f"Course with code {course_code} does not exist."
@@ -1261,7 +1261,7 @@ class admin(user):
             return False , f"Instructor with ID {instructor_id} does not exist."
         courses_db.execute("INSERT INTO Courses (course_code, course_name, credit, section, instructor, capacity, time) VALUES (?, ?, ?, ?, ?, ?, ?)", (course_code, sub.subject_name, sub.credit, section_name, instructor_id, capacity, "To be scheduled"), commit=True)
         return True , f"Section {section_name} added successfully to course {course_code}."
-    def remove_section(self,section_name):
+    def remove_section(self,section_name): #done
         sect=section(section_name=section_name)
         if not sect.section_is_existing():
             return False , f"Section {section_name} does not exist."
