@@ -1,8 +1,16 @@
 import sqlite3
-from classses2 import admin, student,section,subject,instructor,Database
+import bcrypt
+from classses2 import admin, student,section,subject,instructor,Database, user
 
 
-
+# db = sqlite3.connect("Users.db")
+# cr = db.cursor()
+# cr.execute("DROP TABLE IF EXISTS enrollments")
+# cr.execute("DROP TABLE IF EXISTS admins")
+# cr.execute("CREATE TABLE IF NOT EXISTS admins (id TEXT, username TEXT, password TEXT, email TEXT, status TEXT)")
+# cr.execute("CREATE TABLE IF NOT EXISTS enrollments (section TEXT, instructor TEXT, course TEXT, student_id TEXT, student_name TEXT, time TEXT, credit TEXT)")
+# db.commit()
+# db.close()
 # tariq = student( id=2430020)
 # print("--------------------------------")
 # print(tariq.view_available_subjects())
@@ -248,3 +256,78 @@ db.close()
 #     else:
 #         print("class is full")        
 #
+# db = sqlite3.connect("test.db")
+# cr = db.cursor()
+# cr.execute("CREATE TABLE IF NOT EXISTS test (id TEXT PRIMARY KEY, username TEXT, email TEXT, major TEXT, password TEXT, current_term INTEGER)") 
+# db.commit()
+# db.close()
+# class signup(user):
+#     def __init__(self, username, password, email=None, id=None):
+#         super().__init__(username, password, email, id)
+#         if self.id is None:
+#             self.id = self.generate_unique_id()
+#         if self.email is None:
+#             self.email = self.generate_email()
+#     def register(self):
+#         self.email = self.generate_email()
+#         self.hashed = bcrypt.hashpw(self.password.encode(), bcrypt.gensalt()).decode()
+#         db = sqlite3.connect("test.db")
+#         cr = db.cursor()
+#         cr.execute(
+#         "INSERT INTO test (id, username, email, password) VALUES (?, ?, ?, ?)",
+#         (self.id, self.username, self.email, self.hashed))
+#         db.commit()
+#         db.close()  
+#     def checking(self):
+#         print("ID I'm searching for:", self.id)
+#         checker = input("Enter your password: ")
+#         new_hashed = bcrypt.hashpw(checker.encode(), bcrypt.gensalt()).decode()
+#         print(checker)
+#         print(new_hashed)
+#         print(self.hashed)
+#         if bcrypt.checkpw(checker.encode(), self.hashed.encode()):
+#             print("Same")
+#         else:
+#             print("Not same")
+# test_obj = signup(username="Abdulaziz aa", password="mypass")
+# test_obj.register()
+# # a = input("Enter username: ")
+# # b = input("Enter password: ")
+# # test_obj2 = signup(username=a, password=b)
+# # test_obj2.register()
+# test_obj.checking()
+# m = "abc123"
+# print(list(m))
+# t = "A"
+# print(t.isupper())
+
+def is_special(ch): # this is for password ensuring it has a special character
+    return not ch.isalnum()
+
+def has_sequence(chars, length=3):
+    digits = [int(c) for c in chars if c.isdigit()]
+    if len(digits) < length:
+        return False
+
+    streak = 1
+    for i in range(1, len(digits)):
+        if digits[i] == digits[i - 1] + 1:
+            streak += 1
+            if streak >= length:
+                return True
+        else:
+            streak = 1
+    return False
+
+
+def enforce_strong_password(new_password): # this method is checking the new password is strong enough (for new students)
+    new_password_splited = list(new_password)
+    cond1 = any(is_special(ch) for ch in new_password_splited) # First condition to have at least one character
+
+    cond2 = len(new_password_splited) >= 8 # Second condition to have at least 8 letters
+
+    cond3 = not has_sequence(new_password_splited) # Third condition to not have 3 numbers in a row
+    
+    cond4 = any(ch.isupper() for ch in new_password_splited) # Forth condition to have at least one capital letter
+
+    return cond1 and cond2 and cond3 and cond4

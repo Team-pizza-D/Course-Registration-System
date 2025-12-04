@@ -345,7 +345,7 @@ def all_courses(x1, y1, z1, p1, a1, a2, i1, t1):
     db = sqlite3.connect('courses.db')
     cr = db.cursor()
     cr.execute('DROP TABLE IF EXISTS courses')
-    cr.execute('CREATE TABLE IF NOT EXISTS Courses (course_code TEXT, course_name TEXT, credit INTEGER, section TEXT, instructor INTEGER, capacity TEXT, time TEXT, lab_time TEXT, prerequisites TEXT)')
+    cr.execute('CREATE TABLE IF NOT EXISTS Courses (course_code TEXT, course_name TEXT, term INTEGER, credit INTEGER, section TEXT, instructor INTEGER, capacity TEXT, time TEXT, lab_time TEXT, prerequisites TEXT)')
     for i in range(len(x1)):
         cr.execute('INSERT INTO Courses (course_code, course_name, credit, prerequisites, section, capacity, instructor, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
                (x1[i] , y1[i], z1[i], p1[i], a1[i], 25, i1[i], t1[i]))

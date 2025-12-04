@@ -1,13 +1,13 @@
 import os
-from PyQt5 import uic, QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow
+import sys
+from PyQt5 import uic, QtWidgets, QtCore, QtGui
+from PyQt5.QtWidgets import QApplication, QMainWindow,QShortcut
 from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import QShortcut
-
-from classses2 import admin           # backend
-from Admin_Window import AdminWindow  # your admin GUI file
+from classses2 import admin       
+from Admin_Window import AdminWindow  
 
 class LoginWindow(QMainWindow):
+
     def __init__(self):
         super().__init__()
         ui_path = os.path.join(os.path.dirname(__file__), "Login.ui")
@@ -70,20 +70,13 @@ class LoginWindow(QMainWindow):
         self.main_window.show()
 
 
-import sys
-import os
-from PyQt5 import uic, QtWidgets, QtCore, QtGui
-from PyQt5.QtWidgets import QApplication
-from classses2 import student, admin  # backend classes
-
-
 class AdminWindow(QtWidgets.QMainWindow):
     def __init__(self, admin_id, admin_name):
         super().__init__()
         ui_path = os.path.join(os.path.dirname(__file__), "Admin_Window.ui")
         uic.loadUi(ui_path, self)
         
-        self.setFixedWidth(1236)
+        self.setFixedWidth(1471)
         self.setFixedHeight(966)
         self.adminName = admin_name
         self.admin_id = admin_id
@@ -142,10 +135,10 @@ class AdminWindow(QtWidgets.QMainWindow):
         # Enrollment message label
         self.EnrollmentMessege.setText("")
 
-
     # =========================================================
     # TAB 1 - Student Add/Delete
     # =========================================================
+
     def tab1_add_student(self):
         first = self.Tab1_FirstName.text().strip()
         last = self.Tab1_LastName.text().strip()
@@ -165,7 +158,6 @@ class AdminWindow(QtWidgets.QMainWindow):
 
         self.Tab1_FirstName.clear()
         self.Tab1_LastName.clear()
-
 
     def tab1_delete_student(self):
         student_id = self.Tab1_Student_ID.text().strip()
@@ -219,10 +211,10 @@ class AdminWindow(QtWidgets.QMainWindow):
         table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         table.verticalHeader().setVisible(False)
 
-
     # =========================================================
     # TAB 2 — Subject Enrollment
     # =========================================================
+
     def handle_submit_student(self):
         self.EnrollmentMessege.setText("")
 
@@ -574,9 +566,11 @@ class AdminWindow(QtWidgets.QMainWindow):
             self.load_available_subjects_table()
         else:
             QtWidgets.QMessageBox.warning(self, "Remove Course", msg)
+ 
     # =========================================================
     # TAB 3 — Expand capacity
     # =========================================================
+
     def handle_tab3_capacity_change(self):
         section = self.Tab3_Section_Code.text().strip()
         new_capacity = self.Tab3_Capacity.text().strip()
@@ -636,9 +630,11 @@ class AdminWindow(QtWidgets.QMainWindow):
         header = self.CapacityTable.horizontalHeader()
         for col in range(self.CapacityTable.columnCount()):
             header.setSectionResizeMode(col, QtWidgets.QHeaderView.Stretch)
+
     # =========================================================
     # TAB 4 — Grading
     # =========================================================
+
     def handle_tab4_grading(self):
         student_id = self.Tab4_Student_ID.text().strip()
         course_code = self.Tab4_Course_code.text().strip()
