@@ -256,14 +256,14 @@ db.close()
 #     else:
 #         print("class is full")        
 #
-db = sqlite3.connect("test.db")
-cr = db.cursor()
-cr.execute("CREATE TABLE IF NOT EXISTS test (id TEXT PRIMARY KEY, username TEXT, email TEXT, major TEXT, password TEXT, current_term INTEGER)") 
-db.commit()
-db.close()
+# db = sqlite3.connect("test.db")
+# cr = db.cursor()
+# cr.execute("CREATE TABLE IF NOT EXISTS test (id TEXT PRIMARY KEY, username TEXT, email TEXT, major TEXT, password TEXT, current_term INTEGER)") 
+# db.commit()
+# db.close()
 class signup(user):
     def __init__(self, username, password, email=None, id=None):
-        super().__init__(username=username, password=password, email=email, id=id)
+        super().__init__(username, password, email, id)
         if self.id is None:
             self.id = self.generate_unique_id()
         if self.email is None:
