@@ -1353,7 +1353,7 @@ class admin(user):
         if capacity is not None:
            sect.new_capacity(capacity)
         if instructor_id is not None:
-            if not instructor(instructor_id).is_existing():
+            if not instructor(instructor_id.strip()).is_existing():
                 return False , f"Instructor with ID {instructor_id} does not exist."
             courses_db.execute("UPDATE Courses SET instructor = ? WHERE section = ?", (instructor_id, section_name), commit=True)
         if ( start_time is not None and (end_time is None or day is None) ) or ( end_time is not None and (start_time is None or day is None) ) or ( day is not None and (start_time is None or end_time is None) ):
