@@ -580,7 +580,7 @@ class section(subject):
     
     def has_a_lab(self,student_id):  # to check if section has a lab component, if so enroll student in lab using enroll_lab function
         row= courses_db.execute("SELECT lab_time FROM Courses WHERE section = ?",(self.section_name,),fetchone=True)
-        if row==None or len(row[0])==0:
+        if row==None or row[0]==None:
             return False , f"Section {self.section_name} has no lab component."
         else:
             okay , message= self.enroll_lab(student_id)
@@ -989,7 +989,11 @@ class instructor(user):
         self.section.view_enrolled_students()
 
     def is_existing(self):
-        pass
+        row= users_db.execute("SELECT id FROM instructors WHERE id = ?", (self.id,), fetchone=True)
+        if row==None:
+            return False
+        else:
+            return True
 
 # _______________________________________________________________________________________________________________
 
