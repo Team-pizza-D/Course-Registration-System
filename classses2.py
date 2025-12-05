@@ -624,6 +624,9 @@ class section(subject):
         return True , f"All conditions met for enrollment."
     
     def enroll_student_in_section(self, student_id):  # to enroll a student in the section for data only (admin use only)
+        stu=student(student_id)
+        if not stu.is_existing():
+            return False , f"student with ID {student_id} does not exist"
         okay , message = self.all_conditions_met(student_id)
         if not okay:
             return False , message
