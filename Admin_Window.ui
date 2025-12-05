@@ -175,7 +175,56 @@ QMessageBox {
 }
 
 
+QScrollBar:vertical {
+    background: #00111d; 
+    width: 14px;
+    margin: 0px;
+    border-radius: 6px;
+}
 
+QScrollBar::handle:vertical {
+    background: #2b2b2b;
+    min-height: 30px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #3c3c3c;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+/* Horizontal same theme */
+QScrollBar:horizontal {
+    background: #00111d;
+    height: 14px;
+    margin: 0px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #2b2b2b;
+    min-width: 30px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #3c3c3c;
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: none;
+}
 </string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -267,7 +316,7 @@ QMessageBox {
 </string>
     </property>
     <property name="currentIndex">
-     <number>5</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -537,7 +586,7 @@ QMessageBox {
       <widget class="QPushButton" name="Tab2_AddCourse">
        <property name="geometry">
         <rect>
-         <x>340</x>
+         <x>1000</x>
          <y>680</y>
          <width>131</width>
          <height>41</height>
@@ -550,7 +599,7 @@ QMessageBox {
       <widget class="QPushButton" name="Tab2_DeleteCourse">
        <property name="geometry">
         <rect>
-         <x>1000</x>
+         <x>340</x>
          <y>680</y>
          <width>131</width>
          <height>41</height>
@@ -654,7 +703,7 @@ QMessageBox {
         <number>0</number>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="Tab2Submit">
        <property name="geometry">
         <rect>
          <x>620</x>
@@ -756,7 +805,7 @@ background-color: rgb(0, 17n 29);</string>
       <zorder>Tab2_DeleteCourse</zorder>
       <zorder>StudentCourseTable</zorder>
       <zorder>Tab2_SubjectsTable</zorder>
-      <zorder>pushButton</zorder>
+      <zorder>Tab2Submit</zorder>
       <zorder>welcomeLabel_2</zorder>
       <zorder>welcomeLabel_6</zorder>
      </widget>
@@ -1625,61 +1674,6 @@ QComboBox QAbstractItemView::item:hover {
 }
 </string>
       </property>
-      <item>
-       <property name="text">
-        <string>9 AM</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>10 AM</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>11 AM</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>12 PM</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>1 PM</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>2 PM</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>3 PM</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>4 PM</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>5 PM</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>6 PM</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>7 PM</string>
-       </property>
-      </item>
      </widget>
      <widget class="QComboBox" name="Section_StartTime_Combo">
       <property name="geometry">
@@ -1709,71 +1703,6 @@ QComboBox QAbstractItemView::item:hover {
 }
 </string>
       </property>
-      <item>
-       <property name="text">
-        <string>8:00</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>8:05</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>8:10</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>8:15</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>8:20</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>8:25</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>8:30</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>8:35</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>8:40</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>8:45</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>8:50</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>8:55</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>9:00</string>
-       </property>
-      </item>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_6">
@@ -2003,7 +1932,7 @@ QComboBox QAbstractItemView::item:hover {
      <widget class="QPushButton" name="Tab6_AddPlan">
       <property name="geometry">
        <rect>
-        <x>310</x>
+        <x>980</x>
         <y>660</y>
         <width>131</width>
         <height>41</height>
@@ -2016,7 +1945,7 @@ QComboBox QAbstractItemView::item:hover {
      <widget class="QPushButton" name="Tab6_DeletePlan">
       <property name="geometry">
        <rect>
-        <x>980</x>
+        <x>310</x>
         <y>660</y>
         <width>131</width>
         <height>41</height>
@@ -2174,7 +2103,7 @@ background-color: rgb(0, 17n 29);</string>
   <tabstop>Tab1_AddStudent</tabstop>
   <tabstop>Tab1_DeleteStudent</tabstop>
   <tabstop>Tab2_StudentID</tabstop>
-  <tabstop>pushButton</tabstop>
+  <tabstop>Tab2Submit</tabstop>
   <tabstop>StudentCourseTable</tabstop>
   <tabstop>Tab2_SubjectsTable</tabstop>
   <tabstop>Tab3_Section_Code</tabstop>

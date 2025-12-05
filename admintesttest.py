@@ -69,6 +69,49 @@ class LoginWindow(QMainWindow):
         self.main_window = AdminWindow(admin_id=admin_id, admin_name=admin_name)
         self.main_window.show()
 
+def generate_start_times():
+    times = []
+    hour = 8
+    minute = 0
+
+    # STOP BEFORE reaching 17:00
+    while True:
+        current = hour * 60 + minute
+        if current >= 17 * 60:  # 17:00
+            break
+
+        times.append(f"{hour}:{minute:02d}")
+
+        minute += 5
+        if minute >= 60:
+            minute = 0
+            hour += 1
+
+    return times
+
+
+def generate_end_times():
+    times = []
+    hour = 8
+    minute = 5  # OFFSET start at 8:05
+
+    # CONTINUE UNTIL EXACTLY 17:00
+    while True:
+        current = hour * 60 + minute
+        times.append(f"{hour}:{minute:02d}")
+
+        if current >= 17 * 60:  # STOP exactly at 17:00
+            break
+
+        minute += 5
+        if minute >= 60:
+            minute = 0
+            hour += 1
+
+    return times
+
+
+
 
 class AdminWindow(QtWidgets.QMainWindow):
     def __init__(self, admin_id, admin_name):
@@ -86,6 +129,16 @@ class AdminWindow(QtWidgets.QMainWindow):
         self.current_student = None
         self.available_section_map = {}   # row -> section (right table)
         self.current_section_map = {}     # row -> section (left table)
+
+        start_times = generate_start_times()
+        end_times = generate_end_times()
+
+        self.Section_StartTime_Combo.clear()
+        self.Section_StartTime_Combo.addItems(start_times)
+
+        self.Section_EndTime_Combo.clear()
+        self.Section_EndTime_Combo.addItems(end_times)
+
 
         # General table settings
         for table in (
@@ -120,7 +173,7 @@ class AdminWindow(QtWidgets.QMainWindow):
         self.Tab1_DeleteStudent.clicked.connect(self.tab1_delete_student)
 
         # Tab 2: submit student
-        self.pushButton.clicked.connect(self.handle_submit_student)
+        self.Tab2Submit.clicked.connect(self.handle_submit_student)
 
         # Tab 2: add/remove course
         self.Tab2_AddCourse.clicked.connect(self.add_selected_course)
@@ -147,8 +200,7 @@ class AdminWindow(QtWidgets.QMainWindow):
 
 
 
-        # Enrollment message label
-        self.EnrollmentMessege.setText("")
+
     # =========================================================
     # General 
     # =========================================================
@@ -807,15 +859,15 @@ class AdminWindow(QtWidgets.QMainWindow):
         credit = self.Tab5_Credit.text().strip() or None
         term = self.Tab5_term.text().strip() or None
         prereq = self.Tab5_prerequisite.text().strip() or None
-
+        capacity = self.Tab5_Capacity.text().strip() or None
         try:
             if credit: credit = int(credit)
             if term: term = int(term)
+            if capacity: capacity = int(capacity)
         except:
-            return QtWidgets.QMessageBox.warning(self, "Error", "Credit and Term must be numbers.")
+            return QtWidgets.QMessageBox.warning(self, "Error", "Credit, Term, and Capacity must be numbers.")
 
-        ok, msg = self.admin_obj.update_course(code, name, credit, term, prereq)
-
+        ok, msg = self.admin_obj.update_course(code, name, credit, term, prereq, capacity)
         if ok:
             QtWidgets.QMessageBox.information(self, "Update Course", msg)
         else:
