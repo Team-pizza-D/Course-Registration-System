@@ -1372,9 +1372,9 @@ class admin(user):
                 return False , f"Course with code {course_code} does not exist."
             courses_db.execute("UPDATE Courses SET course_code = ? WHERE section = ?", (course_code, section_name), commit=True)
         if capacity is not None:
-           if capacity<=0:
-                return False , "Capacity must be a positive integer."
-           sect.new_capacity(capacity)
+         if int(capacity)<=0:
+            return False , "Capacity must be a positive integer."
+         sect.new_capacity(capacity)
         if instructor_id is not None:
             if not instructor(instructor_id.strip()).is_existing():
                 return False , f"Instructor with ID {instructor_id} does not exist."
