@@ -946,25 +946,51 @@ class AdminWindow(QtWidgets.QMainWindow):
     # TAB 6 — COURSE PLAN MANAGEMENT
     ###############################################
 
+
     def tab6_load_tables(self):
         major = self.Tab6_Major_combobox.currentText().strip()
+        term = self.Tab6_Term.currentText().strip()
         adm = admin(id=self.admin_id)
 
-        result = adm.display_subjects_by_major_plan(major)
+        # Convert term to int
+        try:
+            term = int(term)
+        except:
+            QMessageBox.warning(self, "Invalid Term", "Term must be a number.")
+            return
+
+        # -----------------------------
+        # FIX: Map major → database table
+        # -----------------------------
+        major_map = {
+            "Electrical communication and electronics engineering": "communication",
+            "Electrical computer engineering": "computer",
+            "Electrical power and machines engineering": "power",
+            "Electrical biomedical engineering": "biomedical"
+        }
+
+        plane = major_map.get(major)
+        if plane is None:
+            QMessageBox.warning(self, "Error", f"No table found for major: {major}")
+            return
+
+        # Load CURRENT plan (left)
+        result = adm.display_courses_by_plane_level(plane, term)
         self.Tab6_CurrentPlan_table.setRowCount(0)
 
         if isinstance(result, dict):
             for row_idx, (course_code, info) in enumerate(result.items()):
                 self.Tab6_CurrentPlan_table.insertRow(row_idx)
+                course_name, credit, term_val, prereq = info
                 self.Tab6_CurrentPlan_table.setItem(row_idx, 0, QTableWidgetItem(course_code))
-                self.Tab6_CurrentPlan_table.setItem(row_idx, 1, QTableWidgetItem(info["course_name"]))
-                self.Tab6_CurrentPlan_table.setItem(row_idx, 2, QTableWidgetItem(str(info["credit"])))
-                self.Tab6_CurrentPlan_table.setItem(row_idx, 3, QTableWidgetItem(info["prerequisites"]))
-                self.Tab6_CurrentPlan_table.setItem(row_idx, 4, QTableWidgetItem(str(info["terms"])))
+                self.Tab6_CurrentPlan_table.setItem(row_idx, 1, QTableWidgetItem(course_name))
+                self.Tab6_CurrentPlan_table.setItem(row_idx, 2, QTableWidgetItem(str(credit)))
+                self.Tab6_CurrentPlan_table.setItem(row_idx, 3, QTableWidgetItem(prereq))
+                self.Tab6_CurrentPlan_table.setItem(row_idx, 4, QTableWidgetItem(str(term_val)))
 
+        # Load NOT-IN-PLAN (right)
         no_plan = adm.courses_not_in_the_plane(major)
         self.Tab6_NoPlan_table.setRowCount(0)
-
         if isinstance(no_plan, list):
             for row_idx, course_code in enumerate(no_plan):
                 self.Tab6_NoPlan_table.insertRow(row_idx)
@@ -972,11 +998,12 @@ class AdminWindow(QtWidgets.QMainWindow):
 
 
 
+
     def tab6_add_course(self):
         major = self.Tab6_Major_combobox.currentText().strip()
+        term = self.Tab6_Term.currentText().strip()
         adm = admin(id=self.admin_id)
 
-        # Get selected course from RIGHT table
         row = self.Tab6_NoPlan_table.currentRow()
         if row < 0:
             QMessageBox.warning(self, "Selection Error",
@@ -992,15 +1019,15 @@ class AdminWindow(QtWidgets.QMainWindow):
         else:
             QMessageBox.warning(self, "Error", msg)
 
-        self.tab6_load_tables()  # Refresh both tables
+        self.tab6_load_tables()
 
 
 
     def tab6_delete_course(self):
         major = self.Tab6_Major_combobox.currentText().strip()
+        term = self.Tab6_Term.currentText().strip()
         adm = admin(id=self.admin_id)
 
-        # Get selected course from LEFT table
         row = self.Tab6_CurrentPlan_table.currentRow()
         if row < 0:
             QMessageBox.warning(self, "Selection Error",
@@ -1016,7 +1043,7 @@ class AdminWindow(QtWidgets.QMainWindow):
         else:
             QMessageBox.warning(self, "Error", msg)
 
-        self.tab6_load_tables()  # Refresh both tables
+        self.tab6_load_tables()
 
 
 
