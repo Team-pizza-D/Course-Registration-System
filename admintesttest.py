@@ -847,24 +847,22 @@ class AdminWindow(QtWidgets.QMainWindow):
     def tab5_add_course(self):
         code = self.Tab5_Course_code.text().strip()
         name = self.Tab5_Course_name.text().strip()
-        instructor = self.Tab5_Instructor_ID.text().strip()
-        capacity = self.Tab5_Capacity.text().strip()
+        
         credit = self.Tab5_Credit.text().strip()
         section = self.Tab5_section.text().strip()
         term = self.Tab5_term.text().strip()
         prereq = self.Tab5_prerequisite.text().strip()
 
-        if not all([code, name, instructor, capacity, credit, section, term, prereq]):
+        if not all([code, name, credit, section, term, prereq]):
             return QtWidgets.QMessageBox.warning(self, "Error", "Please fill all fields.")
 
         try:
             credit = int(credit)
-            capacity = int(capacity)
             term = int(term)
         except:
-            return QtWidgets.QMessageBox.warning(self, "Error", "Credit, Capacity and Term must be numbers.")
+            return QtWidgets.QMessageBox.warning(self, "Error", "Credit, Term must be numbers.")
 
-        ok, msg = self.admin_obj.add_course(code, name, credit, section, instructor, capacity, term, prereq)
+        ok, msg = self.admin_obj.add_course(code, name, credit, section, term, prereq)
 
         if ok:
             QtWidgets.QMessageBox.information(self, "Add Course", msg)
@@ -995,7 +993,7 @@ class AdminWindow(QtWidgets.QMainWindow):
         # Convert empty fields to None
         course_code = course_code if course_code else None
         instructor_id = instructor_id if instructor_id else None
-        capacity = int(capacity) if capacity.isdigit() else None
+        capacity = capacity 
         start_time = start_time if start_time else None
         end_time = end_time if end_time else None
         day = day if day else None
