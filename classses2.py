@@ -1037,7 +1037,9 @@ class admin(user):
 
             
     def add_subject(self, section_code, student_id):  # to add a subject to a student
-        ### later this will probably call student.enroll_subject with correct ID and section_code
+        stu=student(str(student_id.strip()))
+        if not stu.is_student() or not stu.is_existing():
+            return f"Student with ID {student_id} does not exist."
         sect=section(section_name=section_code)
         okay,massege = sect.enroll_student_in_section(student_id)
         return okay, massege
