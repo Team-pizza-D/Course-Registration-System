@@ -734,10 +734,13 @@ class student(user):
             except sqlite3.IntegrityError:
                 print(f"Student with ID {self.id} already exists in the database.")
         else:
-             majors_row=users_db.execute("SELECT major fROM students WHERE id = ?", (self.id,), fetchone=True)
-             self.major=majors_row[0].strip()
-             enrolled_subjects_row= users_db.execute("SELECT course FROM enrollments WHERE student_id = ?", (self.id,), fetchall=True)
-             self.enrolled_subjects= [r[0].strip() for r in enrolled_subjects_row]
+             try:
+                majors_row=users_db.execute("SELECT major fROM students WHERE id = ?", (self.id,), fetchone=True)
+                self.major=majors_row[0].strip()
+                enrolled_subjects_row= users_db.execute("SELECT course FROM enrollments WHERE student_id = ?", (self.id,), fetchall=True)
+                self.enrolled_subjects= [r[0].strip() for r in enrolled_subjects_row]
+             except:
+                 raise ValueError(f"Student with ID {self.id} does not exist")
 
         # else:
         #     row=users_db.execute(
@@ -1037,7 +1040,7 @@ class admin(user):
 
             
     def add_subject(self, section_code, student_id):  # to add a subject to a student
-        stu=student(str(student_id.strip()))
+        stu=student(id=str(student_id).strip())
         if not stu.is_student() or not stu.is_existing():
             return f"Student with ID {student_id} does not exist."
         sect=section(section_name=section_code)
@@ -1196,7 +1199,7 @@ class admin(user):
             prerequisites=r[4]
             courses_info[course_code]=(course_name,credit,term,prerequisites)
         return courses_info
-    def add_course(self,course_code,course_name,credit,sections,instructor_id,capacity,term,prerequisites,start_time,end_time,day): #done
+    def add_course(self,course_code,course_name,credit,sections,instructor_id,capacity,term,prerequisites,start_time=None,end_time=None,day=None): #done
         if not 10>=term>=1:
             return False , "Term must be between 1 and 10."
         course_code=course_code.strip().upper()
@@ -1377,6 +1380,7 @@ class admin(user):
             courses_db.execute("UPDATE Courses SET time = ? WHERE section = ?", (time, section_name), commit=True)
         return True , f"Section {section_name} updated successfully."
     def update_course(self,course_code,course_name=None,credit=None,term=None,prerequisites=None,capacity=None):
+        course_code=course_code.strip().upper()
         if capacity is not None:
             return False , "capacity cant be updated from course managment please use section managment."
         sub=subject(course_code)
