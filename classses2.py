@@ -155,7 +155,7 @@ class subject:  ### Data base team said that this is currently not needed but i 
     def __init__(self, subject_name, subject_code=None, prerequisites=None):
         self.subject_code = subject_code
         self.subject_name = subject_name
-        prerequisites_row= courses_db.execute("SELECT prerequisites FROM Courses WHERE course_code = ?", (self.subject_name,), fetchone=True)
+        prerequisites_row= courses_db.execute("SELECT prerequisites FROM Courses WHERE course_code = ?", (self.subject_name.strip().upper(),), fetchone=True)
         if prerequisites_row==None or prerequisites_row[0]==None or prerequisites_row[0].strip()=="":
             self.prerequisites = []
         else:
@@ -969,7 +969,7 @@ class student(user):
 
 # _______________________________________________________________________________________________________________
 class instructor(user):
-    def __init__(self, username, subject, sections ,password=None, email=None, id=None, database=False):
+    def __init__(self, username, subject=None, sections=None, password=None, email=None, id=None, database=False):
         super().__init__(username, password, email, id)
         self.subject = subject  # subject assigned to the instructor
         self.sections = sections if sections is not None else []  ### will be abdated later when database design is complete to take sections from database directly
@@ -1337,7 +1337,7 @@ class admin(user):
             return False , f"Cannot delete section {section_name} because students are enrolled in it."
         courses_db.execute("DELETE FROM Courses WHERE section = ?", (section_name,), commit=True)
         return True , f"Section {section_name} deleted successfully."
-    def update_section(selfself,course_code=None,section_name=None,capacity=None,instructor_id=None,start_time=None,end_time=None,day=None):
+    def update_section(self,course_code=None,section_name=None,capacity=None,instructor_id=None,start_time=None,end_time=None,day=None):
         sect=section(section_name=section_name)
         if not sect.section_is_existing():
             return False , f"Section {section_name} does not exist."
