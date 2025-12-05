@@ -267,7 +267,7 @@ QMessageBox {
 </string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>5</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -537,7 +537,7 @@ QMessageBox {
       <widget class="QPushButton" name="Tab2_AddCourse">
        <property name="geometry">
         <rect>
-         <x>1000</x>
+         <x>340</x>
          <y>680</y>
          <width>131</width>
          <height>41</height>
@@ -550,7 +550,7 @@ QMessageBox {
       <widget class="QPushButton" name="Tab2_DeleteCourse">
        <property name="geometry">
         <rect>
-         <x>340</x>
+         <x>1000</x>
          <y>680</y>
          <width>131</width>
          <height>41</height>
@@ -610,7 +610,7 @@ QMessageBox {
       <widget class="QTableWidget" name="Tab2_SubjectsTable">
        <property name="geometry">
         <rect>
-         <x>740</x>
+         <x>760</x>
          <y>170</y>
          <width>591</width>
          <height>481</height>
@@ -1383,7 +1383,7 @@ background-color: rgb(0, 17n 29);</string>
        </rect>
       </property>
       <property name="text">
-       <string>Section Code</string>
+       <string>Section Name</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_26">
@@ -1543,7 +1543,7 @@ background-color: rgb(0, 17n 29);</string>
        <string>Day</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="comboBox_Day">
+     <widget class="QComboBox" name="Section_Day_Combo">
       <property name="geometry">
        <rect>
         <x>710</x>
@@ -1597,7 +1597,7 @@ QComboBox QAbstractItemView::item:hover {
        </property>
       </item>
      </widget>
-     <widget class="QComboBox" name="comboBox_End">
+     <widget class="QComboBox" name="Section_EndTime_Combo">
       <property name="geometry">
        <rect>
         <x>710</x>
@@ -1681,7 +1681,7 @@ QComboBox QAbstractItemView::item:hover {
        </property>
       </item>
      </widget>
-     <widget class="QComboBox" name="comboBox_Start">
+     <widget class="QComboBox" name="Section_StartTime_Combo">
       <property name="geometry">
        <rect>
         <x>710</x>
@@ -1711,65 +1711,321 @@ QComboBox QAbstractItemView::item:hover {
       </property>
       <item>
        <property name="text">
-        <string>8 AM</string>
+        <string>8:00</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>9 AM</string>
+        <string>8:05</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>10 AM</string>
+        <string>8:10</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>11 AM</string>
+        <string>8:15</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>12 PM</string>
+        <string>8:20</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>1 PM</string>
+        <string>8:25</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>2 PM</string>
+        <string>8:30</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>3 PM</string>
+        <string>8:35</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>4 PM</string>
+        <string>8:40</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>5 PM</string>
+        <string>8:45</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>6 PM</string>
+        <string>8:50</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>8:55</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9:00</string>
        </property>
       </item>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_6">
      <attribute name="title">
-      <string>Page</string>
+      <string>Plan Mangment</string>
      </attribute>
+     <widget class="QLabel" name="label_32">
+      <property name="geometry">
+       <rect>
+        <x>440</x>
+        <y>30</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Major</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="Tab6_Major_combobox">
+      <property name="geometry">
+       <rect>
+        <x>550</x>
+        <y>20</y>
+        <width>331</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QComboBox {
+    background-color: #082336;
+    color: white;
+    font-weight: bold;
+    border: 1px solid #082336;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #082336;
+    color: white;
+    font-weight: bold;
+}
+
+QComboBox QAbstractItemView::item:hover {
+    background-color: #0a2d44; /* slightly lighter hover */
+}
+</string>
+      </property>
+      <item>
+       <property name="text">
+        <string>Electrical communication and electronics engineering</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Electrical computer engineering</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Electrical power and machines engineering</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Electrical biomedical engineering</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="welcomeLabel_3">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>90</y>
+        <width>301</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Consolas,Courier New,monospace</family>
+        <pointsize>20</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 20pt;
+}</string>
+      </property>
+      <property name="text">
+       <string>Current plan</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="welcomeLabel_4">
+      <property name="geometry">
+       <rect>
+        <x>890</x>
+        <y>90</y>
+        <width>301</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Consolas,Courier New,monospace</family>
+        <pointsize>20</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 20pt;
+}</string>
+      </property>
+      <property name="text">
+       <string>Not in plan</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="Tab6_CurrentPlan_table">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>160</y>
+        <width>591</width>
+        <height>481</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">    
+    QTableWidget {
+        background-color: #001622;
+        color: white;
+        font-size: 14px;
+        border: 1px solid #4c4c4c;
+    }
+
+    QHeaderView::section {
+        background-color: #0b2e4a;
+        color: white;
+        padding: 5px;
+        border: 1px solid #32414B;
+        font-weight: bold;
+    }
+
+    QTableWidget::item:selected {
+        background-color: #1e90ff;
+        color: black;
+    }</string>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="showGrid">
+       <bool>false</bool>
+      </property>
+      <property name="cornerButtonEnabled">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="Tab6_NoPlan_table">
+      <property name="geometry">
+       <rect>
+        <x>750</x>
+        <y>160</y>
+        <width>591</width>
+        <height>481</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">    
+    QTableWidget {
+        background-color: #001622;
+        color: white;
+        font-size: 14px;
+        border: 1px solid #4c4c4c;
+    }
+
+    QHeaderView::section {
+        background-color: #0b2e4a;
+        color: white;
+        padding: 5px;
+        border: 1px solid #32414B;
+        font-weight: bold;
+    }
+
+    QTableWidget::item:selected {
+        background-color: #1e90ff;
+        color: black;
+    }</string>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="showGrid">
+       <bool>false</bool>
+      </property>
+      <property name="columnCount">
+       <number>0</number>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="Tab6_AddPlan">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>660</y>
+        <width>131</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="Tab6_DeletePlan">
+      <property name="geometry">
+       <rect>
+        <x>980</x>
+        <y>660</y>
+        <width>131</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Remove</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QLabel" name="welcomeLabel">
@@ -1816,6 +2072,100 @@ background-color: rgb(0, 17n 29);</string>
      <bool>false</bool>
     </property>
    </widget>
+   <widget class="QComboBox" name="Section_StartTime_Combo_2">
+    <property name="geometry">
+     <rect>
+      <x>1140</x>
+      <y>920</y>
+      <width>171</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QComboBox {
+    background-color: #082336;
+    color: white;
+    font-weight: bold;
+    border: 1px solid #082336;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #082336;
+    color: white;
+    font-weight: bold;
+}
+
+QComboBox QAbstractItemView::item:hover {
+    background-color: #0a2d44; /* slightly lighter hover */
+}
+</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>8:00</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>8:05</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>8:10</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>8:15</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>8:20</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>8:25</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>8:30</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>8:35</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>8:40</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>8:45</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>8:50</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>8:55</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>9:00</string>
+     </property>
+    </item>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
@@ -1852,13 +2202,13 @@ background-color: rgb(0, 17n 29);</string>
   <tabstop>Tab5_PrerequistieCode</tabstop>
   <tabstop>Tab5_PrerequistieAdd</tabstop>
   <tabstop>Tab5_PrerequistieRemove</tabstop>
-  <tabstop>comboBox_Start</tabstop>
+  <tabstop>Section_StartTime_Combo</tabstop>
   <tabstop>Tab5_Section_CourseCord</tabstop>
   <tabstop>Tab5_Section_Capacity</tabstop>
-  <tabstop>comboBox_End</tabstop>
+  <tabstop>Section_EndTime_Combo</tabstop>
   <tabstop>Tab5_Section_SectionName</tabstop>
   <tabstop>Tab5_Section_Instructor</tabstop>
-  <tabstop>comboBox_Day</tabstop>
+  <tabstop>Section_Day_Combo</tabstop>
   <tabstop>Tab5_SectionUpdate</tabstop>
   <tabstop>Tab5_SectionRemove</tabstop>
   <tabstop>Tab5_SectionAdd</tabstop>

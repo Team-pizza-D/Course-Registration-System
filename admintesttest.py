@@ -1,9 +1,9 @@
 import os
 import sys
 from PyQt5 import uic, QtWidgets, QtCore, QtGui
-from PyQt5.QtWidgets import QApplication, QMainWindow,QShortcut,QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow,QShortcut,QMessageBox,QTableWidgetItem
 from PyQt5.QtGui import QKeySequence
-from classses2 import admin       
+from classses2 import admin, student       
 from Admin_Window import AdminWindow  
 
 class LoginWindow(QMainWindow):
@@ -137,9 +137,14 @@ class AdminWindow(QtWidgets.QMainWindow):
         self.Tab5_CourseUpdate.clicked.connect(self.tab5_update_course)
         self.Tab5_PrerequistieAdd.clicked.connect(self.tab5_add_prerequisite)
         self.Tab5_PrerequistieRemove.clicked.connect(self.tab5_remove_prerequisite)
-        self.Tab5_SectionAdd.clicked.connect(self.tab5_add_section)
-        self.Tab5_SectionUpdate.clicked.connect(self.tab5_update_section)
-        self.Tab5_SectionRemove.clicked.connect(self.tab5_remove_section)
+        self.Tab5_SectionAdd.clicked.connect(self.handle_add_section)
+        self.Tab5_SectionUpdate.clicked.connect(self.handle_update_section)
+        self.Tab5_SectionRemove.clicked.connect(self.handle_remove_section)
+        # Tab 6 buttons
+        self.Tab6_Major_combobox.currentIndexChanged.connect(self.tab6_load_tables)
+        self.Tab6_AddPlan.clicked.connect(self.tab6_add_course)
+        self.Tab6_DeletePlan.clicked.connect(self.tab6_delete_course)
+
 
 
         # Enrollment message label
@@ -850,79 +855,168 @@ class AdminWindow(QtWidgets.QMainWindow):
 
 
     # ---------------------- ADD SECTION ----------------------
-    def tab5_add_section(self):
-        course_code = self.Tab5_Section_CourseCord.text().strip()
-        section = self.Tab5_Section_CourseName.text().strip()
-        name = self.Tab5_Section_SectionName.text().strip()
+    def handle_add_section(self):
+        course_code = self.Tab5_Section_CourseCord.text().strip().upper()
+        section_name = self.Tab5_Section_SectionName.text().strip().upper()
+        instructor_id = self.Tab5_Section_Instructor.text().strip()
         capacity = self.Tab5_Section_Capacity.text().strip()
-        instructor = self.Tab5_Section_Instructor.text().strip()
+        start_time = self.Section_StartTime_Combo.currentText().strip()
+        end_time = self.Section_EndTime_Combo.currentText().strip()
+        day = self.Section_Day_Combo.currentText().strip()
 
-        start = self.comboBox_Start.currentText()
-        end = self.comboBox_End.currentText()
-        day = self.comboBox_Day.currentText()
-        time = f"{start}-{end} , {day}"
+        # Validate all fields are filled
+        if not all([course_code, section_name, instructor_id, capacity, start_time, end_time, day]):
+            QMessageBox.warning(self, "Missing Fields", "Please fill all fields before adding a section.")
+            return
 
-        if not all([course_code, section, name, capacity, instructor]):
-            return QtWidgets.QMessageBox.warning(self, "Error", "Please fill all fields.")
+        # Validate capacity
+        if not capacity.isdigit():
+            QMessageBox.warning(self, "Invalid Input", "Capacity must be a positive integer.")
+            return
 
-        try:
-            capacity = int(capacity)
-        except:
-            return QtWidgets.QMessageBox.warning(self, "Error", "Capacity must be a number.")
+        adm = admin(id=self.admin_id)
 
-        ok, msg = self.admin_obj.add_section(course_code, section, capacity, instructor, time)
-
-        if ok:
-            QtWidgets.QMessageBox.information(self, "Add Section", msg)
-        else:
-            QtWidgets.QMessageBox.warning(self, "Add Section", msg)
-
-
-    # ---------------------- UPDATE SECTION ----------------------
-    def tab5_update_section(self):
-        course_code = self.Tab5_Section_CourseCord.text().strip()
-        section = self.Tab5_Section_CourseName.text().strip()
-
-        if not section:
-            return QtWidgets.QMessageBox.warning(self, "Error", "Section Code is required.")
-
-        name = self.Tab5_Section_SectionName.text().strip()
-        capacity = self.Tab5_Section_Capacity.text().strip()
-        instructor = self.Tab5_Section_Instructor.text().strip()
-
-        start = self.comboBox_Start.currentText()
-        end = self.comboBox_End.currentText()
-        day = self.comboBox_Day.currentText()
-        time = f"{start}-{end} , {day}"
-
-        try:
-            if capacity:
-                capacity = int(capacity)
-        except:
-            return QtWidgets.QMessageBox.warning(self, "Error", "Capacity must be a number.")
-
-        ok, msg = self.admin_obj.update_section(course_code, section, capacity, instructor, time)
+        ok, msg = adm.add_section(course_code, section_name, int(capacity),
+                                instructor_id, start_time, end_time, day)
 
         if ok:
-            QtWidgets.QMessageBox.information(self, "Update Section", msg)
+            QMessageBox.information(self, "Success", msg)
         else:
-            QtWidgets.QMessageBox.warning(self, "Update Section", msg)
+            QMessageBox.warning(self, "Error", msg)
 
 
-    # ---------------------- REMOVE SECTION ----------------------
-    def tab5_remove_section(self):
-        section = self.Tab5_Section_CourseName.text().strip()
 
-        if not section:
-            return QtWidgets.QMessageBox.warning(self, "Error", "Section Code is required.")
+    def handle_remove_section(self):
+        section_name = self.Section_SectionName_LineEdit.text().strip().upper()
 
-        ok, msg = self.admin_obj.remove_section(section)
+        if not section_name:
+            QMessageBox.warning(self, "Missing Field", "Please enter the Section Name to remove.")
+            return
+
+        adm = admin(id=self.AdminID)
+
+        ok, msg = adm.remove_section(section_name)
 
         if ok:
-            QtWidgets.QMessageBox.information(self, "Remove Section", msg)
+            QMessageBox.information(self, "Success", msg)
         else:
-            QtWidgets.QMessageBox.warning(self, "Remove Section", msg)
+            QMessageBox.warning(self, "Error", msg)
 
+
+
+    def handle_update_section(self):
+        section_name = self.Section_SectionName_LineEdit.text().strip().upper()
+        course_code = self.Section_CourseCode_LineEdit.text().strip().upper()
+        instructor_id = self.Section_InstructorID_LineEdit.text().strip()
+        capacity = self.Section_Capacity_LineEdit.text().strip()
+        start_time = self.Section_StartTime_Combo.currentText().strip()
+        end_time = self.Section_EndTime_Combo.currentText().strip()
+        day = self.Section_Day_Combo.currentText().strip()
+
+        if not section_name:
+            QMessageBox.warning(self, "Missing Field", "Section Name is required to update.")
+            return
+
+        # Convert empty fields to None
+        course_code = course_code if course_code else None
+        instructor_id = instructor_id if instructor_id else None
+        capacity = int(capacity) if capacity.isdigit() else None
+        start_time = start_time if start_time else None
+        end_time = end_time if end_time else None
+        day = day if day else None
+
+        adm = admin(id=self.AdminID)
+
+        ok, msg = adm.update_section(
+            course_code=course_code,
+            section_name=section_name,
+            capacity=capacity,
+            instructor_id=instructor_id,
+            start_time=start_time,
+            end_time=end_time,
+            day=day
+        )
+
+        if ok:
+            QMessageBox.information(self, "Success", msg)
+        else:
+            QMessageBox.warning(self, "Error", msg)
+
+    ###############################################
+    # TAB 6 — COURSE PLAN MANAGEMENT
+    ###############################################
+
+    def tab6_load_tables(self):
+        major = self.Tab6_Major_combobox.currentText().strip()
+        adm = admin(id=self.admin_id)
+
+        result = adm.display_subjects_by_major_plan(major)
+        self.Tab6_CurrentPlan_table.setRowCount(0)
+
+        if isinstance(result, dict):
+            for row_idx, (course_code, info) in enumerate(result.items()):
+                self.Tab6_CurrentPlan_table.insertRow(row_idx)
+                self.Tab6_CurrentPlan_table.setItem(row_idx, 0, QTableWidgetItem(course_code))
+                self.Tab6_CurrentPlan_table.setItem(row_idx, 1, QTableWidgetItem(info["course_name"]))
+                self.Tab6_CurrentPlan_table.setItem(row_idx, 2, QTableWidgetItem(str(info["credit"])))
+                self.Tab6_CurrentPlan_table.setItem(row_idx, 3, QTableWidgetItem(info["prerequisites"]))
+                self.Tab6_CurrentPlan_table.setItem(row_idx, 4, QTableWidgetItem(str(info["terms"])))
+
+        no_plan = adm.courses_not_in_the_plane(major)
+        self.Tab6_NoPlan_table.setRowCount(0)
+
+        if isinstance(no_plan, list):
+            for row_idx, course_code in enumerate(no_plan):
+                self.Tab6_NoPlan_table.insertRow(row_idx)
+                self.Tab6_NoPlan_table.setItem(row_idx, 0, QTableWidgetItem(course_code))
+
+
+
+    def tab6_add_course(self):
+        major = self.Tab6_Major_combobox.currentText().strip()
+        adm = admin(id=self.admin_id)
+
+        # Get selected course from RIGHT table
+        row = self.Tab6_NoPlan_table.currentRow()
+        if row < 0:
+            QMessageBox.warning(self, "Selection Error",
+                                "Select a course from the 'Not in plan' table.")
+            return
+
+        course_code = self.Tab6_NoPlan_table.item(row, 0).text().strip()
+
+        ok, msg = adm.add_course_to_plane(course_code, major)
+
+        if ok:
+            QMessageBox.information(self, "Success", msg)
+        else:
+            QMessageBox.warning(self, "Error", msg)
+
+        self.tab6_load_tables()  # Refresh both tables
+
+
+
+    def tab6_delete_course(self):
+        major = self.Tab6_Major_combobox.currentText().strip()
+        adm = admin(id=self.admin_id)
+
+        # Get selected course from LEFT table
+        row = self.Tab6_CurrentPlan_table.currentRow()
+        if row < 0:
+            QMessageBox.warning(self, "Selection Error",
+                                "Select a course from the 'Current plan' table.")
+            return
+
+        course_code = self.Tab6_CurrentPlan_table.item(row, 0).text().strip()
+
+        ok, msg = adm.delete_course_from_plane(course_code, major)
+
+        if ok:
+            QMessageBox.information(self, "Success", msg)
+        else:
+            QMessageBox.warning(self, "Error", msg)
+
+        self.tab6_load_tables()  # Refresh both tables
 
 
 
