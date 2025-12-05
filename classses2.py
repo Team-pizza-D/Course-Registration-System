@@ -740,7 +740,7 @@ class student(user):
                 enrolled_subjects_row= users_db.execute("SELECT course FROM enrollments WHERE student_id = ?", (self.id,), fetchall=True)
                 self.enrolled_subjects= [r[0].strip() for r in enrolled_subjects_row]
              except:
-                 raise ValueError(f"Student with ID {self.id} does not exist")
+                 f"Student with ID {self.id} does not exist"
 
         # else:
         #     row=users_db.execute(
