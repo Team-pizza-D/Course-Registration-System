@@ -1178,7 +1178,7 @@ class admin(user):
         users_db.execute("DELETE FROM grades WHERE student_id = ?", (student_id,), commit=True)
         return True , f"Student with ID {student_id} deleted from the database."
     def display_courses_by_plane_level(self,plane,Level):
-        row=courses_db.execute("SELECT course_code,course_name,credit,term,prerequisites FROM {plane} WHERE level = ?".format(plane=plane),(Level,),fetchall=True)
+        row=courses_db.execute("SELECT course_code,course_name,credit,terms,prerequisites FROM {plane} WHERE level = ?".format(plane=plane),(Level,),fetchall=True)
         if row is None or len(row)==0:
             return f"No courses found for level {Level} in plane {plane}."
         courses_info= {}
@@ -1309,7 +1309,7 @@ class admin(user):
             return False , f"Section {section_name} already exists."
         if capacity<=0:
             return False , "Capacity must be a positive integer."
-        if not instructor(instructor_id).is_existing():
+        if not instructor(instructor_id).is_instructor():
             return False , f"Instructor with ID {instructor_id} does not exist."
         if day == "Sunday":
             day_code = "S"
