@@ -1,6 +1,8 @@
 import sqlite3
 import bcrypt
 from classses2 import admin, student,section,subject,instructor,Database, user
+import random
+import smtplib
 
 
 # db = sqlite3.connect("Users.db")
@@ -381,3 +383,16 @@ db.close()
 # print(bcrypt.checkpw(tariq_pass.encode(),tariq.encode()))
 # db.commit()
 # db.close()
+
+def reset_password(the_id):
+    this_time_code = random.randint(100000,999999)
+    sender_email = "viibrkk@gmail.com"
+    #======Getting user's email=======#
+    db = sqlite3.connect("Users.db")
+    cr = db.cursor()
+    cr.execute("SELECT email FROM admins WHERE id = ? UNION SELECT email FROM instructors WHERE id = ? UNION SELECT email FROM students WHERE id = ?", (the_id,the_id,the_id))
+    email_in_tuple = cr.fetchall()
+    user_email = email_in_tuple[0][0]
+    cr.execute("SELECT username FROM admins WHERE id = ? UNION SELECT username FROM instructors WHERE id = ? UNION SELECT username FROM students WHERE id = ?", (the_id,the_id,the_id))
+    user_name = cr.fetchall()
+    ### I will continue the function later today
