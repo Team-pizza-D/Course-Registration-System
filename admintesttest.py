@@ -1,9 +1,12 @@
+from operator import index
 import os
+import sqlite3
 import sys
 from PyQt5 import uic, QtWidgets, QtCore, QtGui
-from PyQt5.QtWidgets import QApplication, QMainWindow,QShortcut,QMessageBox,QTableWidgetItem
+from PyQt5.QtWidgets import QApplication, QMainWindow,QShortcut,QMessageBox,QTableWidgetItem, QHeaderView, QAbstractItemView
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QKeySequence
-from classses2 import admin, student       
+from classses2 import admin, section, student       
 from Admin_Window import AdminWindow  
 
 class LoginWindow(QMainWindow):
@@ -138,6 +141,15 @@ class AdminWindow(QtWidgets.QMainWindow):
 
         self.Section_EndTime_Combo.clear()
         self.Section_EndTime_Combo.addItems(end_times)
+        self.map_major_to_plane = {
+            "Electrical communication and electronics engineering": "ECE",
+            "Electrical power and machines engineering": "PM",
+            "Computer engineering": "CE",
+            "Biomedical engineering": "BIO"
+        }
+
+        
+
 
 
         # General table settings
@@ -162,7 +174,7 @@ class AdminWindow(QtWidgets.QMainWindow):
         # Load Tab 1 student table initially
         self.load_tab1_students()
         # Load Tab 3 table initially
-        self.load_capacity_table()
+        
         # Load Tab 4 grade table initially
         self.load_tab4_grade_table()
 
@@ -179,8 +191,14 @@ class AdminWindow(QtWidgets.QMainWindow):
         self.Tab2_AddCourse.clicked.connect(self.add_selected_course)
         self.Tab2_DeleteCourse.clicked.connect(self.remove_selected_course)
 
-        # Tab 3: capacity
-        self.Tab3_Confirm.clicked.connect(self.handle_tab3_capacity_change)
+        # Tab 3: Details
+        self.Tab3_MajorChoice.currentIndexChanged.connect(self.update_subjects_table)
+        self.Tab3_Term.currentIndexChanged.connect(self.update_subjects_table)
+
+
+        self.update_subjects_table()
+
+
 
         #Tab 4 : Grades
         self.Tab4_Confirm.clicked.connect(self.handle_tab4_grading)
@@ -677,68 +695,84 @@ class AdminWindow(QtWidgets.QMainWindow):
             QtWidgets.QMessageBox.warning(self, "Remove Course", msg)
  
     # =========================================================
-    # TAB 3 — Expand capacity
+    # TAB 3 — Subject details 
     # =========================================================
 
-    def handle_tab3_capacity_change(self):
-        section = self.Tab3_Section_Code.text().strip()
-        new_capacity = self.Tab3_Capacity.text().strip()
+    def update_subjects_table(self):
+        # --- TABLE FORMATTING ---
+        self.Subjects_details.verticalHeader().setVisible(False)
+        self.Subjects_details.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.Subjects_details.horizontalHeader().setDefaultAlignment(Qt.AlignCenter)
+        self.Subjects_details.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.Subjects_details.setSelectionBehavior(QAbstractItemView.SelectRows)
+        # ------------------------
 
-        if not section or not new_capacity:
-            QtWidgets.QMessageBox.warning(self, "Error", "Please fill all fields.")
+        selected_major = self.Tab3_MajorChoice.currentText().strip()
+        selected_term = self.Tab3_Term.currentText().strip()
+
+        major_map = {
+            'Electrical communication and electronics engineering': "communication",
+            'Electrical computer engineering': "computer",
+            'Electrical power and machines engineering': "power",
+            'Electrical biomedical engineering': "biomedical"
+        }
+        
+        plane = major_map.get(selected_major)
+        
+        # Reset table
+        self.Subjects_details.setRowCount(0)
+        
+        # Ensure columns exist
+        self.Subjects_details.setColumnCount(5)
+        self.Subjects_details.setHorizontalHeaderLabels(["Course Code", "Section ID", "Capacity", "Instructor", "Credit"])
+
+        if not plane or not selected_term.isdigit():
             return
 
-        if not new_capacity.isdigit():
-            QtWidgets.QMessageBox.warning(self, "Invalid Input", "Capacity must be an integer.")
+        # 1. Get the list of courses using the method WE KNOW WORKS
+        # This returns: { 'EE321': (Name, Credit, Term, Prereqs), ... }
+        courses_dict = admin.display_courses_by_plane_level(None, plane, int(selected_term))
+
+        if isinstance(courses_dict, str):
+            print(courses_dict)
             return
 
-        # Use the existing admin object (created from login)
-        admin_obj = self.admin_obj
+        # 2. Loop through the courses
+        for course_code, details in courses_dict.items():
+            course_credit = str(details[1]) # We get Credit directly from the course list
 
-        message = admin_obj.expand_capacity(section, new_capacity)
+            # Get sections for this course
+            sections_list = admin.find_sections(None, course_code)
 
-        QtWidgets.QMessageBox.information(self, "Capacity Update", message)
+            if isinstance(sections_list, list):
+                for sec_name in sections_list:
+                    # --- THE FIX: USE FAST LOOKUP ---
+                    # Instead of "sec_obj = section(sec_name)" (which freezes),
+                    # We use the fast helper we just added.
+                    fast_info = admin.get_section_info_fast(sec_name)
+                    
+                    capacity = str(fast_info[0])
+                    instructor = str(fast_info[1])
+                    # --------------------------------
 
-        self.load_capacity_table()
+                    row_position = self.Subjects_details.rowCount()
+                    self.Subjects_details.insertRow(row_position)
 
-        self.Tab3_Section_Code.clear()
-        self.Tab3_Capacity.clear()
+                    # Helper for centering
+                    def create_centered_item(text):
+                        item = QTableWidgetItem(str(text))
+                        item.setTextAlignment(Qt.AlignCenter)
+                        return item
 
-    def load_capacity_table(self):
-        from classses2 import courses_db
+                    self.Subjects_details.setItem(row_position, 0, create_centered_item(course_code))
+                    self.Subjects_details.setItem(row_position, 1, create_centered_item(sec_name))
+                    self.Subjects_details.setItem(row_position, 2, create_centered_item(capacity))
+                    self.Subjects_details.setItem(row_position, 3, create_centered_item(instructor))
+                    self.Subjects_details.setItem(row_position, 4, create_centered_item(course_credit))
+                    
+                    # Keep the UI alive
+                    QApplication.processEvents()
 
-        row = courses_db.execute(
-            "SELECT course_code, section, capacity FROM Courses",
-            fetchall=True
-        )
-
-        self.CapacityTable.setRowCount(0)
-        self.CapacityTable.setColumnCount(3)
-        self.CapacityTable.setHorizontalHeaderLabels(
-            ["Course Code", "Section ID", "Capacity"]
-        )
-
-        if not row:
-            return
-
-        for r_index, (code, section, cap) in enumerate(row):
-            self.CapacityTable.insertRow(r_index)
-
-            item_code = QtWidgets.QTableWidgetItem(str(code))
-            item_sec = QtWidgets.QTableWidgetItem(str(section))
-            item_cap = QtWidgets.QTableWidgetItem(str(cap))
-
-            # 🔹 CENTER the text
-            item_code.setTextAlignment(QtCore.Qt.AlignCenter)
-            item_sec.setTextAlignment(QtCore.Qt.AlignCenter)
-            item_cap.setTextAlignment(QtCore.Qt.AlignCenter)
-
-            self.CapacityTable.setItem(r_index, 0, item_code)
-            self.CapacityTable.setItem(r_index, 1, item_sec)
-            self.CapacityTable.setItem(r_index, 2, item_cap)
-        header = self.CapacityTable.horizontalHeader()
-        for col in range(self.CapacityTable.columnCount()):
-            header.setSectionResizeMode(col, QtWidgets.QHeaderView.Stretch)
 
     # =========================================================
     # TAB 4 — Grading
@@ -847,24 +881,22 @@ class AdminWindow(QtWidgets.QMainWindow):
     def tab5_add_course(self):
         code = self.Tab5_Course_code.text().strip()
         name = self.Tab5_Course_name.text().strip()
-        instructor = self.Tab5_Instructor_ID.text().strip()
-        capacity = self.Tab5_Capacity.text().strip()
+        
         credit = self.Tab5_Credit.text().strip()
         section = self.Tab5_section.text().strip()
         term = self.Tab5_term.text().strip()
         prereq = self.Tab5_prerequisite.text().strip()
 
-        if not all([code, name, instructor, capacity, credit, section, term, prereq]):
+        if not all([code, name, credit, section, term, prereq]):
             return QtWidgets.QMessageBox.warning(self, "Error", "Please fill all fields.")
 
         try:
             credit = int(credit)
-            capacity = int(capacity)
             term = int(term)
         except:
-            return QtWidgets.QMessageBox.warning(self, "Error", "Credit, Capacity and Term must be numbers.")
+            return QtWidgets.QMessageBox.warning(self, "Error", "Credit, Term must be numbers.")
 
-        ok, msg = self.admin_obj.add_course(code, name, credit, section, instructor, capacity, term, prereq)
+        ok, msg = self.admin_obj.add_course(code, name, credit, section, term, prereq)
 
         if ok:
             QtWidgets.QMessageBox.information(self, "Add Course", msg)
@@ -995,7 +1027,7 @@ class AdminWindow(QtWidgets.QMainWindow):
         # Convert empty fields to None
         course_code = course_code if course_code else None
         instructor_id = instructor_id if instructor_id else None
-        capacity = int(capacity) if capacity.isdigit() else None
+        capacity = capacity 
         start_time = start_time if start_time else None
         end_time = end_time if end_time else None
         day = day if day else None
