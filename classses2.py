@@ -911,7 +911,8 @@ class student(user):
 
         if not rows:
             conn.close()
-            return f"No completed subjects found for student ID {self.id}."
+            gpa = 0.0
+            return gpa
         total_credits = 0
         total_points = 0
         for course, letter_grade, credit in rows:
