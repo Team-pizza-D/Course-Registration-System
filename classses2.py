@@ -144,9 +144,9 @@ class user:
         password = str(first_name) + str(random.randint(100000, 999999))
         return password
     def correct_password(self, password):  # to check if provided password matches user's password
-        row = users_db.execute("SELECT password FROM admins WHERE id = ? UNION SELECT password FROM instructors WHERE id = ? UNION SELECT password FROM students WHERE id = ?", (self.id, self.id, self.id), fetchone=True)
-        password_in_db = row[0] if row else None
-        return password == password_in_db
+        row = users_db.execute("SELECT hashed_password FROM admins WHERE id = ? UNION SELECT hashed_password FROM instructors WHERE id = ? UNION SELECT hashed_password FROM students WHERE id = ?", (self.id, self.id, self.id), fetchone=True)
+        hashed_password_in_db = row[0] if row else None
+        return bcrypt.checkpw(password.encode() , hashed_password_in_db.encode()) # comparing by hashed passwords (saftier)
 
 
 

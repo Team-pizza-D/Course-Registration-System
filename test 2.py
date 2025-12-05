@@ -11,11 +11,11 @@ from classses2 import admin, student,section,subject,instructor,Database, user
 # cr.execute("CREATE TABLE IF NOT EXISTS enrollments (section TEXT, instructor TEXT, course TEXT, student_id TEXT, student_name TEXT, time TEXT, credit TEXT)")
 # db.commit()
 # db.close()
-tariq = student( id=2430020)
+# tariq = student( id=2430020)
 # print("--------------------------------")
 # print(tariq.view_available_subjects())
-print(tariq.email)
-print(tariq.display_info())
+# print(tariq.email)
+# print(tariq.display_info())
 # print("--------------------------------")
 # print(tariq.view_enrolled_subjects())
 # print("--------------------------------")
@@ -303,61 +303,81 @@ db.close()
 # t = "A"
 # print(t.isupper())
 
-def is_special(ch): # this is for password ensuring it has a special character
-    return not ch.isalnum()
+# def is_special(ch): # this is for password ensuring it has a special character
+#     return not ch.isalnum()
 
-def has_sequence(chars, length=3):
-    digits = [int(c) for c in chars if c.isdigit()]
-    if len(digits) < length:
-        return False
+# def has_sequence(chars, length=3):
+#     digits = [int(c) for c in chars if c.isdigit()]
+#     if len(digits) < length:
+#         return False
 
-    streak = 1
-    for i in range(1, len(digits)):
-        if digits[i] == digits[i - 1] + 1:
-            streak += 1
-            if streak >= length:
-                return True
-        else:
-            streak = 1
-    return False
+#     streak = 1
+#     for i in range(1, len(digits)):
+#         if digits[i] == digits[i - 1] + 1:
+#             streak += 1
+#             if streak >= length:
+#                 return True
+#         else:
+#             streak = 1
+#     return False
 
 
-def enforce_strong_password(new_password): # this method is checking the new password is strong enough (for new students)
-    new_password_splited = list(new_password)
-    cond1 = any(is_special(ch) for ch in new_password_splited) # First condition to have at least one character
+# def enforce_strong_password(new_password): # this method is checking the new password is strong enough (for new students)
+#     new_password_splited = list(new_password)
+#     cond1 = any(is_special(ch) for ch in new_password_splited) # First condition to have at least one character
 
-    cond2 = len(new_password_splited) >= 8 # Second condition to have at least 8 letters
+#     cond2 = len(new_password_splited) >= 8 # Second condition to have at least 8 letters
 
-    cond3 = not has_sequence(new_password_splited) # Third condition to not have 3 numbers in a row
+#     cond3 = not has_sequence(new_password_splited) # Third condition to not have 3 numbers in a row
     
-    cond4 = any(ch.isupper() for ch in new_password_splited) # Forth condition to have at least one capital letter
+#     cond4 = any(ch.isupper() for ch in new_password_splited) # Forth condition to have at least one capital letter
 
-    return cond1 and cond2 and cond3 and cond4
+#     return cond1 and cond2 and cond3 and cond4
 
 
-def signup(FN, LN, Npassword): # FN = first name , LN = last name
-    db = sqlite3.connect("Users.db")
-    cr = db.cursor()
-    cr.execute("SELECT id FROM students WHERE term = ?", (1,))
-    FYID1 = cr.fetchall()
+# def signup(FN, LN, Npassword): # FN = first name , LN = last name
+#     db = sqlite3.connect("Users.db")
+#     cr = db.cursor()
+#     cr.execute("SELECT id FROM students WHERE term = ?", (1,))
+#     FYID1 = cr.fetchall()
 
-    cr.execute("SELECT id FROM students WHERE term = ?", (2,))
-    FYID2 = cr.fetchall()
+#     cr.execute("SELECT id FROM students WHERE term = ?", (2,))
+#     FYID2 = cr.fetchall()
 
-    All_ids_FY2 = [x[0] for x in FYID2]
-    All_ids_FY1 = [x[0] for x in FYID1]
-    All_ids_FY = All_ids_FY1 + All_ids_FY2
-    highest_id = (max(All_ids_FY))
-    stu_id = int(highest_id) + 1
+#     All_ids_FY2 = [x[0] for x in FYID2]
+#     All_ids_FY1 = [x[0] for x in FYID1]
+#     All_ids_FY = All_ids_FY1 + All_ids_FY2
+#     highest_id = (max(All_ids_FY))
+#     stu_id = int(highest_id) + 1
 
-    Tusername = FN.strip() + " " + LN.strip()
-    s = student(id = stu_id, username=Tusername,email= f"{FN}{stu_id}@stu.kau.edu.sa", password=Npassword, major="preparatory engineering", database=True)
+#     Tusername = FN.strip() + " " + LN.strip()
+#     s = student(id = stu_id, username=Tusername,email= f"{FN}{stu_id}@stu.kau.edu.sa", password=Npassword, major="preparatory engineering", database=True)
 
-    db.commit()
-    db.close()
+#     db.commit()
+#     db.close()
         
 # a = input()
 # b = input()
 # c = input()
 # signup(a,b,c)
 
+# db = sqlite3.connect("Users.db")
+# cr = db.cursor()
+# cr.execute("SELECT id,password FROM admins")
+# admins_passwords = cr.fetchall()
+# cr.execute("SELECT id,password FROM instructors")
+# instructors_passwords = cr.fetchall()
+# for i in admins_passwords:
+#     this_time_hased = bcrypt.hashpw(i[1].encode(), bcrypt.gensalt()).decode()
+#     cr.execute("UPDATE admins SET hashed_password = ? WHERE id = ?", (this_time_hased,i[0]))
+
+# for i in instructors_passwords:
+#     this_time_hased = bcrypt.hashpw(i[1].encode(), bcrypt.gensalt()).decode()
+#     cr.execute("UPDATE instructors SET hashed_password = ? WHERE id = ?", (this_time_hased,i[0]))
+# cr.execute("SELECT hashed_password FROM students WHERE id = ?", ("2430020",))
+# tariq = cr.fetchall()
+# tariq = tariq[0][0]
+# tariq_pass = "tariq178715"
+# print(bcrypt.checkpw(tariq_pass.encode(),tariq.encode()))
+# db.commit()
+# db.close()
