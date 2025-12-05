@@ -197,7 +197,7 @@ QPushButton {
     color: rgb(232, 232, 232);
     font-family: Consolas, &quot;Courier New&quot;, monospace;
     font-size: 14px;
-    border-radius: 5px;
+    border-radius: 10px;
 
     /* Gradient background */
     background: qlineargradient(
@@ -388,6 +388,12 @@ QPushButton:pressed {
       <height>51</height>
      </rect>
     </property>
+    <property name="inputMethodHints">
+     <set>Qt::ImhHiddenText|Qt::ImhNoAutoUppercase|Qt::ImhNoPredictiveText|Qt::ImhSensitiveData</set>
+    </property>
+    <property name="echoMode">
+     <enum>QLineEdit::Password</enum>
+    </property>
    </widget>
    <widget class="QLineEdit" name="PasslineEditNew">
     <property name="geometry">
@@ -400,6 +406,12 @@ QPushButton:pressed {
     </property>
     <property name="toolTip">
      <string extracomment="At least 1 Capital letter, 1 special character, 8 digits and NO 3 or more sequnce numbers  ">At least 1 Capital letter, 1 special character, 8 digits and NO 3 sequnce numbers  </string>
+    </property>
+    <property name="inputMethodHints">
+     <set>Qt::ImhHiddenText|Qt::ImhNoAutoUppercase|Qt::ImhNoPredictiveText|Qt::ImhSensitiveData</set>
+    </property>
+    <property name="echoMode">
+     <enum>QLineEdit::Password</enum>
     </property>
    </widget>
   </widget>
@@ -416,6 +428,8 @@ QPushButton:pressed {
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <tabstops>
+  <tabstop>OldLineEdit</tabstop>
+  <tabstop>PasslineEditNew</tabstop>
   <tabstop>PassLineEditConfirm</tabstop>
   <tabstop>checkBox_showNew</tabstop>
   <tabstop>ConfirmButton</tabstop>

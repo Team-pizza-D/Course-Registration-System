@@ -40,7 +40,7 @@ QPushButton {
     color: rgb(232, 232, 232);
     font-family: Consolas, &quot;Courier New&quot;, monospace;
     font-size: 14px;
-    border-radius: 5px;
+    border-radius: 10px;
 
     /* Gradient background */
     background: qlineargradient(
@@ -1010,7 +1010,7 @@ border-color: rgb(0, 17, 29);</string>
     <property name="font">
      <font>
       <family>Consolas,Courier New,monospace</family>
-      <pointsize>10</pointsize>
+      <pointsize>20</pointsize>
      </font>
     </property>
     <property name="styleSheet">

@@ -1,6 +1,7 @@
 import sys
 import os
 import sqlite3
+import time
 from PyQt5 import uic, QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QShortcut
 from PyQt5.QtGui import QKeySequence
@@ -55,6 +56,10 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.load_current_courses_table()
         # Load total credit
         self.load_total_credit()
+
+        self.start_countdown(90)  
+
+        
     
     # __________General__________
     def setup_current_courses_table(self):
@@ -137,7 +142,33 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.load_current_courses_table()
         self.load_weekly_schedule()
         self.load_total_credit() 
-   
+    
+    def start_countdown(self, seconds):
+        self.remaining_time = seconds
+
+        # Create QTimer
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.update_countdown)
+        self.update_countdown()  # Update instantly
+        self.timer.start(1000)   # 1 second interval
+
+    def update_countdown(self):
+        if self.remaining_time <= 0:
+            self.TimeLabel.setText("Time is up!")
+            self.timer.stop()
+            return
+
+        # Update label
+        self.TimeLabel.setText(f"{self.remaining_time} seconds remaining")
+
+        # Decrease time
+        self.remaining_time -= 1
+
+
+    
+        
+
+
     # __________Transcript Tab__________
     def load_info_table(self):
         # Prepare table

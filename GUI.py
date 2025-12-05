@@ -2,6 +2,7 @@ import sys
 import os
 import sqlite3
 import bcrypt
+import smtplib
 from PyQt5 import uic, QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QShortcut
 from PyQt5.QtGui import QKeySequence
@@ -21,6 +22,7 @@ class LoginWindow(QMainWindow):
 
         self.loginButton.clicked.connect(self.loginfunction)
         self.SignUpButton.clicked.connect(self.signupfunction)
+        self.ForgetButton.clicked.connect(self.forget_password)
 
         # Enter triggers login
         QShortcut(QKeySequence("Return"), self, self.loginButton.click)
@@ -114,9 +116,14 @@ class LoginWindow(QMainWindow):
         self.signup_window.show()
         self.signup_window.destroyed.connect(self.show)
 
+    def forget_password(self):
+        self.hide()
+        self.forget_password_window = self.ForgetPassword()
+        self.forget_password_window.show()
+        self.forget_password_window.destroyed.connect(self.show)
 
     # _____________________________________________________________
-    #                        SIGN UP WINDOW
+    #                        ADDITIONAL WINDOWS
     # _____________________________________________________________
     class SignUpWindow(QtWidgets.QMainWindow):
         def __init__(self):
@@ -219,7 +226,62 @@ class LoginWindow(QMainWindow):
                     f"An error occurred:\n{e}"
                 )
 
+    class ForgetPassword(QtWidgets.QMainWindow):
+        def __init__(self):
+            super().__init__()
+            ui_path = os.path.join(os.path.dirname(__file__), "ForgetPass.ui")
+            uic.loadUi(ui_path, self)
 
+            self.setFixedWidth(577)
+            self.setFixedHeight(705)
+
+            self.BackButton.clicked.connect(self.go_back)
+            self.VerifyIDButton.clicked.connect(self.verify_student_id)
+            self.VerifyCodeButton.clicked.connect(self.verify_code)
+
+            # Disable verification code until ID is validated
+            self.CodeLineEdit.setEnabled(False)
+
+        def go_back(self):
+                self.close()
+                self.login = LoginWindow()
+                self.login.show()
+
+        def verify_student_id(self):
+            uni_id = self.IDLineEdit.text().strip()
+
+            try:
+                if not uni_id:
+                    QtWidgets.QMessageBox.warning(self, "Error", "Please enter a University ID.")
+                    return
+                # Create student object
+                s = student(id=uni_id)
+
+                # Student exists → enable verification code field
+                self.CodeLineEdit.setEnabled(True)
+
+                QtWidgets.QMessageBox.information(
+                    self,
+                    "Success",
+                    "Student found. Please enter the verification code."
+                )
+
+            except:
+                QtWidgets.QMessageBox.critical(
+                    self,
+                    "Error",
+                    "Student ID not found."
+                )
+
+        def verify_code(self):
+            code = self.CodeLineEdit.text().strip()
+
+            if not code:
+                QtWidgets.QMessageBox.warning(self, "Error", "Please enter the verification code.")
+                return
+
+            # For now only display a message (you will link actual email verification later)
+            QtWidgets.QMessageBox.information(self, "Success", "Verification code accepted.")
 
 
 # _____________________________________________________________
