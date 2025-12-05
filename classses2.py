@@ -230,8 +230,16 @@ class subject:  ### Data base team said that this is currently not needed but i 
                 return True , f"Prerequisites {', '.join(prereq_list)} added to subject {self.subject_name}."
             else:
                 return False , f"Prerequisite {preq} already exists in subject {self.subject_name}."
+        else:
+            prerequisite= prerequisite.strip().upper()
+            if prerequisite not in self.prerequisites:
+                self.prerequisites.append(prerequisite)
+                courses_db.execute("UPDATE Courses SET prerequisites = ? WHERE course_code = ?", (", ".join(self.prerequisites), self.subject_name), commit=True)
+                return True , f"Prerequisite {prerequisite} added to subject {self.subject_name}."
+            else:
+                return False , f"Prerequisite {prerequisite} already exists in subject {self.subject_name}."
     def get_all_sections(self):  # to get all sections of the subject
-        row= courses_db.execute("SELECT section FROM Courses WHERE course_code = ?",(self.subject_name,),fetchall=True)
+        row= courses_db.execute("SELECT section FROM Courses WHERE course_code = ?",(self.subject_name.strip().upper(),),fetchall=True)
         if row==None or len(row)==0:
             return []
         sections= [r[0] for r in row]
