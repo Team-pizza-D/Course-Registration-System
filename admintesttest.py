@@ -118,7 +118,7 @@ class AdminWindow(QtWidgets.QMainWindow):
         super().__init__()
         ui_path = os.path.join(os.path.dirname(__file__), "Admin_Window.ui")
         uic.loadUi(ui_path, self)
-        
+        self.Tab4_SearchBar.textChanged.connect(self.filter_tab4_table)
         self.setFixedWidth(1471)
         self.setFixedHeight(966)
         self.adminName = admin_name
@@ -219,6 +219,29 @@ class AdminWindow(QtWidgets.QMainWindow):
             self.close()          # close admin window
             self.login = LoginWindow()  # return to login
             self.login.show()
+    
+    def filter_tab4_table(self):
+        text = self.Tab4_SearchBar.text().strip().lower()
+
+        table = self.StudentGradeTable_4
+        row_count = table.rowCount()
+
+        if text == "":
+            # Show all rows when search is empty
+            for row in range(row_count):
+                table.setRowHidden(row, False)
+            return
+
+        for row in range(row_count):
+            match_found = False
+
+            for col in range(table.columnCount()):
+                item = table.item(row, col)
+                if item and text in item.text().lower():
+                    match_found = True
+                    break
+
+            table.setRowHidden(row, not match_found)
 
 
     # =========================================================
@@ -302,11 +325,11 @@ class AdminWindow(QtWidgets.QMainWindow):
     # =========================================================
 
     def handle_submit_student(self):
-        self.EnrollmentMessege.setText("")
+        
 
         id_text = self.Tab2_StudentID.text().strip()
         if not id_text.isdigit():
-            self.EnrollmentMessege.setText("Please enter a valid numeric student ID.")
+            QtWidgets.QMessageBox.warning(self, "Error", "Please enter a valid numeric student ID.")
             self.clear_enrollment_tables()
             self.current_student = None
             return
@@ -315,8 +338,8 @@ class AdminWindow(QtWidgets.QMainWindow):
         stu = student(id=sid)
 
         if not stu.is_student():
-            self.EnrollmentMessege.setText(f"Student with ID {sid} not found.")
-            self.clear_enrollment_tables()
+            QtWidgets.QMessageBox.warning(self, "Error", "Please enter a valid numeric student ID.")
+            self.Tab2_StudentID.clear()
             self.current_student = None
             return
 
@@ -466,7 +489,7 @@ class AdminWindow(QtWidgets.QMainWindow):
         schedule = self.current_student.view_enrolled_subjects()
 
         if isinstance(schedule, str) or schedule is None:
-            self.EnrollmentMessege.setText(str(schedule))
+            QMessageBox.warning(self, "Unavailable", str(schedule))
             return
 
         self.current_section_map = {}
@@ -939,13 +962,13 @@ class AdminWindow(QtWidgets.QMainWindow):
 
 
     def handle_remove_section(self):
-        section_name = self.Section_SectionName_LineEdit.text().strip().upper()
+        section_name = self.Tab5_Section_SectionName.text().strip().upper()
 
         if not section_name:
             QMessageBox.warning(self, "Missing Field", "Please enter the Section Name to remove.")
             return
 
-        adm = admin(id=self.AdminID)
+        adm = admin(id=self.admin_id)
 
         ok, msg = adm.remove_section(section_name)
 
@@ -957,10 +980,10 @@ class AdminWindow(QtWidgets.QMainWindow):
 
 
     def handle_update_section(self):
-        section_name = self.Section_SectionName_LineEdit.text().strip().upper()
-        course_code = self.Section_CourseCode_LineEdit.text().strip().upper()
-        instructor_id = self.Section_InstructorID_LineEdit.text().strip()
-        capacity = self.Section_Capacity_LineEdit.text().strip()
+        section_name = self.Tab5_Section_SectionName.text().strip().upper()
+        course_code = self.Tab5_Section_CourseCord.text().strip().upper()
+        instructor_id = self.Tab5_Section_Instructor.text().strip()
+        capacity = self.Tab5_Section_Capacity.text().strip()
         start_time = self.Section_StartTime_Combo.currentText().strip()
         end_time = self.Section_EndTime_Combo.currentText().strip()
         day = self.Section_Day_Combo.currentText().strip()
@@ -977,7 +1000,7 @@ class AdminWindow(QtWidgets.QMainWindow):
         end_time = end_time if end_time else None
         day = day if day else None
 
-        adm = admin(id=self.AdminID)
+        adm = admin(id=self.admin_id)
 
         ok, msg = adm.update_section(
             course_code=course_code,
