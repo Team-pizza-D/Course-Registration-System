@@ -33,30 +33,7 @@
    <string>Login</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">/*Copyright (c) DevSec Studio. All rights reserved.
-
-MIT License
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the &quot;Software&quot;), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
-/*-----QWidget-----*/
-QWidget
+   <string notr="true">QWidget
 {
 	background-color: #00111d;
 	color: #000000;
@@ -65,88 +42,70 @@ QWidget
 }
 
 
-/*-----QLabel-----*/
-QLabel
-{
-	background-color: #00111d;
-	color: #717e87;
-	border-color: #000000;
+QPushButton {
+    height: 50px;
+    width: 120px;
+    background-color: #333;
+    border: 1px solid #404c5d;
+    color: rgb(232, 232, 232);
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+    font-size: 14px;
+    border-radius: 5px;
 
+    /* Gradient background */
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:1,
+        stop:0 #2e2d2d,
+        stop:1 #212121
+    );
+
+    padding: 5px;
 }
 
-
-/*-----QPushButton-----*/
-QPushButton
-{
-	background-color: #3de6af;
-	color: #000000;
-	border-style: solid;
-	border-color: #000000;
-	font-weight : bold;
-	padding: 13px;
-
+/* Hover */
+QPushButton:hover {
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:1,
+        stop:0 #353535,
+        stop:1 #262626
+    );
+    color: #d6d6d6;
 }
 
+/* Pressed */
+QPushButton:pressed {
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:1,
+        stop:0 #262626,
+        stop:1 #1a1a1a
+    );
+    color: #e0e0e0;
 
-QPushButton::hover
-{
-	background-color: #3dffaf;
-	color: #000000;
-	border-style: solid;
-	border-color: #000000;
-	font-weight : bold;
-	padding: 13px;
-
+    /* Slight inset effect */
+    padding-top: 7px;
+    padding-bottom: 3px;
 }
 
+QTableWidget {
+        background-color: #001622;
+        color: white;
+        font-size: 14px;
+        border: 1px solid #4c4c4c;
+    }
 
-QPushButton::pressed
-{
-	background-color: #3dc8af;
-	color: #000000;
-	border-style: solid;
-	border-color: #000000;
-	font-weight : bold;
-	padding: 13px;
+QHeaderView::section {
+        background-color: #0b2e4a;
+        color: white;
+        padding: 5px;
+        border: 1px solid #32414B;
+        font-weight: bold;
+    }
 
-}
+QTableWidget::item:selected {
+        background-color: #1e90ff;
+        color: black;
+    }
 
-
-/*-----QToolButton-----*/
-QToolButton
-{
-	background-color: #00111d;
-	color: #000000;
-	border-style: solid;
-	border-color: #000000;
-	padding: 5px;
-
-}
-
-
-QToolButton::hover
-{
-	background-color: #00111d;
-	color: #000000;
-	border-style: solid;
-	border-width: 1px;
-	border-color: #01dcff;
-
-}
-
-
-QToolButton::pressed
-{
-	background-color: #01dcff;
-	color: #000000;
-	border-style: solid;
-	border-width: 1px;
-	border-color: #01dcff;
-
-}
-
-
-/*-----QLineEdit-----*/
 QLineEdit
 {
 	background-color: #082336;
@@ -182,12 +141,15 @@ QLineEdit::focus
 
 }
 
-
-
-
-
-
-</string>
+QMessageBox {
+    color: white;
+}
+QLabel {
+    color: white;
+}
+QPushButton {
+    color: white;
+}</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="loginButton">
@@ -202,9 +164,7 @@ QLineEdit::focus
     <property name="font">
      <font>
       <family>Consolas,Courier New,monospace</family>
-      <pointsize>10</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
+      <pointsize>20</pointsize>
      </font>
     </property>
     <property name="mouseTracking">
@@ -397,10 +357,7 @@ QPushButton:pressed {
     <property name="font">
      <font>
       <family>Consolas,Courier New monospace</family>
-      <pointsize>10</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-      <underline>true</underline>
+      <pointsize>20</pointsize>
      </font>
     </property>
     <property name="mouseTracking">
@@ -418,6 +375,7 @@ QPushButton:pressed {
     font-family: Consolas, &quot;Courier New&quot;monospace;
     font-size: 12px;
     border-radius: 10px;
+	border-color: rgb(0, 17, 29);
 
     /* Gradient background */
     background: qlineargradient(
@@ -452,7 +410,7 @@ QPushButton:pressed {
     padding-top: 7px;
     padding-bottom: 3px;
 }
-</string>
+	</string>
     </property>
     <property name="text">
      <string>Sign Up</string>
@@ -471,6 +429,13 @@ QPushButton:pressed {
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <tabstops>
+  <tabstop>IDlineEdit</tabstop>
+  <tabstop>PasslineEdit</tabstop>
+  <tabstop>checkBox_show</tabstop>
+  <tabstop>loginButton</tabstop>
+  <tabstop>SignUpButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

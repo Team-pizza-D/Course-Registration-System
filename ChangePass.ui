@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>585</width>
-    <height>859</height>
+    <width>664</width>
+    <height>705</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -30,7 +30,22 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Sign Up</string>
+   <string>Change Password</string>
+  </property>
+  <property name="toolTip">
+   <string/>
+  </property>
+  <property name="statusTip">
+   <string/>
+  </property>
+  <property name="whatsThis">
+   <string/>
+  </property>
+  <property name="accessibleName">
+   <string/>
+  </property>
+  <property name="accessibleDescription">
+   <string/>
   </property>
   <property name="styleSheet">
    <string notr="true">QWidget
@@ -152,12 +167,12 @@ QPushButton {
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="CreateButton">
+   <widget class="QPushButton" name="ConfirmButton">
     <property name="geometry">
      <rect>
-      <x>240</x>
-      <y>730</y>
-      <width>131</width>
+      <x>270</x>
+      <y>600</y>
+      <width>101</width>
       <height>41</height>
      </rect>
     </property>
@@ -220,15 +235,15 @@ QPushButton:pressed {
 </string>
     </property>
     <property name="text">
-     <string>Create User</string>
+     <string>Confirm</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>280</y>
-      <width>181</width>
+      <x>80</x>
+      <y>270</y>
+      <width>221</width>
       <height>31</height>
      </rect>
     </property>
@@ -246,14 +261,14 @@ QPushButton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string>First Name</string>
+     <string>Old Password</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
       <x>80</x>
-      <y>530</y>
+      <y>360</y>
       <width>221</width>
       <height>31</height>
      </rect>
@@ -275,35 +290,12 @@ QPushButton:pressed {
      <string>New Password</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="FirstNameLineEdit">
-    <property name="geometry">
-     <rect>
-      <x>360</x>
-      <y>270</y>
-      <width>191</width>
-      <height>51</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="NewPassLineEdit">
-    <property name="geometry">
-     <rect>
-      <x>360</x>
-      <y>520</y>
-      <width>191</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="echoMode">
-     <enum>QLineEdit::Password</enum>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>240</x>
+      <x>270</x>
       <y>50</y>
-      <width>141</width>
+      <width>151</width>
       <height>151</height>
      </rect>
     </property>
@@ -311,53 +303,45 @@ QPushButton:pressed {
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../Downloads/add-user-name-1.png</pixmap>
+     <pixmap>../../Downloads/change-password-5.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
     </property>
-   </widget>
-   <widget class="QLineEdit" name="LastNameLineEdit">
-    <property name="geometry">
-     <rect>
-      <x>360</x>
-      <y>360</y>
-      <width>191</width>
-      <height>51</height>
-     </rect>
+    <property name="wordWrap">
+     <bool>false</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label_4">
+   <widget class="QCheckBox" name="checkBox_showNew">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>370</y>
-      <width>161</width>
-      <height>31</height>
+      <x>370</x>
+      <y>510</y>
+      <width>131</width>
+      <height>17</height>
      </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Consolas,Courier New,monospace</family>
-      <pointsize>20</pointsize>
-     </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">QLabel{
-    font-family: Consolas, &quot;Courier New&quot;, monospace;
-	color: rgb(232, 232, 232);
-	font: 20pt;
-}</string>
+     <string notr="true">QCheckBox
+{
+	color: #b1b1b1;
+    background-color: #00111d;
+    width: 12px;
+    height: 12px;
+
+}
+
+</string>
     </property>
     <property name="text">
-     <string>Last Name</string>
+     <string>Show Passwords</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="ConfirmPassLineEdit">
+   <widget class="QLineEdit" name="PassLineEditConfirm">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>610</y>
+      <x>370</x>
+      <y>440</y>
       <width>191</width>
       <height>51</height>
      </rect>
@@ -365,12 +349,15 @@ QPushButton:pressed {
     <property name="echoMode">
      <enum>QLineEdit::Password</enum>
     </property>
+    <property name="placeholderText">
+     <string>Repeat New Password</string>
+    </property>
    </widget>
-   <widget class="QLabel" name="label_5">
+   <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>620</y>
+      <y>450</y>
       <width>291</width>
       <height>31</height>
      </rect>
@@ -392,135 +379,27 @@ QPushButton:pressed {
      <string>Confirm Password</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="BackButton">
+   <widget class="QLineEdit" name="OldLineEdit">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>30</y>
-      <width>111</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Consolas,Courier New,monospace</family>
-      <pointsize>20</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">selection-background-color: rgb(0, 17, 28);
-alternate-background-color: rgb(0, 17, 29);
-background-color: rgb(0, 17n 29);</string>
-    </property>
-    <property name="text">
-     <string>Back</string>
-    </property>
-    <property name="icon">
-     <iconset>
-      <normaloff>../../Downloads/si--arrow-left-circle-fill.svg</normaloff>../../Downloads/si--arrow-left-circle-fill.svg</iconset>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_6">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>450</y>
-      <width>221</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Consolas,Courier New,monospace</family>
-      <pointsize>20</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QLabel{
-    font-family: Consolas, &quot;Courier New&quot;, monospace;
-	color: rgb(232, 232, 232);
-	font: 20pt;
-}</string>
-    </property>
-    <property name="text">
-     <string>Choose Major</string>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="MajorComboBox">
-    <property name="geometry">
-     <rect>
-      <x>360</x>
-      <y>440</y>
+      <x>370</x>
+      <y>260</y>
       <width>191</width>
       <height>51</height>
      </rect>
     </property>
-    <property name="styleSheet">
-     <string notr="true">QComboBox {
-    background-color: #082336;
-    color: white;
-    border: 1px solid #082336;
-	font-size: 10pt
-}
-
-QComboBox QAbstractItemView {
-    background-color: #082336;
-    color: white;
-    font-weight: bold;
-}
-
-QComboBox QAbstractItemView::item:hover {
-    background-color: #0a2d44; /* slightly lighter hover */
-}
-</string>
-    </property>
-    <item>
-     <property name="text">
-      <string>Power &amp; Machines</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Communication</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Computer</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Biomedical</string>
-     </property>
-    </item>
    </widget>
-   <widget class="QCheckBox" name="checkBox_show1">
+   <widget class="QLineEdit" name="PasslineEditNew">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>680</y>
-      <width>131</width>
-      <height>17</height>
+      <x>370</x>
+      <y>350</y>
+      <width>191</width>
+      <height>51</height>
      </rect>
     </property>
-    <property name="styleSheet">
-     <string notr="true">QCheckBox
-{
-	color: #b1b1b1;
-    background-color: #00111d;
-    width: 12px;
-    height: 12px;
-
-}
-
-</string>
-    </property>
-    <property name="text">
-     <string>Show Password</string>
+    <property name="toolTip">
+     <string extracomment="At least 1 Capital letter, 1 special character, 8 digits and NO 3 or more sequnce numbers  ">At least 1 Capital letter, 1 special character, 8 digits and NO 3 sequnce numbers  </string>
     </property>
    </widget>
   </widget>
@@ -529,7 +408,7 @@ QComboBox QAbstractItemView::item:hover {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>585</width>
+     <width>664</width>
      <height>26</height>
     </rect>
    </property>
@@ -537,12 +416,9 @@ QComboBox QAbstractItemView::item:hover {
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <tabstops>
-  <tabstop>FirstNameLineEdit</tabstop>
-  <tabstop>LastNameLineEdit</tabstop>
-  <tabstop>NewPassLineEdit</tabstop>
-  <tabstop>ConfirmPassLineEdit</tabstop>
-  <tabstop>CreateButton</tabstop>
-  <tabstop>BackButton</tabstop>
+  <tabstop>PassLineEditConfirm</tabstop>
+  <tabstop>checkBox_showNew</tabstop>
+  <tabstop>ConfirmButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>

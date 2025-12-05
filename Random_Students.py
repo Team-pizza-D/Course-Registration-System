@@ -1181,20 +1181,20 @@ def insert_grades_for_student(student_id: str, major: str, current_term: int):
 
 
 # ====== TERM 1 (starts with 26) ======
-st51 = student('2610001', 'ahmed alqahtani',   'ahmed2610001@stu.kau.edu.sa',   MAJOR_COMPUTER, database=True)
-st52 = student('2610002', 'omar alzahrani',    'omar2610002@stu.kau.edu.sa',    MAJOR_POWER, database=True)
-st53 = student('2610003', 'saad alghamdi',    'saad2610003@stu.kau.edu.sa',    MAJOR_COMM, database=True)
-st54 = student('2610004', 'ali alharbi',     'ali2610004@stu.kau.edu.sa',     MAJOR_BIO, database=True)
+st51 = student('2610001', 'ahmed alqahtani',   'ahmed2610001@stu.kau.edu.sa',   "preparatory engineering", database=True)
+st52 = student('2610002', 'omar alzahrani',    'omar2610002@stu.kau.edu.sa',    "preparatory engineering", database=True)
+st53 = student('2610003', 'saad alghamdi',    'saad2610003@stu.kau.edu.sa',    "preparatory engineering", database=True)
+st54 = student('2610004', 'ali alharbi',     'ali2610004@stu.kau.edu.sa',     "preparatory engineering", database=True)
 
-st55 = student('2610005', 'khalid alotaibi',  'khalid2610005@stu.kau.edu.sa',  MAJOR_COMPUTER, database=True)
-st56 = student('2610006', 'fahad almalki',   'fahad2610006@stu.kau.edu.sa',   MAJOR_POWER, database=True)
-st57 = student('2610007', 'sultan alshammari',  'sultan2610007@stu.kau.edu.sa',  MAJOR_COMM, database=True)
-st58 = student('2610008', 'yousef alsubaie',  'yousef2610008@stu.kau.edu.sa',  MAJOR_BIO, database=True)
+st55 = student('2610005', 'khalid alotaibi',  'khalid2610005@stu.kau.edu.sa',  "preparatory engineering", database=True)
+st56 = student('2610006', 'fahad almalki',   'fahad2610006@stu.kau.edu.sa',   "preparatory engineering", database=True)
+st57 = student('2610007', 'sultan alshammari',  'sultan2610007@stu.kau.edu.sa',  "preparatory engineering", database=True)
+st58 = student('2610008', 'yousef alsubaie',  'yousef2610008@stu.kau.edu.sa',  "preparatory engineering", database=True)
 
-st59 = student('2610009', 'ibrahim almansour', 'ibrahim2610009@stu.kau.edu.sa', MAJOR_COMPUTER, database=True)
-st60 = student('2610010', 'nasser alenzi',  'nasser2610010@stu.kau.edu.sa',  MAJOR_POWER, database=True)
-st61 = student('2610011', 'turki alqarni',   'turki2610011@stu.kau.edu.sa',   MAJOR_COMM, database=True)
-st62 = student('2610012', 'hamad aldosari',   'hamad2610012@stu.kau.edu.sa',   MAJOR_BIO, database=True)
+st59 = student('2610009', 'ibrahim almansour', 'ibrahim2610009@stu.kau.edu.sa', "preparatory engineering", database=True)
+st60 = student('2610010', 'nasser alenzi',  'nasser2610010@stu.kau.edu.sa',  "preparatory engineering", database=True)
+st61 = student('2610011', 'turki alqarni',   'turki2610011@stu.kau.edu.sa',   "preparatory engineering", database=True)
+st62 = student('2610012', 'hamad aldosari',   'hamad2610012@stu.kau.edu.sa',   "preparatory engineering", database=True)
 
 term1_students = [st51, st52, st53, st54, st55, st56, st57, st58, st59, st60, st61, st62]
 t1 = {}
@@ -1202,20 +1202,20 @@ for i in term1_students:
     t1[i.return_id()]=1
 
 # ====== TERM 2 (starts with 26) ======
-st63 = student('2620001', 'majed alqahtani',    'majed2620001@stu.kau.edu.sa',    MAJOR_COMPUTER, database=True)
-st64 = student('2620002', 'anas alzahrani',     'anas2620002@stu.kau.edu.sa',     MAJOR_POWER, database=True)
-st65 = student('2620003', 'rayan alghamdi',    'rayan2620003@stu.kau.edu.sa',    MAJOR_COMM, database=True)
-st66 = student('2620004', 'salem alharbi',    'salem2620004@stu.kau.edu.sa',    MAJOR_BIO, database=True)
+st63 = student('2620001', 'majed alqahtani',    'majed2620001@stu.kau.edu.sa',    "preparatory engineering", database=True)
+st64 = student('2620002', 'anas alzahrani',     'anas2620002@stu.kau.edu.sa',     "preparatory engineering", database=True)
+st65 = student('2620003', 'rayan alghamdi',    'rayan2620003@stu.kau.edu.sa',    "preparatory engineering", database=True)
+st66 = student('2620004', 'salem alharbi',    'salem2620004@stu.kau.edu.sa',    "preparatory engineering", database=True)
 
-st67 = student('2620005', 'hassan alotaibi',   'hassan2620005@stu.kau.edu.sa',   MAJOR_COMPUTER, database=True)
-st68 = student('2620006', 'hadi almalki',     'hadi2620006@stu.kau.edu.sa',     MAJOR_POWER, database=True)
-st69 = student('2620007', 'bandar alshammari',   'bandar2620007@stu.kau.edu.sa',   MAJOR_COMM, database=True)
-st70 = student('2620008', 'talal alsubaie',    'talal2620008@stu.kau.edu.sa',    MAJOR_BIO, database=True)
+st67 = student('2620005', 'hassan alotaibi',   'hassan2620005@stu.kau.edu.sa',   "preparatory engineering", database=True)
+st68 = student('2620006', 'hadi almalki',     'hadi2620006@stu.kau.edu.sa',     "preparatory engineering", database=True)
+st69 = student('2620007', 'bandar alshammari',   'bandar2620007@stu.kau.edu.sa',   "preparatory engineering", database=True)
+st70 = student('2620008', 'talal alsubaie',    'talal2620008@stu.kau.edu.sa',    "preparatory engineering", database=True)
 
-st71 = student('2620009', 'nawaf alenzi',    'nawaf2620009@stu.kau.edu.sa',    MAJOR_COMPUTER, database=True)
-st72 = student('2620010', 'mohammed almansour', 'mohammed2620010@stu.kau.edu.sa', MAJOR_POWER, database=True)
-st73 = student('2620011', 'abdullah alqarni', 'abdullah2620011@stu.kau.edu.sa', MAJOR_COMM, database=True)
-st74 = student('2620012', 'yazeed aldosari',   'yazeed2620012@stu.kau.edu.sa',   MAJOR_BIO, database=True)
+st71 = student('2620009', 'nawaf alenzi',    'nawaf2620009@stu.kau.edu.sa',    "preparatory engineering", database=True)
+st72 = student('2620010', 'mohammed almansour', 'mohammed2620010@stu.kau.edu.sa', "preparatory engineering", database=True)
+st73 = student('2620011', 'abdullah alqarni', 'abdullah2620011@stu.kau.edu.sa', "preparatory engineering", database=True)
+st74 = student('2620012', 'yazeed aldosari',   'yazeed2620012@stu.kau.edu.sa',   "preparatory engineering", database=True)
 
 term2_students = [st63, st64, st65, st66, st67, st68, st69, st70, st71, st72, st73, st74]
 t2 = {}
@@ -1223,20 +1223,20 @@ for i in term2_students:
     t2[i.return_id()]=2
 
 # ====== TERM 3 (starts with 25) ======
-st75 = student('2510001', 'ahmed alhazmi',   'ahmed2510001@stu.kau.edu.sa',   MAJOR_COMPUTER, database=True)
-st76 = student('2510002', 'omar alothman',    'omar2510002@stu.kau.edu.sa',    MAJOR_POWER, database=True)
-st77 = student('2510003', 'saad aljuhani',    'saad2510003@stu.kau.edu.sa',    MAJOR_COMM, database=True)
-st78 = student('2510004', 'ali alsaidi',     'ali2510004@stu.kau.edu.sa',     MAJOR_BIO, database=True)
+st75 = student('2510001', 'ahmed alhazmi',   'ahmed2510001@stu.kau.edu.sa',   "preparatory engineering", database=True)
+st76 = student('2510002', 'omar alothman',    'omar2510002@stu.kau.edu.sa',    "preparatory engineering", database=True)
+st77 = student('2510003', 'saad aljuhani',    'saad2510003@stu.kau.edu.sa',    "preparatory engineering", database=True)
+st78 = student('2510004', 'ali alsaidi',     'ali2510004@stu.kau.edu.sa',     "preparatory engineering", database=True)
 
-st79 = student('2510005', 'khalid alenzi',  'khalid2510005@stu.kau.edu.sa',  MAJOR_COMPUTER, database=True)
-st80 = student('2510006', 'fahad alshahrani',   'fahad2510006@stu.kau.edu.sa',   MAJOR_POWER, database=True)
-st81 = student('2510007', 'sultan alqahtani',  'sultan2510007@stu.kau.edu.sa',  MAJOR_COMM, database=True)
-st82 = student('2510008', 'yousef alharbi',  'yousef2510008@stu.kau.edu.sa',  MAJOR_BIO, database=True)
+st79 = student('2510005', 'khalid alenzi',  'khalid2510005@stu.kau.edu.sa',  "preparatory engineering", database=True)
+st80 = student('2510006', 'fahad alshahrani',   'fahad2510006@stu.kau.edu.sa',   "preparatory engineering", database=True)
+st81 = student('2510007', 'sultan alqahtani',  'sultan2510007@stu.kau.edu.sa',  "preparatory engineering", database=True)
+st82 = student('2510008', 'yousef alharbi',  'yousef2510008@stu.kau.edu.sa',  "preparatory engineering", database=True)
 
-st83 = student('2510009', 'ibrahim alghamdi', 'ibrahim2510009@stu.kau.edu.sa', MAJOR_COMPUTER, database=True)
-st84 = student('2510010', 'nasser aldosari',  'nasser2510010@stu.kau.edu.sa',  MAJOR_POWER, database=True)
-st85 = student('2510011', 'turki almutairi',   'turki2510011@stu.kau.edu.sa',   MAJOR_COMM, database=True)
-st86 = student('2510012', 'hamad alruwais',   'hamad2510012@stu.kau.edu.sa',   MAJOR_BIO, database=True)
+st83 = student('2510009', 'ibrahim alghamdi', 'ibrahim2510009@stu.kau.edu.sa', "preparatory engineering", database=True)
+st84 = student('2510010', 'nasser aldosari',  'nasser2510010@stu.kau.edu.sa',  "preparatory engineering", database=True)
+st85 = student('2510011', 'turki almutairi',   'turki2510011@stu.kau.edu.sa',   "preparatory engineering", database=True)
+st86 = student('2510012', 'hamad alruwais',   'hamad2510012@stu.kau.edu.sa',   "preparatory engineering", database=True)
 
 term3_students = [st75, st76, st77, st78, st79, st80, st81, st82, st83, st84, st85, st86]
 t3 = {}
@@ -1244,20 +1244,20 @@ for i in term3_students:
     t3[i.return_id()]=3
 
 # ====== TERM 4 (starts with 25) ======
-st87 = student('2520001', 'majed alenzi',    'majed2520001@stu.kau.edu.sa',    MAJOR_COMPUTER, database=True)
-st88 = student('2520002', 'anas alqahtani',     'anas2520002@stu.kau.edu.sa',     MAJOR_POWER, database=True)
-st89 = student('2520003', 'rayan alshahrani',    'rayan2520003@stu.kau.edu.sa',    MAJOR_COMM, database=True)
-st90 = student('2520004', 'salem alotaibi',    'salem2520004@stu.kau.edu.sa',    MAJOR_BIO, database=True)
+st87 = student('2520001', 'majed alenzi',    'majed2520001@stu.kau.edu.sa',    "preparatory engineering", database=True)
+st88 = student('2520002', 'anas alqahtani',     'anas2520002@stu.kau.edu.sa',     "preparatory engineering", database=True)
+st89 = student('2520003', 'rayan alshahrani',    'rayan2520003@stu.kau.edu.sa',    "preparatory engineering", database=True)
+st90 = student('2520004', 'salem alotaibi',    'salem2520004@stu.kau.edu.sa',    "preparatory engineering", database=True)
 
-st91  = student('2520005', 'hassan alghamdi',   'hassan2520005@stu.kau.edu.sa',   MAJOR_COMPUTER, database=True)
-st92  = student('2520006', 'hadi alharbi',     'hadi2520006@stu.kau.edu.sa',     MAJOR_POWER, database=True)
-st93  = student('2520007', 'bandar almansour',   'bandar2520007@stu.kau.edu.sa',   MAJOR_COMM, database=True)
-st94  = student('2520008', 'talal aldosari',    'talal2520008@stu.kau.edu.sa',    MAJOR_BIO, database=True)
+st91  = student('2520005', 'hassan alghamdi',   'hassan2520005@stu.kau.edu.sa',   "preparatory engineering", database=True)
+st92  = student('2520006', 'hadi alharbi',     'hadi2520006@stu.kau.edu.sa',     "preparatory engineering", database=True)
+st93  = student('2520007', 'bandar almansour',   'bandar2520007@stu.kau.edu.sa',   "preparatory engineering", database=True)
+st94  = student('2520008', 'talal aldosari',    'talal2520008@stu.kau.edu.sa',    "preparatory engineering", database=True)
 
-st95  = student('2520009', 'nawaf almutairi',    'nawaf2520009@stu.kau.edu.sa',    MAJOR_COMPUTER, database=True)
-st96  = student('2520010', 'mohammed aljuhani', 'mohammed2520010@stu.kau.edu.sa', MAJOR_POWER, database=True)
-st97  = student('2520011', 'abdullah alqarni', 'abdullah2520011@stu.kau.edu.sa', MAJOR_COMM, database=True)
-st98  = student('2520012', 'yazeed alhazmi',   'yazeed2520012@stu.kau.edu.sa',   MAJOR_BIO, database=True)
+st95  = student('2520009', 'nawaf almutairi',    'nawaf2520009@stu.kau.edu.sa',    "preparatory engineering", database=True)
+st96  = student('2520010', 'mohammed aljuhani', 'mohammed2520010@stu.kau.edu.sa', "preparatory engineering", database=True)
+st97  = student('2520011', 'abdullah alqarni', 'abdullah2520011@stu.kau.edu.sa', "preparatory engineering", database=True)
+st98  = student('2520012', 'yazeed alhazmi',   'yazeed2520012@stu.kau.edu.sa',   "preparatory engineering", database=True)
 
 term4_students = [st87, st88, st89, st90, st91, st92, st93, st94, st95, st96, st97, st98]
 t4 = {}

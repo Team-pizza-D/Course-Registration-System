@@ -1,6 +1,7 @@
 import random
 import sqlite3
 import os
+import bcrypt
 
 
 
@@ -99,6 +100,9 @@ class user:
             return True
         else:
             return False
+
+    def return_id(self):
+        return self.id
 
     def is_student(self):  # to check if user is student
         # This will later be known by which table is the information in (student or admin)
@@ -696,7 +700,7 @@ class student(user):
         self.enrolled_subjects = enrolled_subjects if enrolled_subjects is not None else [] # list of section codes the student is currently enrolled in
         self.completed_subjects = completed_subjects if completed_subjects is not None else []  # list of subject codes the student has completed
         self.current_credits = 0 ### total credits of current enrolled subjects for checking max credits allowed per semester not current total subjects
-        # self.email = f"{self.username}{self.Id}@kau.edu.sa" if email is None else email
+        # self.email = f"{self.username}{self.id}@stu.kau.edu.sa" if email is None else email
         majors_row=users_db.execute("SELECT major fROM students WHERE id = ?", (self.id,), fetchone=True)
         if  self.is_student():
             self.major=majors_row[0]
@@ -707,12 +711,13 @@ class student(user):
         ### set database to true if you want to insert this student into database upon creation
         ### eg. student = student("azad", database=True)
         if self.database:
-            super().__init__(username, password, email, id)
+            # super().__init__(username, password, email, id) ### I closed this (Abdulaziz)
             self.major=major
+            hash_pass = bcrypt.hashpw(self.password.encode(), bcrypt.gensalt()).decode()
             try:
                 users_db.execute(
-                    "INSERT INTO students (username, password, email, id,major,term) VALUES (?, ?, ?, ?, ?, ?)",
-                    (self.username, self.password, self.email, self.id,self.major,1),
+                    "INSERT INTO students (username, password, email, id, major, term, hashed_password) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (self.username, self.password, self.email, self.id, self.major, 1, hash_pass),
                     commit=True,
                     )
             except sqlite3.IntegrityError:
@@ -1380,9 +1385,64 @@ class admin(user):
         if prerequisites is not None:
             courses_db.execute("UPDATE Courses SET prerequisites = ? WHERE course_code = ?", (prerequisites, course_code), commit=True)
         return True , f"Course {course_code} updated successfully."
-        
+    
+
+# _______________________________________________________________________________________________________________
+
+def is_special(ch): # this is for password ensuring it has a special character
+    return not ch.isalnum()
+
+def has_sequence(chars, length=3):
+    digits = [int(c) for c in chars if c.isdigit()]
+    if len(digits) < length:
+        return False
+
+    streak = 1
+    for i in range(1, len(digits)):
+        if digits[i] == digits[i - 1] + 1:
+            streak += 1
+            if streak >= length:
+                return True
+        else:
+            streak = 1
+    return False
 
 
+def enforce_strong_password(new_password): # this method is checking the new password is strong enough (for new students)
+    new_password_splited = list(new_password)
+    cond1 = any(is_special(ch) for ch in new_password_splited) # First condition to have at least one character
+
+    cond2 = len(new_password_splited) >= 8 # Second condition to have at least 8 letters
+
+    cond3 = not has_sequence(new_password_splited) # Third condition to not have 3 numbers in a row
+    
+    cond4 = any(ch.isupper() for ch in new_password_splited) # Forth condition to have at least one capital letter
+
+    return cond1 and cond2 and cond3 and cond4
+
+def signup(FN, LN, Npassword, M): # FN = first name , LN = last name
+    db = sqlite3.connect("Users.db")
+    cr = db.cursor()
+    cr.execute("SELECT id FROM students WHERE term = ?", (1,))
+    FYID1 = cr.fetchall()
+
+    cr.execute("SELECT id FROM students WHERE term = ?", (2,))
+    FYID2 = cr.fetchall()
+
+    All_ids_FY2 = [x[0] for x in FYID2]
+    All_ids_FY1 = [x[0] for x in FYID1]
+    All_ids_FY = All_ids_FY1 + All_ids_FY2
+    highest_id = (max(All_ids_FY))
+    stu_id = int(highest_id) + 1
+
+    
+    Tusername = FN.strip() + " " + LN.strip()
+    s = student(id = stu_id, username=Tusername, major=M, email= f"{FN}{stu_id}@stu.kau.edu.sa", password=Npassword, database=True)
+
+    db.commit()
+    db.close()
+
+    return s
 
 # Example test (from original file) - commented to avoid running automatically
 # st1 = student('ABDULAZIZ', 1234, 'Electrical communication and electronics engineering', Id=2490248)

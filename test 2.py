@@ -11,9 +11,11 @@ from classses2 import admin, student,section,subject,instructor,Database, user
 # cr.execute("CREATE TABLE IF NOT EXISTS enrollments (section TEXT, instructor TEXT, course TEXT, student_id TEXT, student_name TEXT, time TEXT, credit TEXT)")
 # db.commit()
 # db.close()
-# tariq = student( id=2430020)
+tariq = student( id=2430020)
 # print("--------------------------------")
 # print(tariq.view_available_subjects())
+print(tariq.email)
+print(tariq.display_info())
 # print("--------------------------------")
 # print(tariq.view_enrolled_subjects())
 # print("--------------------------------")
@@ -331,3 +333,31 @@ def enforce_strong_password(new_password): # this method is checking the new pas
     cond4 = any(ch.isupper() for ch in new_password_splited) # Forth condition to have at least one capital letter
 
     return cond1 and cond2 and cond3 and cond4
+
+
+def signup(FN, LN, Npassword): # FN = first name , LN = last name
+    db = sqlite3.connect("Users.db")
+    cr = db.cursor()
+    cr.execute("SELECT id FROM students WHERE term = ?", (1,))
+    FYID1 = cr.fetchall()
+
+    cr.execute("SELECT id FROM students WHERE term = ?", (2,))
+    FYID2 = cr.fetchall()
+
+    All_ids_FY2 = [x[0] for x in FYID2]
+    All_ids_FY1 = [x[0] for x in FYID1]
+    All_ids_FY = All_ids_FY1 + All_ids_FY2
+    highest_id = (max(All_ids_FY))
+    stu_id = int(highest_id) + 1
+
+    Tusername = FN.strip() + " " + LN.strip()
+    s = student(id = stu_id, username=Tusername,email= f"{FN}{stu_id}@stu.kau.edu.sa", password=Npassword, major="preparatory engineering", database=True)
+
+    db.commit()
+    db.close()
+        
+# a = input()
+# b = input()
+# c = input()
+# signup(a,b,c)
+

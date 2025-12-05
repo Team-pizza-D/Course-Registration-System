@@ -1,10 +1,11 @@
 import sys
 import os
 import sqlite3
+import bcrypt
 from PyQt5 import uic, QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QShortcut
 from PyQt5.QtGui import QKeySequence
-from classses2 import Database,  student, admin, user, subject, section, instructor
+from classses2 import Database,  student, admin, user, subject, section, instructor, enforce_strong_password, signup
 
 
 # _____________________________________________________________
@@ -26,6 +27,7 @@ class LoginWindow(QMainWindow):
         QShortcut(QKeySequence("Enter"), self, self.loginButton.click)
 
         self.checkBox_show.stateChanged.connect(self.toggle_password)
+
 
     def toggle_password(self):
         if self.checkBox_show.isChecked():
@@ -108,47 +110,116 @@ class LoginWindow(QMainWindow):
 
     def signupfunction(self):
         self.hide()
-        self.signup_window = SignUpWindow()
+        self.signup_window = self.SignUpWindow()
         self.signup_window.show()
         self.signup_window.destroyed.connect(self.show)
 
 
-# _____________________________________________________________
-#                        SIGN UP WINDOW
-# _____________________________________________________________
-class SignUpWindow(QtWidgets.QMainWindow):
-    def __init__(self):
-        super().__init__()
-        ui_path = os.path.join(os.path.dirname(__file__), "SignUp.ui")
-        uic.loadUi(ui_path, self)
+    # _____________________________________________________________
+    #                        SIGN UP WINDOW
+    # _____________________________________________________________
+    class SignUpWindow(QtWidgets.QMainWindow):
+        def __init__(self):
+            super().__init__()
+            ui_path = os.path.join(os.path.dirname(__file__), "SignUp.ui")
+            uic.loadUi(ui_path, self)
 
-        self.setFixedWidth(585)
-        self.setFixedHeight(820)
-        self.checkBox_show1.stateChanged.connect(self.toggle_password)
-        self.checkBox_show2.stateChanged.connect(self.toggle_password)
-        self.BackButton.clicked.connect(self.go_back)
+            self.setFixedWidth(585)
+            self.setFixedHeight(820)
 
-        # Example: You can rename SignUp button inside SignUp.ui if needed
-        # self.CreateButton.clicked.connect(self.create_account)
+            self.checkBox_show1.stateChanged.connect(self.toggle_password)
+            self.BackButton.clicked.connect(self.go_back)
 
-    def toggle_password(self):
-        if self.checkBox_show1.isChecked():
-            self.NewPassLineEdit.setEchoMode(QtWidgets.QLineEdit.Normal)
-        else:
-            self.NewPassLineEdit.setEchoMode(QtWidgets.QLineEdit.Password)
-        if self.checkBox_show2.isChecked():
-            self.ConfirmPassLineEdit.setEchoMode(QtWidgets.QLineEdit.Normal)
-        else:
-            self.ConfirmPassLineEdit.setEchoMode(QtWidgets.QLineEdit.Password)
+            # CONNECT SIGNUP BUTTON
+            self.CreateButton.clicked.connect(self.process_signup)
 
-    def go_back(self):
-            self.close()
-            self.login = LoginWindow()
-            self.login.show()
+        def toggle_password(self):
+            if self.checkBox_show1.isChecked():
+                self.NewPassLineEdit.setEchoMode(QtWidgets.QLineEdit.Normal)
+                self.ConfirmPassLineEdit.setEchoMode(QtWidgets.QLineEdit.Normal)
+            else:
+                self.NewPassLineEdit.setEchoMode(QtWidgets.QLineEdit.Password)
+                self.ConfirmPassLineEdit.setEchoMode(QtWidgets.QLineEdit.Password)
 
-    def create_account(self):
-        # TODO — Write your signup logic here
-        QtWidgets.QMessageBox.information(self, "Success", "Account created successfully!")
+        def go_back(self):
+                self.close()
+                self.login = LoginWindow()
+                self.login.show()
+
+        # _____________________________________________________________
+        #                SIGN UP PROCESS USING signup()
+        # _____________________________________________________________
+
+        def process_signup(self):
+            FN = self.FirstNameLineEdit.text().strip()
+            LN = self.LastNameLineEdit.text().strip()
+            new_pass = self.NewPassLineEdit.text().strip()
+            confirm_pass = self.ConfirmPassLineEdit.text().strip()
+
+            MAJOR_MAP = {
+                "Power & Machines" : "Electrical power and machines engineering",
+                "Communication" : "Electrical communication and electronics engineering",
+                "Computer" : "Electrical computer engineering",
+                "Biomedical" : "Electrical biomedical engineering"
+            }
+
+
+            # ========== CHECK EMPTY FIELDS ==========
+            if not FN or not LN or not new_pass or not confirm_pass:
+                QtWidgets.QMessageBox.warning(self, "Error", "All fields are required.")
+                return
+
+            # ========== CHECK PASSWORD MATCH ==========
+            if new_pass != confirm_pass:
+                QtWidgets.QMessageBox.warning(self, "Error", "Passwords do not match.")
+                return
+
+            # ========== CHECK PASSWORD STRENGTH ==========
+            from classses2 import enforce_strong_password, signup
+
+            if not enforce_strong_password(new_pass):
+                QtWidgets.QMessageBox.warning(
+                    self,
+                    "Weak Password",
+                    "Password must:\n"
+                    "- Have 1 special character\n"
+                    "- Be at least 8 characters\n"
+                    "- Contain an uppercase letter\n"
+                    "- Not contain 3 consecutive numbers"
+                )
+                return
+            
+
+            # ===== GET SELECTED MAJOR =====
+            selected_major_ui = self.MajorComboBox.currentText()
+            if selected_major_ui not in MAJOR_MAP:
+                QtWidgets.QMessageBox.warning(self, "Error", "Please select a valid major.")
+                return
+            
+            selected_major = MAJOR_MAP[selected_major_ui]
+
+            
+            # ========== PERFORM SIGNUP ==========
+            try:
+                lines = signup(FN, LN, new_pass, selected_major)
+                QtWidgets.QMessageBox.information(
+                    self,
+                    "Success",
+                    "Account created successfully! You may now log in."
+                    f"\nYour University ID is: {lines.return_id()}"
+                )
+                self.close()
+                self.login = LoginWindow()
+                self.login.show()
+
+            except Exception as e:
+                QtWidgets.QMessageBox.critical(
+                    self,
+                    "Signup Failed",
+                    f"An error occurred:\n{e}"
+                )
+
+
 
 
 # _____________________________________________________________
@@ -174,6 +245,8 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.AcademicRadio.setChecked(True)
         self.WeeklySchTable.hide()
         self.SignOutButton.clicked.connect(self.sign_out)
+        self.ChangePassButton.clicked.connect(self.open_change_pass)
+
         
       
         # Call the GPA function from classses2.py
@@ -291,6 +364,10 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.load_weekly_schedule()
         self.load_total_credit() 
    
+    def open_change_pass(self):
+        self.change_pass_window = self.ChangePassWindow(self.student_id)
+        self.change_pass_window.show()
+
     # __________Transcript Tab__________
     def load_info_table(self):
         # Prepare table
@@ -982,10 +1059,9 @@ class StudentWindow(QtWidgets.QMainWindow):
         # ---------------- Term Table ----------------
         self.TermTable.setRowCount(1)
         self.TermTable.setColumnCount(1)
-        self.TermTable.setHorizontalHeaderLabels(["Term"])
+        self.TermTable.setHorizontalHeaderLabels(["Current Term"])
 
         # Fetch term from database
-        import sqlite3
         conn = sqlite3.connect("Users.db")
         cur = conn.cursor()
         row = cur.execute("SELECT term FROM students WHERE id = ?", (s.id,)).fetchone()
@@ -999,13 +1075,84 @@ class StudentWindow(QtWidgets.QMainWindow):
         self.TermTable.verticalHeader().setVisible(False)
         self.TermTable.horizontalHeader().setStretchLastSection(True)
 
+    # _____________________________________________________________
+    #                      CHANGE PASSWORD WINDOW
+    # _____________________________________________________________
+    class ChangePassWindow(QtWidgets.QMainWindow):
+        def __init__(self, student_id):
+            super().__init__()
+            ui_path = os.path.join(os.path.dirname(__file__), "ChangePass.ui")
+            uic.loadUi(ui_path, self)
+
+            self.setFixedWidth(664)
+            self.setFixedHeight(705)
+
+            # Store student ID
+            self.student_id = student_id
+
+            # Toggle password visibility
+            self.checkBox_showNew.stateChanged.connect(self.toggle_password)
+
+            # Confirm button
+            self.ConfirmButton.clicked.connect(self.process_password_change)
+
+            # ENTER key triggers confirm
+            QShortcut(QKeySequence("Return"), self, self.ConfirmButton.click)
+            QShortcut(QKeySequence("Enter"), self, self.ConfirmButton.click)
 
 
+        def toggle_password(self):
+            mode = QtWidgets.QLineEdit.Normal if self.checkBox_showNew.isChecked() else QtWidgets.QLineEdit.Password
+            self.OldLineEdit.setEchoMode(mode)
+            self.PasslineEditNew.setEchoMode(mode)
+            self.PassLineEditConfirm.setEchoMode(mode)
 
 
+        def process_password_change(self):
+            old_pass = self.OldLineEdit.text().strip()
+            new_pass = self.PasslineEditNew.text().strip()
+            confirm_pass = self.PassLineEditConfirm.text().strip()
+
+            # Empty fields check
+            if not old_pass or not new_pass or not confirm_pass:
+                QtWidgets.QMessageBox.warning(self, "Error", "All fields are required.")
+                return
 
 
+            if enforce_strong_password(new_pass):
+                # Match check
+                if new_pass != confirm_pass:
+                    QtWidgets.QMessageBox.warning(self, "Error", "New password and confirmation do not match.")
+                    return
 
+                # Student object
+                stu = student(self.student_id)
+
+                # Verify old password
+                if not stu.correct_password(old_pass):
+                    QtWidgets.QMessageBox.warning(self, "Error", "Old password is incorrect.")
+                    return
+                # Change password using classses2.py
+                ok, msg = stu.change_password(old_pass, new_pass)
+
+                if ok:
+                    QtWidgets.QMessageBox.information(self, "Success", msg)
+                    self.close()
+                else:
+                    QtWidgets.QMessageBox.warning(self, "Error", msg)
+            else: 
+                QtWidgets.QMessageBox.warning(
+                    self,
+                    "Weak Password",
+                    "Password must:\n"
+                    "- Have 1 special character\n"
+                    "- Be at least 8 characters\n"
+                    "- Contain an uppercase letter\n"
+                    "- Not contain 3 consecutive numbers"
+                )
+                return
+
+            
 # _____________________________________________________________
 #                        ADMIN WINDOW
 # _____________________________________________________________
