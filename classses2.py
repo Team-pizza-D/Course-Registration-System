@@ -848,7 +848,10 @@ class student(user):
             available_sections = [r[0] for r in row]
             enrolled_row = users_db.execute("SELECT section FROM enrollments WHERE student_id = ?", (self.id,), fetchall=True)
             enrolled_sections = [r[0] for r in enrolled_row]
-            available_sections = [sec for sec in available_sections if sec not in enrolled_sections]
+            completed_row = users_db.execute("SELECT course FROM grades WHERE student_id = ?", (self.id,), fetchall=True)
+            completed_courses = [r[0].strip().upper() for r in completed_row] 
+            available_sections = [sec for sec in available_sections if sec not in enrolled_sections and sec not in completed_courses]
+            
             all_available = {}
             for section in available_sections:
                 course_row = courses_db.execute("SELECT course_code, instructor ,section,time,credit FROM Courses WHERE section = ?", (section,), fetchone=True)
@@ -1132,6 +1135,7 @@ class admin(user):
         pass
 
     def expand_capacity(self, section_code, new_capacity):  # to expand section capacity
+        section_code=section_code.strip().upper()
         sec=section(section_name=section_code)
         massege= sec.new_capacity(new_capacity)
         return massege
@@ -1336,7 +1340,7 @@ class admin(user):
         end_hour = int(end_time_list[0])
         if start_hour == end_hour:
             return False , "Start time and end time cannot be the same."
-        elif start_hour < end_hour:
+        elif start_hour > end_hour:
             return False , "The lecture time conflict with non-academic commitments."
         elif start_hour - end_hour > 3:
             return False , "Lecture duration cannot exceed 3 hours."
@@ -1368,6 +1372,8 @@ class admin(user):
                 return False , f"Course with code {course_code} does not exist."
             courses_db.execute("UPDATE Courses SET course_code = ? WHERE section = ?", (course_code, section_name), commit=True)
         if capacity is not None:
+           if capacity<=0:
+                return False , "Capacity must be a positive integer."
            sect.new_capacity(capacity)
         if instructor_id is not None:
             if not instructor(instructor_id.strip()).is_existing():
