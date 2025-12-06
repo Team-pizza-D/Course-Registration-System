@@ -2,7 +2,7 @@ import random
 import sqlite3
 import os
 import bcrypt
-from numpy import diff
+
 
 
 
@@ -1277,20 +1277,19 @@ class admin(user):
                 return False , "Credit must be a positive integer."
             elif int(credit)<=0:
                 return False , "Credit must be a positive integer."
-            courses_db.execute("UPDATE Courses SET credit = ? WHERE course_code = ?", (int(credit), course_code), commit=True)
-        if course_name is not None:
-            courses_db.execute("UPDATE Courses SET course_name = ? WHERE course_code = ?", (course_name, course_code), commit=True)
+        
+            
         if sections is not None:
             sec=sections.strip().upper()
             if section(sec).section_is_existing():
                 return False , f"Section {sec} already exists."
-            courses_db.execute("UPDATE Courses SET section = ? WHERE course_code = ?", (sec, course_code), commit=True)
+            
         if term is not None:
             if not term.isdigit():
                 return False , "Term must be a positive integer."
             elif not 10>=int(term)>=1:
                 return False , "Term must be between 1 and 10."
-            courses_db.execute("UPDATE Courses SET term = ? WHERE course_code = ?", (int(term), course_code), commit=True)
+            
         if prerequisites is not None:
             if "," in prerequisites:
                 prereq_list=[prereq.strip().upper() for prereq in prerequisites.split(",")]
@@ -1301,6 +1300,14 @@ class admin(user):
                 if not pre_sub.is_existing():
                     return False , f"Prerequisite course with code {prereq} does not exist."
             courses_db.execute("UPDATE Courses SET prerequisites = ? WHERE course_code = ?", (prerequisites, course_code), commit=True)
+        if sections is not None:courses_db.execute("UPDATE Courses SET section = ? WHERE course_code = ?", (sec, course_code), commit=True)
+            
+        if course_name is not None:courses_db.execute("UPDATE Courses SET course_name = ? WHERE course_code = ?", (course_name, course_code), commit=True)
+        
+        if credit is not None:courses_db.execute("UPDATE Courses SET credit = ? WHERE course_code = ?", (int(credit), course_code), commit=True)
+
+        if term is not None:courses_db.execute("UPDATE Courses SET term = ? WHERE course_code = ?", (int(term), course_code), commit=True)
+
         return True , f"Course with code {course_code} updated successfully." ### what if this course has multiple sections? we see later
     
     def rewrite_add_section(self,course_code=None,section_name=None,instructor_id=None,capacity=None,start_time=None,end_time=None,day=None):
@@ -1392,7 +1399,7 @@ class admin(user):
                 return False , "Lecture duration cannot exceed 3 hours."
             time = f"{day_code} {start_time}-{end_time}"
             courses_db.execute("UPDATE Courses SET time = ? WHERE course_code = ? AND section = ?", (time, course_code, sec), commit=True)
-            return True , f"Section {sec} for course {course_code} updated successfully."
+        return True , f"Section {sec} for course {course_code} updated successfully."
 
         
         
@@ -1604,8 +1611,20 @@ class admin(user):
         if prerequisites is not None:
             courses_db.execute("UPDATE Courses SET prerequisites = ? WHERE course_code = ?", (prerequisites, course_code), commit=True)
         return True , f"Course {course_code} updated successfully."
-    
+    def get_table_data_optimized(self, plane, term):
+        if plane == "Electrical communication and electronics engineering":
+            plane="communication"
+        elif plane == "Electrical computer engineering":
+            plane="computer"
+        elif plane == "Electrical power and machines engineering":
+            plane="power"
+        elif plane == "Electrical biomedical engineering":
+            plane="biomedical"
+        ### now we bring (section, capacity, instructor, credit, time) from Courses table for each course_code
+        row= courses_db.execute("SELECT course_code, section, capacity, instructor, credit, time FROM Courses WHERE course_code IN (SELECT course_code FROM {plane} WHERE terms = ?)".format(plane=plane), (term,), fetchall=True)
 
+        return row
+        
 # _______________________________________________________________________________________________________________
 
 def is_special(ch): # this is for password ensuring it has a special character
