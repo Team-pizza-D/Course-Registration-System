@@ -73,7 +73,7 @@ class LoginWindow(QMainWindow):
         self.main_window.show()
 
 def generate_start_times():
-    times = []
+    times = [None]
     hour = 8
     minute = 0
 
@@ -94,7 +94,7 @@ def generate_start_times():
 
 
 def generate_end_times():
-    times = []
+    times = [None]
     hour = 8
     minute = 5  # OFFSET start at 8:05
 
@@ -204,13 +204,14 @@ class AdminWindow(QtWidgets.QMainWindow):
         self.Tab4_Confirm.clicked.connect(self.handle_tab4_grading)
 
         # Tab 5: Courses Management
-        self.Tab5_CourseAdd.clicked.connect(self.tab5_add_course)
-        self.Tab5_CourseUpdate.clicked.connect(self.tab5_update_course)
+        self.Tab5_CourseAdd.clicked.connect(self.logic_add_course)
+        self.Tab5_CourseUpdate.clicked.connect(self.logic_update_course)
         self.Tab5_PrerequistieAdd.clicked.connect(self.tab5_add_prerequisite)
         self.Tab5_PrerequistieRemove.clicked.connect(self.tab5_remove_prerequisite)
-        self.Tab5_SectionAdd.clicked.connect(self.handle_add_section)
-        self.Tab5_SectionUpdate.clicked.connect(self.handle_update_section)
-        self.Tab5_SectionRemove.clicked.connect(self.handle_remove_section)
+        self.Tab5_SectionAdd.clicked.connect(self.logic_add_section)
+        self.Tab5_SectionUpdate.clicked.connect(self.logic_update_section)
+        self.Tab5_SectionRemove.clicked.connect(self.logic_remove_section)
+
         # Tab 6 buttons
         self.Tab6_Major_combobox.currentIndexChanged.connect(self.tab6_load_tables)
         self.Tab6_AddPlan.clicked.connect(self.tab6_add_course)
@@ -707,71 +708,43 @@ class AdminWindow(QtWidgets.QMainWindow):
         self.Subjects_details.setSelectionBehavior(QAbstractItemView.SelectRows)
         # ------------------------
 
+        # 1. Get Inputs
         selected_major = self.Tab3_MajorChoice.currentText().strip()
         selected_term = self.Tab3_Term.currentText().strip()
 
-        major_map = {
-            'Electrical communication and electronics engineering': "communication",
-            'Electrical computer engineering': "computer",
-            'Electrical power and machines engineering': "power",
-            'Electrical biomedical engineering': "biomedical"
-        }
-        
-        plane = major_map.get(selected_major)
-        
         # Reset table
         self.Subjects_details.setRowCount(0)
         
-        # Ensure columns exist
-        self.Subjects_details.setColumnCount(5)
-        self.Subjects_details.setHorizontalHeaderLabels(["Course Code", "Section ID", "Capacity", "Instructor", "Credit"])
+        # NOTE: Your new SQL query returns 6 items (including 'time'), so I increased column count to 6
+        self.Subjects_details.setColumnCount(6)
+        self.Subjects_details.setHorizontalHeaderLabels(["Course Code", "Section ID", "Capacity", "Instructor", "Credit", "Time"])
 
-        if not plane or not selected_term.isdigit():
+        if not selected_term.isdigit():
             return
 
-        # 1. Get the list of courses using the method WE KNOW WORKS
-        # This returns: { 'EE321': (Name, Credit, Term, Prereqs), ... }
-        courses_dict = admin.display_courses_by_plane_level(None, plane, int(selected_term))
-
-        if isinstance(courses_dict, str):
-            print(courses_dict)
-            return
-
-        # 2. Loop through the courses
-        for course_code, details in courses_dict.items():
-            course_credit = str(details[1]) # We get Credit directly from the course list
-
-            # Get sections for this course
-            sections_list = admin.find_sections(None, course_code)
-
-            if isinstance(sections_list, list):
-                for sec_name in sections_list:
-                    # --- THE FIX: USE FAST LOOKUP ---
-                    # Instead of "sec_obj = section(sec_name)" (which freezes),
-                    # We use the fast helper we just added.
-                    fast_info = admin.get_section_info_fast(sec_name)
-                    
-                    capacity = str(fast_info[0])
-                    instructor = str(fast_info[1])
-                    # --------------------------------
-
-                    row_position = self.Subjects_details.rowCount()
-                    self.Subjects_details.insertRow(row_position)
-
-                    # Helper for centering
-                    def create_centered_item(text):
-                        item = QTableWidgetItem(str(text))
-                        item.setTextAlignment(Qt.AlignCenter)
-                        return item
-
-                    self.Subjects_details.setItem(row_position, 0, create_centered_item(course_code))
-                    self.Subjects_details.setItem(row_position, 1, create_centered_item(sec_name))
-                    self.Subjects_details.setItem(row_position, 2, create_centered_item(capacity))
-                    self.Subjects_details.setItem(row_position, 3, create_centered_item(instructor))
-                    self.Subjects_details.setItem(row_position, 4, create_centered_item(course_credit))
-                    
-                    # Keep the UI alive
-                    QApplication.processEvents()
+        # 2. Call your NEW function
+        # We pass the full major name directly because your new code handles the mapping
+        rows = admin.get_table_data_optimized(None, selected_major, int(selected_term))
+        
+        # 3. Fill the table
+        if rows:
+            for row_data in rows:
+                row_position = self.Subjects_details.rowCount()
+                self.Subjects_details.insertRow(row_position)
+                
+                # row_data is: (course_code, section, capacity, instructor, credit, time)
+                self.Subjects_details.setItem(row_position, 0, QTableWidgetItem(str(row_data[0])))
+                self.Subjects_details.setItem(row_position, 1, QTableWidgetItem(str(row_data[1])))
+                self.Subjects_details.setItem(row_position, 2, QTableWidgetItem(str(row_data[2])))
+                self.Subjects_details.setItem(row_position, 3, QTableWidgetItem(str(row_data[3])))
+                self.Subjects_details.setItem(row_position, 4, QTableWidgetItem(str(row_data[4])))
+                
+                # I added this since your new query fetches 'time' as the 6th item
+                self.Subjects_details.setItem(row_position, 5, QTableWidgetItem(str(row_data[5])))
+                
+                # Optional: Center the items
+                for i in range(6):
+                    self.Subjects_details.item(row_position, i).setTextAlignment(Qt.AlignCenter)
 
 
     # =========================================================
@@ -878,55 +851,83 @@ class AdminWindow(QtWidgets.QMainWindow):
     # TAB 5 — Courses Management
     # =========================================================
     # ---------------------- ADD COURSE ----------------------
-    def tab5_add_course(self):
+    def logic_add_course(self):
+
+        # 1. Retrieve text from inputs
         code = self.Tab5_Course_code.text().strip()
         name = self.Tab5_Course_name.text().strip()
-        
         credit = self.Tab5_Credit.text().strip()
         section = self.Tab5_section.text().strip()
         term = self.Tab5_term.text().strip()
         prereq = self.Tab5_prerequisite.text().strip()
 
-        if not all([code, name, credit, section, term, prereq]):
-            return QtWidgets.QMessageBox.warning(self, "Error", "Please fill all fields.")
+        # 2. Strict Validation: Ensure NO field is empty
+        if not code or not name or not credit or not section or not term or not prereq:
+            QMessageBox.warning(self, "Missing Data", "For adding a course, all fields must be entered.")
+            return
 
-        try:
-            credit = int(credit)
-            term = int(term)
-        except:
-            return QtWidgets.QMessageBox.warning(self, "Error", "Credit, Term must be numbers.")
+        # 3. Call Backend Function
+        # The backend expects: (course_code, course_name, credit, sections, term, prerequisites)
+        success, message = self.admin_obj.rewrite_add_course(
+            course_code=code,
+            course_name=name,
+            credit=credit,
+            sections=section,
+            term=term,
+            prerequisites=prereq
+        )
 
-        ok, msg = self.admin_obj.add_course(code, name, credit, section, term, prereq)
-
-        if ok:
-            QtWidgets.QMessageBox.information(self, "Add Course", msg)
+        # 4. Show Result
+        if success:
+            QMessageBox.information(self, "Success", message)
+            # Optional: Clear fields after successful add
+            # self.Tab5_Course_code.clear()
+            # self.Tab5_Course_name.clear()
+            # self.Tab5_Credit.clear()
+            # self.Tab5_section.clear()
+            # self.Tab5_term.clear()
+            # self.Tab5_prerequisite.clear()
         else:
-            QtWidgets.QMessageBox.warning(self, "Add Course", msg)
+            QMessageBox.warning(self, "Error", message)
 
-
-    # ---------------------- UPDATE COURSE ----------------------
-    def tab5_update_course(self):
+    def logic_update_course(self):
+   
+        # 1. Retrieve text
         code = self.Tab5_Course_code.text().strip()
-        if code == "":
-            return QtWidgets.QMessageBox.warning(self, "Error", "Course Code is required.")
+        name = self.Tab5_Course_name.text().strip()
+        credit = self.Tab5_Credit.text().strip()
+        section = self.Tab5_section.text().strip()
+        term = self.Tab5_term.text().strip()
+        prereq = self.Tab5_prerequisite.text().strip()
 
-        name = self.Tab5_Course_name.text().strip() or None
-        credit = self.Tab5_Credit.text().strip() or None
-        term = self.Tab5_term.text().strip() or None
-        prereq = self.Tab5_prerequisite.text().strip() or None
-        capacity = self.Tab5_Capacity.text().strip() or None
-        try:
-            if credit: credit = int(credit)
-            if term: term = int(term)
-            if capacity: capacity = int(capacity)
-        except:
-            return QtWidgets.QMessageBox.warning(self, "Error", "Credit, Term, and Capacity must be numbers.")
+        # 2. Validation: Course Code is mandatory
+        if not code:
+            QMessageBox.warning(self, "Missing Data", "Please enter the Course Code to update.")
+            return
 
-        ok, msg = self.admin_obj.update_course(code, name, credit, term, prereq, capacity)
-        if ok:
-            QtWidgets.QMessageBox.information(self, "Update Course", msg)
+        # 3. Prepare Data for Backend
+        # If a field is empty string "", convert it to None so the backend knows not to update it.
+        name_arg = name if name else None
+        credit_arg = credit if credit else None
+        section_arg = section if section else None
+        term_arg = term if term else None
+        prereq_arg = prereq if prereq else None
+
+        # 4. Call Backend Function
+        success, message = self.admin_obj.rewrite_update_course(
+            course_code=code,
+            course_name=name_arg,
+            credit=credit_arg,
+            sections=section_arg,
+            term=term_arg,
+            prerequisites=prereq_arg
+        )
+
+        # 5. Show Result
+        if success:
+            QMessageBox.information(self, "Success", message)
         else:
-            QtWidgets.QMessageBox.warning(self, "Update Course", msg)
+            QMessageBox.warning(self, "Error", message)
 
 
     # ---------------------- ADD PREREQUISITE ----------------------
@@ -962,92 +963,106 @@ class AdminWindow(QtWidgets.QMainWindow):
 
 
     # ---------------------- ADD SECTION ----------------------
-    def handle_add_section(self):
-        course_code = self.Tab5_Section_CourseCord.text().strip().upper()
-        section_name = self.Tab5_Section_SectionName.text().strip().upper()
-        instructor_id = self.Tab5_Section_Instructor.text().strip()
+    def logic_add_section(self):
+    # 1. Retrieve Data
+        start_time = self.Section_StartTime_Combo.currentText()
+        end_time = self.Section_EndTime_Combo.currentText()
+        day = self.Section_Day_Combo.currentText()
+        course_code = self.Tab5_Section_CourseCord.text().strip()
+        section_name = self.Tab5_Section_SectionName.text().strip()
         capacity = self.Tab5_Section_Capacity.text().strip()
-        start_time = self.Section_StartTime_Combo.currentText().strip()
-        end_time = self.Section_EndTime_Combo.currentText().strip()
-        day = self.Section_Day_Combo.currentText().strip()
-
-        # Validate all fields are filled
-        if not all([course_code, section_name, instructor_id, capacity, start_time, end_time, day]):
-            QMessageBox.warning(self, "Missing Fields", "Please fill all fields before adding a section.")
-            return
-
-        # Validate capacity
-        if not capacity.isdigit():
-            QMessageBox.warning(self, "Invalid Input", "Capacity must be a positive integer.")
-            return
-
-        adm = admin(id=self.admin_id)
-
-        ok, msg = adm.add_section(course_code, section_name, int(capacity),
-                                instructor_id, start_time, end_time, day)
-
-        if ok:
-            QMessageBox.information(self, "Success", msg)
-        else:
-            QMessageBox.warning(self, "Error", msg)
-
-
-
-    def handle_remove_section(self):
-        section_name = self.Tab5_Section_SectionName.text().strip().upper()
-
-        if not section_name:
-            QMessageBox.warning(self, "Missing Field", "Please enter the Section Name to remove.")
-            return
-
-        adm = admin(id=self.admin_id)
-
-        ok, msg = adm.remove_section(section_name)
-
-        if ok:
-            QMessageBox.information(self, "Success", msg)
-        else:
-            QMessageBox.warning(self, "Error", msg)
-
-
-
-    def handle_update_section(self):
-        section_name = self.Tab5_Section_SectionName.text().strip().upper()
-        course_code = self.Tab5_Section_CourseCord.text().strip().upper()
         instructor_id = self.Tab5_Section_Instructor.text().strip()
-        capacity = self.Tab5_Section_Capacity.text().strip()
-        start_time = self.Section_StartTime_Combo.currentText().strip()
-        end_time = self.Section_EndTime_Combo.currentText().strip()
-        day = self.Section_Day_Combo.currentText().strip()
 
-        if not section_name:
-            QMessageBox.warning(self, "Missing Field", "Section Name is required to update.")
+        # 2. Strict Validation: Ensure NO field is empty
+        # Note: For Comboboxes, ensure they aren't empty (assuming they have values selected)
+        if not (start_time and end_time and day and course_code and section_name and capacity and instructor_id):
+            QMessageBox.warning(self, "Missing Data", "For adding a section, ALL fields must be filled.")
             return
 
-        # Convert empty fields to None
-        course_code = course_code if course_code else None
-        instructor_id = instructor_id if instructor_id else None
-        capacity = capacity 
-        start_time = start_time if start_time else None
-        end_time = end_time if end_time else None
-        day = day if day else None
-
-        adm = admin(id=self.admin_id)
-
-        ok, msg = adm.update_section(
+        # 3. Call Backend
+        # Backend arg order: course_code, section_name, instructor_id, capacity, start_time, end_time, day
+        success, message = self.admin_obj.rewrite_add_section(
             course_code=course_code,
             section_name=section_name,
-            capacity=capacity,
             instructor_id=instructor_id,
+            capacity=capacity,
             start_time=start_time,
             end_time=end_time,
             day=day
         )
 
-        if ok:
-            QMessageBox.information(self, "Success", msg)
+        # 4. Show Result
+        if success:
+            QMessageBox.information(self, "Success", message)
         else:
-            QMessageBox.warning(self, "Error", msg)
+            QMessageBox.warning(self, "Error", message)
+
+    def logic_update_section(self):
+       
+        # 1. Retrieve Data
+        course_code = self.Tab5_Section_CourseCord.text().strip()
+        section_name = self.Tab5_Section_SectionName.text().strip()
+        
+        # Optional fields
+        capacity = self.Tab5_Section_Capacity.text().strip()
+        instructor_id = self.Tab5_Section_Instructor.text().strip()
+        start_time = self.Section_StartTime_Combo.currentText()
+        end_time = self.Section_EndTime_Combo.currentText()
+        day = self.Section_Day_Combo.currentText()
+
+        # 2. Validation: Mandatory fields
+        if not course_code or not section_name:
+            QMessageBox.warning(self, "Missing Data", "Course Code and Section Name are required for updates.")
+            return
+
+        # 3. Prepare Data (Convert empty strings to None)
+        cap_arg = capacity if capacity else None
+        inst_arg = instructor_id if instructor_id else None
+        
+        # For time, if the combobox is empty or not selected, pass None.
+        # Note: If your combo boxes always have a value (like "08:00"), this will pass the string.
+        # If the user intentionally wants to NOT update time, they should ideally not touch them, 
+        # but strictly speaking, Comboboxes usually always have a value unless you added a blank item.
+        # If you have a blank item at index 0, check `if start_time == "": start_arg = None`
+        start_arg = start_time if start_time else None
+        end_arg = end_time if end_time else None
+        day_arg = day if day else None
+
+        # 4. Call Backend
+        success, message = self.admin_obj.rewrite_update_section(
+            course_code=course_code,
+            section_name=section_name,
+            instructor_id=inst_arg,
+            capacity=cap_arg,
+            start_time=start_arg,
+            end_time=end_arg,
+            day=day_arg
+        )
+
+        # 5. Show Result
+        if success:
+            QMessageBox.information(self, "Success", message)
+        else:
+            QMessageBox.warning(self, "Error", message)
+
+    def logic_remove_section(self):
+        # 1. Retrieve Data
+        section_name = self.Tab5_Section_SectionName.text().strip()
+
+        # 2. Validation
+        if not section_name:
+            QMessageBox.warning(self, "Missing Data", "Please enter the Section Name to remove.")
+            return
+
+        # 3. Call Backend
+        # Note: backend remove_section only takes section_name
+        success, message = self.admin_obj.remove_section(section_name)
+
+        # 4. Show Result
+        if success:
+            QMessageBox.information(self, "Success", message)
+        else:
+            QMessageBox.warning(self, "Error", message)
 
     ###############################################
     # TAB 6 — COURSE PLAN MANAGEMENT
