@@ -31,11 +31,11 @@ import smtplib
 # print(a.section_info_student())
 # b = (a.student_id_in_section())
 # print(b)
-a=admin(8206086)
-print(a.display_info())
-ok,msg=a.add_course_to_plan("MEP261","Electrical communication and electronics engineering")
-print(ok)
-print(msg)
+# a=admin(8206086)
+# print(a.display_info())
+# ok,msg=a.add_course_to_plan("MEP261","Electrical communication and electronics engineering")
+# print(ok)
+# print(msg)
 
 
 # ahmad=student(id=2453089)
@@ -392,7 +392,8 @@ db.close()
 
 def reset_password(the_id):
     this_time_code = random.randint(100000,999999)
-    sender_email = "viibrkk@gmail.com"
+    sender_email = "pizzateamd@gmail.com"
+    app_paas = "wihu xclr tdos yxxh"
     #======Getting user's email=======#
     db = sqlite3.connect("Users.db")
     cr = db.cursor()
@@ -400,5 +401,16 @@ def reset_password(the_id):
     email_in_tuple = cr.fetchall()
     user_email = email_in_tuple[0][0]
     cr.execute("SELECT username FROM admins WHERE id = ? UNION SELECT username FROM instructors WHERE id = ? UNION SELECT username FROM students WHERE id = ?", (the_id,the_id,the_id))
-    user_name = cr.fetchall()
-    ### I will continue the function later today
+    user_in_tuple = cr.fetchall()
+    user_name = user_in_tuple[0][0]
+    subj = "RESET YOUR PASSWORD"
+    body = f"Hello {user_name}, this is an email to reset your password\nThis is your one time code: {this_time_code}, please enter it carefully\nIf you don't want to reset your password, just ignore this email"
+    msgg = f"{subj}\n\n{body}"
+
+    server = smtplib.SMTP("smtp.gmail.com",587)
+    server.starttls()
+    server.login(sender_email, app_paas)
+    server.sendmail(sender_email, user_email, msgg)
+    server.quit()
+    return this_time_code
+reset_password(9567238)
