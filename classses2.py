@@ -146,12 +146,9 @@ class user: # main user class that will be inherited by student, instructor, adm
         hashed_password_in_db = row[0] if row else None
         return bcrypt.checkpw(password.encode() , hashed_password_in_db.encode()) # comparing by hashed passwords (saftier)
 # _______________________________________________________________________________________________________________
+class subject: # subject class 
 
-
-
-
-class subject:  ### Data base team said that this is currently not needed but i think its better to have it for future use
-    def __init__(self, subject_name, subject_code=None):
+    def __init__(self, subject_name, subject_code=None,): # subject constructor
         self.subject_code = subject_code
         self.subject_name = subject_name
         prerequisites_row= courses_db.execute("SELECT prerequisites FROM Courses WHERE course_code = ?", (self.subject_name,), fetchone=True)
@@ -182,8 +179,6 @@ class subject:  ### Data base team said that this is currently not needed but i 
             else: 
                 self.subject_term= subject_term[0]
                 break
-
-
         
 
     def already_graded(self, student_id):  # to check if student has already been graded in the section
@@ -232,7 +227,7 @@ class subject:  ### Data base team said that this is currently not needed but i 
                 return False , f"Prerequisite {prerequisite} not found in subject {self.subject_name}. (reminder if you are trying to delete more than one prerequisite, separate them with commas)"
         
   
-        ### can be used by admin to remove prerequisite from subject
+        
     
     def add_prerequisite(self, prerequisite):  # to add a prerequisite to the subject
         if  "," in prerequisite:
@@ -272,13 +267,12 @@ class subject:  ### Data base team said that this is currently not needed but i 
             return []
         sections= [r[0] for r in row]
         return sections
-        ### can be used to get list of all sections for this subject  
+         
 # _______________________________________________________________________________________________________________
+class section(subject): # section class composed of subject class
 
+    def __init__(self,section_name,subject_name=None,subject_code=None,schedule=None,capacity=0,instructor=None,): # section constructor
 
-class section(subject):
-   
-    def __init__(self,section_name,subject_name=None,subject_code=None,schedule=None,capacity=0,instructor=None):
         super().__init__(subject_name, subject_code)
         self.schedule = schedule
         self.instructor = instructor
@@ -295,13 +289,12 @@ class section(subject):
             self.enrolled_students = [f"{r[0]} - {r[1]}" for r in row]
             self.student_id_in_section = [r[0] for r in row]
             self.student_name_in_section = [r[1] for r in row]
-        find_subject_list=courses_db.execute("SELECT course_code FROM Courses WHERE section= ?",(self.section_name,),fetchone=True)
+        find_subject_list=courses_db.execute("SELECT course_code FROM courses WHERE section= ?",(self.section_name,),fetchone=True)
         if find_subject_list==None:
             self.subject=subject_name
         else: 
             self.subject= find_subject_list[0].strip()
         
-            
 
     def section_info_student(self):  # to display section information
         row= courses_db.execute("SELECT course_code, course_name, section, capacity, time, instructor FROM Courses WHERE section = ?",(self.section_name,),fetchone=True) ### database design must be abdated to include instructor name and creat a table name sections
@@ -1146,8 +1139,14 @@ class admin(user): # admin class inherits from user class
         return f"Grade {grade} ({letter_grade}) added for student ID {student_id} in course {course_code}."
     
     def add_student(self,first_name,last_name,major): # to add a new student to the database
-        full_name= first_name + " " + last_name
-        st=student(username=full_name,major=major,database=True)
+        IDT1 = users_db.execute("SELECT id FROM students WHERE term = ?", (1,), fetchall=True)
+        IDT2 = users_db.execute("SELECT id FROM students WHERE term = ?", (2,), fetchall=True)
+        IDY1 = IDT1 + IDT2
+        IDY10 = [x[0] for x in IDY1]
+        max_id = max(IDY10)
+        new_id = int(max_id) + 1
+        full_name= first_name.strip().title() + " " + last_name.strip().title()
+        st=student(username=full_name,major=major,database=True,id=new_id)
         return True , f"Student {full_name} added with ID {st.id} and password {st.password}."   
     
     def delete_student(self, student_id): # to delete a student from the database
@@ -1415,6 +1414,7 @@ class admin(user): # admin class inherits from user class
             courses_db.execute("UPDATE Courses SET capacity = ? WHERE course_code = ? AND section = ?", (int(capacity), course_code, sec), commit=True)
 
         return True , f"Section {sec} for course {course_code} updated successfully."
+   
         
         
     def courses_not_in_the_plan(self,plan_major):  # to display all subjects not in the plan_major 
@@ -1604,12 +1604,12 @@ class admin(user): # admin class inherits from user class
         return True , f"Course with code {course_code} deleted from {plan_major} plan successfully."
     
     def add_prerequisite_to_course(self,course_code,prerequisite):
-        sub=subject(course_code.strip().upper())
+        sub=subject(course_code)
         okay,massege= sub.add_prerequisite(prerequisite)
         return okay, massege
     
     def remove_prerequisite_from_course(self,course_code,prerequisite):
-        sub=subject(course_code.strip().upper())
+        sub=subject(course_code)
         okay,massege= sub.remove_prerequisite(prerequisite)
         return okay, massege
     
@@ -1817,6 +1817,9 @@ def signup(FN, LN, Npassword, M): # FN = first name , LN = last name
 
 
 
+
+
+
 def update_password(student_id, new_password):
 
     db = sqlite3.connect("Users.db")
@@ -1827,3 +1830,5 @@ def update_password(student_id, new_password):
     db.close()
 
     return
+
+
