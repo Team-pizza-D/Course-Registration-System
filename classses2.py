@@ -1393,7 +1393,7 @@ class admin(user): # admin class inherits from user class
         return True , f"Section {sec} for course {course_code} updated successfully."
         
         
-    def courses_not_in_the_plan(self,plan_major):  # to display all subjects not in the plane_major 
+    def courses_not_in_the_plan(self,plan_major):  # to display all subjects not in the plan_major 
         if plan_major == "Electrical communication and electronics engineering":
             row = courses_db.execute("SELECT course_code FROM communication", fetchall=True)
         elif plan_major == "Electrical computer engineering":
@@ -1555,16 +1555,20 @@ class admin(user): # admin class inherits from user class
 
         return True, f"Course with code {course_code} added to {plan_major} plan successfully."
 
-    def delete_course_from_plan(self,course_code,plan_major   ):
+
+    def delete_course_from_plan(self,course_code,plan_major  ):
         course_code=course_code.strip().upper()
-        sub=subject(course_code)
-        sec=sub.get_all_sections()
+        row= courses_db.execute("SELECT section FROM Courses WHERE course_code = ?",(course_code.strip().upper(),),fetchall=True)
+        if row==None or len(row)==0:
+            return []
+        sec= [r[0] for r in row]
+         
+        
         for section_name in sec:
             sect=section(section_name=section_name)
             if len(sect.student_id_in_section)>0:
                 return False , f"Cannot delete course with code {course_code} from {plan_major} plan because students are enrolled in its sections."
-        if not sub.is_existing():
-            return False , f"Course with code {course_code} does not exist."
+       
         if plan_major=="Electrical communication and electronics engineering":
             courses_db.execute("DELETE FROM communication WHERE course_code = ?", (course_code,), commit=True)
         if plan_major=="Electrical computer engineering":
