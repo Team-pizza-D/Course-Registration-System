@@ -1409,60 +1409,167 @@ class admin(user):
         
         
     def courses_not_in_the_plane(self,plan_major):  # to display all subjects not in the plane_major 
-        
-        if plan_major=="Electrical communication and electronics engineering":
-            row= courses_db.execute("SELECT course_code FROM communication",fetchall=True)
-        elif plan_major=="Electrical computer engineering":
-            row= courses_db.execute("SELECT course_code FROM computer",fetchall=True)
-        elif plan_major=="Electrical power and machines engineering":
-            row= courses_db.execute("SELECT course_code FROM power",fetchall=True)
-        elif plan_major=="Electrical biomedical engineering":
-            row= courses_db.execute("SELECT course_code FROM biomedical",fetchall=True)
-        subjects_in_major= [r[0].strip().upper() for r in row]
-        all_courses_row= courses_db.execute("SELECT course_code FROM Courses",fetchall=True)
-        all_courses= [r[0].strip().upper() for r in all_courses_row]
-        not_in_plan= []
+        if plan_major == "Electrical communication and electronics engineering":
+            row = courses_db.execute("SELECT course_code FROM communication", fetchall=True)
+        elif plan_major == "Electrical computer engineering":
+            row = courses_db.execute("SELECT course_code FROM computer", fetchall=True)
+        elif plan_major == "Electrical power and machines engineering":
+            row = courses_db.execute("SELECT course_code FROM power", fetchall=True)
+        elif plan_major == "Electrical biomedical engineering":
+            row = courses_db.execute("SELECT course_code FROM biomedical", fetchall=True)
+
+        subjects_in_major = [r[0].strip().upper() for r in row]
+
+        all_courses_row = courses_db.execute("SELECT course_code FROM Courses", fetchall=True)
+        all_courses = [r[0].strip().upper() for r in all_courses_row]
+
+        not_in_plan = []
         for course in all_courses:
-         if course not in subjects_in_major:
-            not_in_plan.append(course)
-        #know we found ( cours_code, course_name, credit, term, prerequisites) for each course in not_in_plan
-        courses_info= {}
+            if course not in subjects_in_major:
+                not_in_plan.append(course)
+
+        # now we found (course_code) for each course in not_in_plan
+        courses_info = {}
+
         for course_code in not_in_plan:
-            row= courses_db.execute("SELECT course_name,credit,term,prerequisites FROM Courses WHERE course_code = ?", (course_code,), fetchone=True)
-            course_name=row[0]
-            credit=row[1]
-            terms=row[2]
-            if row[3]==None:
-                prerequisites=""
+            row = courses_db.execute(
+                "SELECT course_name, credit, term, prerequisites FROM Courses WHERE course_code = ?",
+                (course_code,),
+                fetchone=True)
+
+            course_name = row[0]
+            credit      = row[1]     
+            if row[3] is None:
+                prerequisites = ""
             else:
-                prerequisites=row[3]
-            courses_info[course_code]={
+                prerequisites = row[3]
+
+            if row[2] is None or row[2] == "":
+                term_row = courses_db.execute("""
+                    SELECT COALESCE(comm.terms, comp.terms, pow.terms, bio.terms)
+                    FROM Courses AS c
+                    LEFT JOIN communication AS comm ON comm.course_code = c.course_code
+                    LEFT JOIN computer      AS comp ON comp.course_code = c.course_code
+                    LEFT JOIN power         AS pow  ON pow.course_code  = c.course_code
+                    LEFT JOIN biomedical    AS bio  ON bio.course_code  = c.course_code
+                    WHERE c.course_code = ?
+                """, (course_code,), fetchone=True)
+
+                if term_row and term_row[0] is not None:
+                    terms = term_row[0]
+            else:
+                terms = row[2]        
+
+            courses_info[course_code] = {
                 "course_name": course_name,
                 "credit": credit,
-                "terms": terms,
+                "terms": terms,         
                 "prerequisites": prerequisites
             }
+
         return courses_info
+        
+        # if plan_major=="Electrical communication and electronics engineering":
+        #     row= courses_db.execute("SELECT course_code FROM communication",fetchall=True)
+        # elif plan_major=="Electrical computer engineering":
+        #     row= courses_db.execute("SELECT course_code FROM computer",fetchall=True)
+        # elif plan_major=="Electrical power and machines engineering":
+        #     row= courses_db.execute("SELECT course_code FROM power",fetchall=True)
+        # elif plan_major=="Electrical biomedical engineering":
+        #     row= courses_db.execute("SELECT course_code FROM biomedical",fetchall=True)
+        # subjects_in_major= [r[0].strip().upper() for r in row]
+        # all_courses_row= courses_db.execute("SELECT course_code FROM Courses",fetchall=True)
+        # all_courses= [r[0].strip().upper() for r in all_courses_row]
+        # not_in_plan= []
+        # for course in all_courses:
+        #  if course not in subjects_in_major:
+        #     not_in_plan.append(course)
+        # #know we found ( cours_code, course_name, credit, term, prerequisites) for each course in not_in_plan
+        # courses_info= {}
+        # for course_code in not_in_plan:
+        #     row= courses_db.execute("SELECT course_name,credit,term,prerequisites FROM Courses WHERE course_code = ?", (course_code,), fetchone=True)
+        #     course_name=row[0]
+        #     credit=row[1]
+        #     terms=row[2]
+        #     if row[3]==None:
+        #         prerequisites=""
+        #     else:
+        #         prerequisites=row[3]
+        #     courses_info[course_code]={
+        #         "course_name": course_name,
+        #         "credit": credit,
+        #         "terms": terms,
+        #         "prerequisites": prerequisites
+        #     }
+        # return courses_info
     
-    def add_course_to_plane(self,course_code,plane_major):
-        course_code=course_code.strip().upper()
-        sub=subject(course_code)
+    def add_course_to_plane(self, course_code, plane_major):
+
+        course_code = course_code.strip().upper()
+        sub = subject(course_code)
+
         if not sub.is_existing():
-            return False , f"Course with code {course_code} does not exist."
-        row= courses_db.execute("SELECT course_code,terms,prerequisites,credit,course_name FROM Courses WHERE course_code = ?", (course_code,), fetchone=True)
-        terms=row[1]
-        prerequisites=row[2]
-        credit=row[3]
-        course_name=row[4]
-        if plane_major=="Electrical communication and electronics engineering":
-            courses_db.execute("INSERT INTO communication (course_code, terms,prerequisites,credit,course_name) VALUES (?, ?, ?, ?, ?)", (course_code, terms, prerequisites, credit, course_name), commit=True)
-        if plane_major=="Electrical computer engineering":
-            courses_db.execute("INSERT INTO computer (course_code, terms,prerequisites,credit,course_name) VALUES (?, ?, ?, ?, ?)", (course_code, terms, prerequisites, credit, course_name), commit=True)
-        if plane_major=="Electrical power and machines engineering":
-            courses_db.execute("INSERT INTO power (course_code, terms,prerequisites,credit,course_name) VALUES (?, ?, ?, ?, ?)", (course_code, terms, prerequisites, credit, course_name), commit=True)
-        if plane_major=="Electrical biomedical engineering":
-            courses_db.execute("INSERT INTO biomedical (course_code, terms,prerequisites,credit,course_name) VALUES (?, ?, ?, ?, ?)", (course_code, terms, prerequisites, credit, course_name), commit=True)
-        return True , f"Course with code {course_code} added to {plane_major} plane successfully."
+                return False, f"Course with code {course_code} does not exist."
+        row = courses_db.execute(
+            "SELECT course_name, credit, term, prerequisites FROM Courses WHERE course_code = ?",
+            (course_code,), fetchone=True
+        )
+
+        if not row:
+            return False, "Course not found in Courses table."
+
+        course_name = row[0]
+        credit = row[1]
+        terms = row[2]
+        prerequisites = row[3] if row[3] else ""
+
+        if terms is None or terms == "":
+            term_row = courses_db.execute("""
+                SELECT COALESCE(comm.terms, comp.terms, pow.terms, bio.terms)
+                FROM Courses c
+                LEFT JOIN communication AS comm ON comm.course_code = c.course_code
+                LEFT JOIN computer      AS comp ON comp.course_code = c.course_code
+                LEFT JOIN power         AS pow  ON pow.course_code = c.course_code
+                LEFT JOIN biomedical    AS bio  ON bio.course_code = c.course_code
+                WHERE c.course_code = ?
+            """, (course_code,), fetchone=True)
+
+            if term_row and term_row[0] is not None:
+                terms = term_row[0]
+
+        major_tables = {
+            "Electrical communication and electronics engineering": "communication",
+            "Electrical computer engineering": "computer",
+            "Electrical power and machines engineering": "power",
+            "Electrical biomedical engineering": "biomedical"
+        }
+
+        table_name = major_tables.get(plane_major)
+        if table_name is None:
+            return False, f"Unknown major: {plane_major}"
+
+        courses_db.execute(
+            f"INSERT INTO {table_name} (course_code, terms, prerequisites, credit, course_name) VALUES (?, ?, ?, ?, ?)",
+            (course_code, terms, prerequisites, credit, course_name),
+            commit=True
+        )
+
+        return True, f"Course with code {course_code} added to {plane_major} plane successfully."
+
+    #     course_code=course_code.strip().upper()
+    #     sub=subject(course_code)
+    #     if not sub.is_existing():
+    #         return False , f"Course with code {course_code} does not exist." 
+    #     ### now im going to bring course_code,prerequisites,credit,course_name FROM Courses and i will use join to bring term too from either communication,computer,power,biomedical based on plane_major
+    #     if plane_major=="Electrical communication and electronics engineering":
+    #         courses_db.execute("INSERT INTO communication (course_code, terms,prerequisites,credit,course_name) VALUES (?, ?, ?, ?, ?)", (course_code, terms, prerequisites, credit, course_name), commit=True)
+    #     if plane_major=="Electrical computer engineering":
+    #         courses_db.execute("INSERT INTO computer (course_code, terms,prerequisites,credit,course_name) VALUES (?, ?, ?, ?, ?)", (course_code, terms, prerequisites, credit, course_name), commit=True)
+    #     if plane_major=="Electrical power and machines engineering":
+    #         courses_db.execute("INSERT INTO power (course_code, terms,prerequisites,credit,course_name) VALUES (?, ?, ?, ?, ?)", (course_code, terms, prerequisites, credit, course_name), commit=True)
+    #     if plane_major=="Electrical biomedical engineering":
+    #         courses_db.execute("INSERT INTO biomedical (course_code, terms,prerequisites,credit,course_name) VALUES (?, ?, ?, ?, ?)", (course_code, terms, prerequisites, credit, course_name), commit=True)
+    #     return True , f"Course with code {course_code} added to {plane_major} plane successfully."
     def delete_course_from_plane(self,course_code,plane_major   ):
         course_code=course_code.strip().upper()
         sub=subject(course_code)
@@ -1473,13 +1580,13 @@ class admin(user):
                 return False , f"Cannot delete course with code {course_code} from {plane_major} plane because students are enrolled in its sections."
         if not sub.is_existing():
             return False , f"Course with code {course_code} does not exist."
-        if plane_major.strip()=="Electrical communication and electronics engineering":
+        if plane_major=="Electrical communication and electronics engineering":
             courses_db.execute("DELETE FROM communication WHERE course_code = ?", (course_code,), commit=True)
-        if plane_major.strip()=="Electrical computer engineering":
+        if plane_major=="Electrical computer engineering":
             courses_db.execute("DELETE FROM computer WHERE course_code = ?", (course_code,), commit=True)
-        if plane_major.strip()=="Electrical power and machines engineering":
+        if plane_major=="Electrical power and machines engineering":
             courses_db.execute("DELETE FROM power WHERE course_code = ?", (course_code,), commit=True)
-        if plane_major.strip()=="Electrical biomedical engineering":
+        if plane_major=="Electrical biomedical engineering":
             courses_db.execute("DELETE FROM biomedical WHERE course_code = ?", (course_code,), commit=True)
         return True , f"Course with code {course_code} deleted from {plane_major} plane successfully."
     def add_prerequisite_to_course(self,course_code,prerequisite):
@@ -1495,13 +1602,13 @@ class admin(user):
         okay,massege= sub.remove_prerequisite(prerequisite)
         return okay, massege
     def display_subjects_by_major_plan(self, major):  # to display subjects by major plan
-        if major.strip()=="Electrical communication and electronics engineering":
+        if major=="Electrical communication and electronics engineering":
             row= courses_db.execute("SELECT course_code, course_name, terms,credit,prerequisites FROM communication ORDER BY terms",fetchall=True)
-        elif major.strip()=="Electrical computer engineering":
+        elif major=="Electrical computer engineering":
             row= courses_db.execute("SELECT course_code, course_name, terms,credit,prerequisites FROM computer ORDER BY terms",fetchall=True)
-        elif major.strip()=="Electrical power and machines engineering":
+        elif major=="Electrical power and machines engineering":
             row= courses_db.execute("SELECT course_code, course_name, terms,credit,prerequisites FROM power ORDER BY terms",fetchall=True)
-        elif major.strip()=="Electrical biomedical engineering":
+        elif major=="Electrical biomedical engineering":
             row= courses_db.execute("SELECT course_code, course_name, terms,credit,prerequisites FROM biomedical ORDER BY terms",fetchall=True)
         else:
             return f"Major {major} not found."
