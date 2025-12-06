@@ -1428,7 +1428,7 @@ class admin(user):
         #know we found ( cours_code, course_name, credit, term, prerequisites) for each course in not_in_plan
         courses_info= {}
         for course_code in not_in_plan:
-            row= courses_db.execute("SELECT course_name,credit,terms,prerequisites FROM Courses WHERE course_code = ?", (course_code,), fetchone=True)
+            row= courses_db.execute("SELECT course_name,credit,term,prerequisites FROM Courses WHERE course_code = ?", (course_code,), fetchone=True)
             course_name=row[0]
             credit=row[1]
             terms=row[2]
