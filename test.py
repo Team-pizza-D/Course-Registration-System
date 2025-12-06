@@ -1,9 +1,9 @@
 import sqlite3
 import bcrypt
-from classses2 import admin, student,section,subject,instructor,Database, user
+from classes import admin, student,section,subject,instructor,Database, user
 import random
 import smtplib
-
+'''this file for testing before committing anything'''
 
 # db = sqlite3.connect("Users.db")
 # cr = db.cursor()
@@ -89,8 +89,8 @@ import smtplib
 # # s1= student(id="2404449",major="computer")
 # # print(s1.display_info())
 # print(mass)
-from classses2 import admin, student, Database
-from classses2 import admin, student, Database, instructor
+from classes import admin, student, Database
+from classes import admin, student, Database, instructor
 
 # ahmed = student(id="12345")
 # print(ahmed.display_info())
@@ -390,27 +390,27 @@ db.close()
 # db.commit()
 # db.close()
 
-def reset_password(the_id):
-    this_time_code = random.randint(100000,999999)
-    sender_email = "pizzateamd@gmail.com"
-    app_paas = "wihu xclr tdos yxxh"
-    #======Getting user's email=======#
-    db = sqlite3.connect("Users.db")
-    cr = db.cursor()
-    cr.execute("SELECT email FROM admins WHERE id = ? UNION SELECT email FROM instructors WHERE id = ? UNION SELECT email FROM students WHERE id = ?", (the_id,the_id,the_id))
-    email_in_tuple = cr.fetchall()
-    user_email = email_in_tuple[0][0]
-    cr.execute("SELECT username FROM admins WHERE id = ? UNION SELECT username FROM instructors WHERE id = ? UNION SELECT username FROM students WHERE id = ?", (the_id,the_id,the_id))
-    user_in_tuple = cr.fetchall()
-    user_name = user_in_tuple[0][0]
-    subj = "RESET YOUR PASSWORD"
-    body = f"Hello {user_name}, this is an email to reset your password\nThis is your one time code: {this_time_code}, please enter it carefully\nIf you don't want to reset your password, just ignore this email"
-    msgg = f"{subj}\n\n{body}"
+# def reset_password(the_id):
+#     this_time_code = random.randint(100000,999999)
+#     sender_email = "pizzateamd@gmail.com"
+#     app_paas = "wihu xclr tdos yxxh"
+#     #======Getting user's email=======#
+#     db = sqlite3.connect("Users.db")
+#     cr = db.cursor()
+#     cr.execute("SELECT email FROM admins WHERE id = ? UNION SELECT email FROM instructors WHERE id = ? UNION SELECT email FROM students WHERE id = ?", (the_id,the_id,the_id))
+#     email_in_tuple = cr.fetchall()
+#     user_email = email_in_tuple[0][0]
+#     cr.execute("SELECT username FROM admins WHERE id = ? UNION SELECT username FROM instructors WHERE id = ? UNION SELECT username FROM students WHERE id = ?", (the_id,the_id,the_id))
+#     user_in_tuple = cr.fetchall()
+#     user_name = user_in_tuple[0][0]
+#     subj = "RESET YOUR PASSWORD"
+#     body = f"Hello {user_name}, this is an email to reset your password\nThis is your one time code: {this_time_code}, please enter it carefully\nIf you don't want to reset your password, just ignore this email"
+#     msgg = f"{subj}\n\n{body}"
 
-    server = smtplib.SMTP("smtp.gmail.com",587)
-    server.starttls()
-    server.login(sender_email, app_paas)
-    server.sendmail(sender_email, user_email, msgg)
-    server.quit()
-    return this_time_code
-reset_password(9567238)
+#     server = smtplib.SMTP("smtp.gmail.com",587)
+#     server.starttls()
+#     server.login(sender_email, app_paas)
+#     server.sendmail(sender_email, user_email, msgg)
+#     server.quit()
+#     return this_time_code
+# reset_password(9567238)

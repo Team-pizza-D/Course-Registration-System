@@ -27,17 +27,17 @@ class Database: # SQLite database helper class
 
         result = None
         if fetchone:
-            result = cur.fetchone() ### to select single row
+            result = cur.fetchone() # to select single row
         elif fetchall:
-            result = cur.fetchall() ### to select multiple rows
+            result = cur.fetchall() # to select multiple rows
 
         if commit:
-            conn.commit() ### for insert, update, delete operations
+            conn.commit() # for insert, update, delete operations
 
         conn.close()
         return result
 # _______________________________________________________________________________________________________________
-### open database connection
+# open database connection
 users_db = Database("Users.db")
 courses_db = Database("courses.db")
 # _______________________________________________________________________________________________________________
@@ -50,18 +50,14 @@ class user: # main user class that will be inherited by student, instructor, adm
         self.email = email
         self.password = password
 
-         ### if id is provided check if user exists in database and load data
-         ### else generate new user with provided or generated data
+
 
         if self.is_existing():
-            # try:
                 row = users_db.execute("SELECT username,password, email FROM admins WHERE id = ? UNION SELECT username, password,email FROM instructors WHERE id = ? UNION SELECT username, password, email FROM students WHERE id = ?", (id, id, id), fetchone=True)
                 self.username = row[0]
                 self.password = row[1]
                 self.email = row[2]
                 self.id = id
-            # except sqlite3.Error as e:
-            #     print(f"Database error: {e}")
         
         else:
             if username is None:
@@ -87,8 +83,6 @@ class user: # main user class that will be inherited by student, instructor, adm
         row = users_db.execute("SELECT id FROM admins WHERE id = ? UNION SELECT id FROM instructors WHERE id = ? UNION SELECT id FROM students WHERE id = ?", (self.id, self.id, self.id), fetchone=True)
         return True if row else False
     
-    def display_info(self):  # to display user information
-        return f"Username: {self.username}, Email: {self.email}, ID: {self.id}"
     
     def is_admin(self):  # to check if user is admin
         # This will later be known by which table is the information in (student or admin)
@@ -309,9 +303,7 @@ class section(subject): # section class composed of subject class
         self.remaining_seats= self.remaining_seats()
         
         return f" Subject Name: {self.subject_name}, Section Name: {self.section_name}, subject_code: {self.subject_code} max Capacity: {self.capacity}, Schedule: {self.schedule}, Instructor: {self.instructor},seats remaining: {self.remaining_seats}"
-        ###we still need structors name in the database to return it here
 
-        ### return section name, subject name, instructor, schedule (will be used by student)
        
     def section_is_existing(self):  # to check if section exists
         row= courses_db.execute("SELECT section FROM Courses WHERE section = ?",(self.section_name,),fetchone=True)
@@ -321,20 +313,17 @@ class section(subject): # section class composed of subject class
             return True
 
     def is_full(self):  # to check if section is full
-        ### always use the function section_is_existing before using this function to avoid errors
         row= courses_db.execute("SELECT capacity FROM Courses WHERE section = ?",(self.section_name,),fetchone=True)
         if row==None:
             return True
-        if len(self.enrolled_students)>=int(row[0]): ### since there is no data base fore enrolled student i'm going to write it like this (temporary)
+        if len(self.enrolled_students)>=int(row[0]): 
             return True
         else:
             return False
-        ### this can compare len(enrolled_students) with capacity
         
 
     def view_enrolled_students(self):  # to view all enrolled students
         print(self.enrolled_students)
-        ### in the future can return/print list of all enrolled students
         pass
 
     def has_time_conflict(self, student_id,lab_time=False):  # to check time conflict with student's schedule
@@ -349,7 +338,6 @@ class section(subject): # section class composed of subject class
         day= times[1].strip()
         class_time= times[0].strip()
         class_time= class_time.split("-")
-        # print(class_time)
         start_time=class_time[0].strip().split(":")
         end_time=class_time[1].strip().split(":")
         start_time_hour=int(start_time[0])
@@ -358,10 +346,6 @@ class section(subject): # section class composed of subject class
         end_time_minute=int(end_time[1])
         if start_time_hour>end_time_hour:
             end_time_hour+=12
-        # print(start_time_hour)
-        # print(end_time_hour)
-        # print(start_time_minute)
-        # print(end_time_minute)
         if start_time_hour == end_time_hour:
             end_time_hour+= (end_time_minute- start_time_minute)/100
         if start_time_hour  < end_time_hour:
@@ -385,16 +369,12 @@ class section(subject): # section class composed of subject class
         end_time_hour*=100
         start_time_hour=int(start_time_hour)
         end_time_hour=int(end_time_hour)
-                          
-        # print(start_time_hour)
-        # print(end_time_hour)                  
+               
 
-                    
         for i in range(start_time_hour, end_time_hour ,5): # using 1 as a stip would be more accurate but would create a very long list, based on data base design used 5 should be enough
             time_loop= (i+5)/100
-            section_time_list.append(time_loop)
-            
-        # print(section_time_list)    
+            section_time_list.append(time_loop)    
+
 
         schedule_row= users_db.execute("SELECT time FROM enrollments WHERE student_id = ?", (student_id,), fetchall=True) 
         if schedule_row is None or len(schedule_row)==0: 
@@ -442,14 +422,7 @@ class section(subject): # section class composed of subject class
                     if student_time_loop in section_time_list:
                         return True ,f"Time conflict with student's schedule on {t}"
         return False , f"No time conflict with student's schedule."
-                    
-
-
-
-        
-        
-        ### I will need to inrolle some students in some sections to be able to check time conflict fartheremore Data base has to add more sections 
-        pass
+    
 
     def prerequisites_met(self, student_id,):  # to check if student meets prerequisites
         The_id= student(id=student_id)
@@ -573,8 +546,7 @@ class section(subject): # section class composed of subject class
             if course_code.strip() == self.subject.strip():
                 return True , f"Student with ID {student_id} is already enrolled in section {sec} for subject {self.subject}."
         return False , f""
-        ### I will need to inrolle some students in some sections to be able to do this 
-        pass
+        
     def already_taken_subject(self, student_id):  # to check if student has already completed the subject
         stu=student(id=student_id)
         return stu.already_taken_subject(self.subject)
@@ -622,10 +594,10 @@ class section(subject): # section class composed of subject class
             return False , message
         if self.is_full():
             return False , f"the section {self.section_name} is full"
-        okay , message =  self.prerequisites_met(student_id) ### this function must return tuple (bool,str)
+        okay , message =  self.prerequisites_met(student_id) # this function must return tuple (bool,str)
         if not okay:
             return False , message
-        okay , message= self.has_time_conflict(student_id) ### this function must return tuple (bool,str)
+        okay , message= self.has_time_conflict(student_id) # this function must return tuple (bool,str)
         if  okay:
             return False, message
         return True , f"All conditions met for enrollment."
@@ -682,9 +654,6 @@ class section(subject): # section class composed of subject class
         self.student_id_in_section.pop(index)
         return True , f"Student with ID {student_id} successfully dropped from section {self.section_name}."
 
-         ### I will need to inrolle some students in some sections to be able to do this
-        ### notce that when considering database design, function will have to update the database instead of just removing from list
-        pass
 
     def new_capacity(self, new_capacity):  # to expand the capacity of the section
         try:
@@ -697,7 +666,6 @@ class section(subject): # section class composed of subject class
         courses_db.execute("UPDATE Courses SET capacity = ? WHERE section = ?", (self.capacity, self.section_name), commit=True)
         return f"Section {self.section_name} capacity updated to {self.capacity}."
 
-        ### can be used by admin to increase capacity
         
 
     def remaining_seats(self):  # to check remaining seats in the section
@@ -754,8 +722,7 @@ class student(user): # student class inherits of user class
         self.password = new_password
         return True , "Password changed successfully."
     
-    def display_info(self):  # to display student information
-        return super().display_info() + f", Major: {self.major}, GPA: {self.GPA} "
+
     
     def already_taken_subject(self, subject_code):  # to check if student has already completed the subject
 
@@ -947,7 +914,7 @@ class instructor(user):
     def __init__(self, id=None , username=None, subject=None, sections=None, password=None, email=None,  database=False):
         super().__init__(username, password, email, id) # i will change this place
         self.subject = subject  # subject assigned to the instructor
-        self.sections = sections if sections is not None else []  ### will be abdated later when database design is complete to take sections from database directly
+        self.sections = sections if sections is not None else []  
         self.database = database
 
         if self.database:
@@ -956,9 +923,7 @@ class instructor(user):
                 "INSERT INTO instructors (username, password, email, id) VALUES (?, ?, ?, ?)",
                 (self.username, self.password, self.email,self.id),
                 commit=True,
-            )
-    def display_info(self):
-        return super().display_info() + f", Subject: {self.subject}"     
+            )   
     def show_students(self,section_code):  # to show all students in a section
         self.section= section(section_name=section_code)
         self.section.view_enrolled_students()
@@ -976,8 +941,8 @@ class admin(user): # admin class inherits from user class
     def __init__(self,id=None,username=None ,password=None, email=None, database=False): # admin constructor
        
         self.database= database
-        ### set database to true if you want to insert this admin into database upon creation
-        ### eg. admin = admin("azad", database=True)
+        # set database to true if you want to insert this admin into database upon creation
+        # eg. admin = admin("azad", database=True)
 
         if self.database == True: # insert new admin into database
             super().__init__(username, password, email, id)
@@ -1011,14 +976,7 @@ class admin(user): # admin class inherits from user class
         okay,massege =sect.drop_student_from_section(student_id)
         return okay, massege
 
-        ### later this will probably call student.drop_subject with correct ID and section_code
-        ### we might create student object from database data here
-        pass
 
-    def admin_remaining_seats(self, section_code):  # to check remaining seats in a section
-        sect=section(section_name=section_code)
-        remaining= sect.remaining_seats()
-        return remaining
 
     def display_student_in_section(self, section_code):  # to display students in a section
         row = users_db.execute("SELECT student_id FROM enrollments WHERE section = ?", (section_code,), fetchall=True)
@@ -1028,15 +986,9 @@ class admin(user): # admin class inherits from user class
         row = users_db.execute("SELECT * FROM students WHERE id IN ({seq})".format(seq=','.join(['?']*len(enrolled_students_id))), tuple(enrolled_students_id), fetchall=True)
         enrolled_students_info = {r[0]: r[1:] for r in row}
         return enrolled_students_info
-        ### can create section object then call section.display_student_in_section
-        pass
 
-    def find_student(self, student_id):  # to find student by id
-        if student_id.is_existing():
-            return student_id.display_info()
+
         
-        ### must search in database for student_id and return student info
-        pass
 
     def view_all_subjects(self, id):  # to view all available subjects
         if student(id).is_student():
@@ -1073,14 +1025,6 @@ class admin(user): # admin class inherits from user class
 
             return all_available
 
-            
-            
-            
-            
-        
-        
-        ### if available_only True, only show open sections
-        pass
 
     def find_sections(self, course_code):  # to view sections for a specific subject
         row  = courses_db.execute("SELECT section FROM Courses WHERE course_code = ?", (course_code,), fetchall=True)
@@ -1088,8 +1032,6 @@ class admin(user): # admin class inherits from user class
             return f"Subject {course_code}, No sections found"
         sections = [r[0] for r in row]
         return sections
-        ### must search in database for sections with this subject_code
-        pass
 
     def expand_capacity(self, section_code, new_capacity):  # to expand section capacity
         section_code=section_code.strip().upper()
@@ -1107,9 +1049,7 @@ class admin(user): # admin class inherits from user class
             return f"Subject with code {course_code} does not exist."
         if not stu.already_taken_subject(course_code) and course_code not in stu.enrolled_subjects:
             return f"Student with ID {student_id} has not completed subject {course_code}."
-        # if stu.already_taken_subject(course_code):
-        #     return f"Student with ID {student_id} has already been graded in subject {course_code}."
-         # Validate and convert grade to letter grade
+
         try :
             grade = float(grade)
         except:
@@ -1171,32 +1111,6 @@ class admin(user): # admin class inherits from user class
             courses_info[course_code]=(course_name,credit,term,prerequisites)
         return courses_info
     
-    def add_course(self,course_code,course_name,credit,sections,instructor_id,capacity,term,prerequisites,start_time=None,end_time=None,day=None): #to add a new course to the database
-        if not 10>=term>=1:
-            return False , "Term must be between 1 and 10."
-        course_code=course_code.strip().upper()
-        sub=subject(course_code)
-        if sub.is_existing():
-            return False , f"Course with code {course_code} already exists."
-        if credit<=0:
-            return False , "Credit must be a positive integer."
-        if not instructor(instructor_id).is_existing():
-            return False , f"Instructor with ID {instructor_id} does not exist."
-        sections=sections.strip().upper()
-        if section(sections).section_is_existing():
-            return False , f"Section {sections} already exists."
-        if capacity<=0:
-            return False , "Capacity must be a positive integer."
-        if prerequisites.find(",")!=-1:
-            prereq_list=[prereq.strip().upper() for prereq in prerequisites.split(",")]
-        else:
-            prereq_list= [prerequisites.strip().upper()]
-        for prereq in prereq_list:
-            pre_sub=subject(prereq)
-            if not pre_sub.is_existing():
-                return False , f"Prerequisite course with code {prereq} does not exist."
-        courses_db.execute("INSERT INTO Courses (course_code, course_name, credit, section, instructor, capacity, time,term) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (course_code, course_name, credit, sections, instructor_id, capacity, "To be scheduled", term), commit=True)
-        return True , f"Course {course_code} - {course_name} added successfully with section {sections}."
     
     def rewrite_add_course(self,course_code=None,course_name=None,credit=None,sections=None,term=None,prerequisites=None): #to change added course details
         if course_code is None or course_name is None or credit is None or sections is None or term is None or prerequisites is None:
@@ -1271,10 +1185,7 @@ class admin(user): # admin class inherits from user class
                     return False , f"Section {new_sec} already exists."
             else:
                 return False , "please use , to separate new section and old section only using , EX: AA,AW. (notce that old section first)"
-            # else:    
-            #     sec=sections.strip().upper()
-            # if section(sec).section_is_existing():
-            #     return False , f"Section {sec} already exists."
+
             
         if term is not None:
             if not term.isdigit():
@@ -1304,7 +1215,7 @@ class admin(user): # admin class inherits from user class
 
         if term is not None:courses_db.execute("UPDATE Courses SET term = ? WHERE course_code = ?", (int(term), course_code), commit=True)
 
-        return True , f"Course with code {course_code} updated successfully." ### what if this course has multiple sections? we see later
+        return True , f"Course with code {course_code} updated successfully." 
     
     def rewrite_add_section(self,course_code=None,section_name=None,instructor_id=None,capacity=None,start_time=None,end_time=None,day=None):
         if course_code is None or section_name is None or instructor_id is None or capacity is None:
@@ -1479,40 +1390,6 @@ class admin(user): # admin class inherits from user class
             }
 
         return courses_info
-        
-        # if plan_major=="Electrical communication and electronics engineering":
-        #     row= courses_db.execute("SELECT course_code FROM communication",fetchall=True)
-        # elif plan_major=="Electrical computer engineering":
-        #     row= courses_db.execute("SELECT course_code FROM computer",fetchall=True)
-        # elif plan_major=="Electrical power and machines engineering":
-        #     row= courses_db.execute("SELECT course_code FROM power",fetchall=True)
-        # elif plan_major=="Electrical biomedical engineering":
-        #     row= courses_db.execute("SELECT course_code FROM biomedical",fetchall=True)
-        # subjects_in_major= [r[0].strip().upper() for r in row]
-        # all_courses_row= courses_db.execute("SELECT course_code FROM Courses",fetchall=True)
-        # all_courses= [r[0].strip().upper() for r in all_courses_row]
-        # not_in_plan= []
-        # for course in all_courses:
-        #  if course not in subjects_in_major:
-        #     not_in_plan.append(course)
-        # #know we found ( cours_code, course_name, credit, term, prerequisites) for each course in not_in_plan
-        # courses_info= {}
-        # for course_code in not_in_plan:
-        #     row= courses_db.execute("SELECT course_name,credit,term,prerequisites FROM Courses WHERE course_code = ?", (course_code,), fetchone=True)
-        #     course_name=row[0]
-        #     credit=row[1]
-        #     terms=row[2]
-        #     if row[3]==None:
-        #         prerequisites=""
-        #     else:
-        #         prerequisites=row[3]
-        #     courses_info[course_code]={
-        #         "course_name": course_name,
-        #         "credit": credit,
-        #         "terms": terms,
-        #         "prerequisites": prerequisites
-        #     }
-        # return courses_info
 
     def add_course_to_plan(self, course_code, plan_major):
         course_code = course_code.strip().upper()
@@ -1634,48 +1511,8 @@ class admin(user): # admin class inherits from user class
             }
         return subjects_info
     
-    def add_section(self,course_code,section_name,capacity,instructor_id,start_time,end_time,day):
-        sub=subject(course_code.strip().upper())
-        if not sub.is_existing():
-            return False , f"Course with code {course_code} does not exist."
-        if section(section_name).section_is_existing():
-            return False , f"Section {section_name} already exists."
-        if capacity<=0:
-            return False , "Capacity must be a positive integer."
-        if not instructor(instructor_id).is_instructor():
-            return False , f"Instructor with ID {instructor_id} does not exist."
-        if day == "Sunday":
-            day_code = "S"
-        elif day == "Monday":
-            day_code = "M"
-        elif day == "Tuesday":
-            day_code = "T"
-        elif day == "Wednesday":
-            day_code = "W"
-        elif day == "Thursday":
-            day_code = "U"
-        start_time_list = start_time.split(":")
-        end_time_list = end_time.split(":")
-        start_hour = int(start_time_list[0])
-        end_hour = int(end_time_list[0])
-        if start_hour == end_hour:
-            return False , "Start time and end time cannot be the same."
-        elif start_hour > end_hour:
-            return False , "The lecture time conflict with non-academic commitments."
-        elif start_hour - end_hour > 3:
-            return False , "Lecture duration cannot exceed 3 hours."
-        time = f"{day_code} {start_time}-{end_time}"
-        credit_prerequisite_row= courses_db.execute("SELECT credit, prerequisites FROM Courses WHERE course_code = ?", (course_code,), fetchone=True)
-        credit= credit_prerequisite_row[0]
-        if credit_prerequisite_row[1]==None or credit_prerequisite_row[1]=="":
-            prerequisites=""
-        else:
-            prerequisites= credit_prerequisite_row[1]
-
-        courses_db.execute("INSERT INTO Courses (course_code, course_name, credit, section, instructor, capacity, time,prerequisites) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (course_code, sub.subject_name, credit, section_name, instructor_id, capacity,time, prerequisites), commit=True)
-        return True , f"Section {section_name} added successfully to course {course_code}."
     
-    def remove_section(self,section_name): #done
+    def remove_section(self,section_name):
         sect=section(section_name=section_name.strip().upper())
         if not sect.section_is_existing():
             return False , f"Section {section_name} does not exist."
@@ -1684,64 +1521,7 @@ class admin(user): # admin class inherits from user class
         courses_db.execute("DELETE FROM Courses WHERE section = ?", (section_name,), commit=True)
         return True , f"Section {section_name} deleted successfully."
     
-    def update_section(self,course_code=None,section_name=None,capacity=None,instructor_id=None,start_time=None,end_time=None,day=None):
-        sect=section(section_name=section_name)
-        if not sect.section_is_existing():
-            return False , f"Section {section_name} does not exist."
-        if course_code is not None:
-            sub=subject(course_code)
-            if not sub.is_existing():
-                return False , f"Course with code {course_code} does not exist."
-            courses_db.execute("UPDATE Courses SET course_code = ? WHERE section = ?", (course_code, section_name), commit=True)
-        if capacity is not None:
-         if not capacity.isdigit():
-            return False , "Capacity must be a positive integer."
-         if int(capacity)<=0:
-            return False , "Capacity must be a positive integer."
-         
-         sect.new_capacity(capacity)
-        if instructor_id is not None:
-            if not instructor(instructor_id.strip()).is_existing():
-                return False , f"Instructor with ID {instructor_id} does not exist."
-            courses_db.execute("UPDATE Courses SET instructor = ? WHERE section = ?", (instructor_id, section_name), commit=True)
-        if ( start_time is not None and (end_time is None or day is None) ) or ( end_time is not None and (start_time is None or day is None) ) or ( day is not None and (start_time is None or end_time is None) ):
-            return False , "To update time, start_time, end_time, and day must all be provided."
-        if start_time is not None and end_time is not None and day is not None:
-            time= f"{day}, {start_time}-{end_time}"
-            courses_db.execute("UPDATE Courses SET time = ? WHERE section = ?", (time, section_name), commit=True)
-        return True , f"Section {section_name} updated successfully."
-    
-    def update_course(self,course_code,course_name=None,credit=None,term=None,prerequisites=None,capacity=None):
-        course_code=course_code.strip().upper()
-        if capacity is not None:
-            return False , "capacity cant be updated from course managment please use section managment."
-        sub=subject(course_code)
-        if not sub.is_existing():
-            return False , f"Course with code {course_code} does not exist."
-        if course_name is not None:
-            courses_db.execute("UPDATE Courses SET course_name = ? WHERE course_code = ?", (course_name, course_code), commit=True)
-        if credit is not None:
-            if credit<=0:
-                return False , "Credit must be a positive integer."
-            courses_db.execute("UPDATE Courses SET credit = ? WHERE course_code = ?", (credit, course_code), commit=True)
-        if term is not None:
-            if not 10>=term>=1:
-                return False , "Term must be between 1 and 10."
-            courses_db.execute("UPDATE Courses SET term = ? WHERE course_code = ?", (term, course_code), commit=True)
-            major_table_map = {
-                'Electrical communication and electronics engineering': "communication",
-                'Electrical computer engineering': "computer",
-                'Electrical power and machines engineering': "power",
-                'Electrical biomedical engineering': "biomedical"}
-            
-            courses_db.execute("UPDATE Courses SET term = ? WHERE course_code = ?", (term, course_code), commit=True)
-            for major_table in major_table_map.values():
-                okay= courses_db.execute("SELECT course_code FROM {table} WHERE course_code = ?".format(table=major_table), (course_code,), fetchone=True)
-                if okay is not None:
-                    courses_db.execute("UPDATE {table} SET terms = ? WHERE course_code = ?".format(table=major_table), (term, course_code), commit=True)
-        if prerequisites is not None:
-            courses_db.execute("UPDATE Courses SET prerequisites = ? WHERE course_code = ?", (prerequisites, course_code), commit=True)
-        return True , f"Course {course_code} updated successfully."
+
     
     def get_table_data_optimized(self, plan, term):
         if plan == "Electrical communication and electronics engineering":
@@ -1752,10 +1532,12 @@ class admin(user): # admin class inherits from user class
             plan="power"
         elif plan == "Electrical biomedical engineering":
             plan="biomedical"
-        ### now we bring (section, capacity, instructor, credit, time) from Courses table for each course_code
+        # now we bring (section, capacity, instructor, credit, time) from Courses table for each course_code
         row= courses_db.execute("SELECT course_code, section, capacity, instructor, credit, time FROM Courses WHERE course_code IN (SELECT course_code FROM {plan} WHERE terms = ?)".format(plan=plan), (term,), fetchall=True)
 
-        return row       
+        return row   
+        
+#________________________________________________________________________________________________________________
 
 #password strength checker methods
 def is_special(ch): # this is for password ensuring it has a special character
@@ -1815,10 +1597,7 @@ def signup(FN, LN, Npassword, M): # FN = first name , LN = last name
 
     return s
 
-
-
-
-
+#________________________________________________________________________________________________________________
 
 def update_password(student_id, new_password):
 

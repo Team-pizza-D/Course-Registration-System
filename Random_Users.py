@@ -1,5 +1,5 @@
 import sqlite3
-from classses2 import admin, instructor
+from classes import admin, instructor
 from Programs import All_Courses, L, L1, L2
 
 #------------5 Admins-----------------

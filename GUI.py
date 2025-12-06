@@ -8,7 +8,7 @@ from PyQt5 import uic, QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow,QShortcut,QMessageBox,QTableWidgetItem, QHeaderView, QAbstractItemView
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QKeySequence
-from classses2 import admin, student, user, users_db, enforce_strong_password, signup, update_password
+from classes import admin, student, user, users_db, enforce_strong_password, signup, update_password
 
 # _____________________________________________________________
 #                         Login WINDOW
@@ -1999,7 +1999,7 @@ class AdminWindow(QtWidgets.QMainWindow):
         self.Tab4_Course_code_2.clear()
 
     def load_tab4_grade_table(self):
-        from classses2 import users_db, courses_db
+        from classes import users_db, courses_db
 
         rows = users_db.execute(
             "SELECT student_id, course, Letter_grade FROM grades",

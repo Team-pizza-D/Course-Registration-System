@@ -1,7 +1,7 @@
 import sqlite3
 import bcrypt
 import random
-from classses2 import student
+from classes import student
 from Programs import loop_dict_key, loop_dict_value
 # This file is a random generated students
 db = sqlite3.connect("Users.db")

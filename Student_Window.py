@@ -5,7 +5,7 @@ import time
 from PyQt5 import uic, QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QShortcut
 from PyQt5.QtGui import QKeySequence
-from classses2 import Database,  student, admin, user, subject, section, instructor
+from classes import Database,  student, admin, user, subject, section, instructor
 
 class StudentWindow(QtWidgets.QMainWindow):
     def __init__(self, sid="2430020", sname="tarif alqahtani", smajor="Electrical communication and electronics engineering"):
