@@ -141,7 +141,7 @@ class AdminWindow(QtWidgets.QMainWindow):
 
         self.Section_EndTime_Combo.clear()
         self.Section_EndTime_Combo.addItems(end_times)
-        self.map_major_to_plane = {
+        self.map_major_to_plan = {
             "Electrical communication and electronics engineering": "ECE",
             "Electrical power and machines engineering": "PM",
             "Computer engineering": "CE",
@@ -1092,7 +1092,7 @@ class AdminWindow(QtWidgets.QMainWindow):
         term_text = self.Tab6_Term.currentText()
 
         try:
-            not_in = self.admin_obj.courses_not_in_the_plane(major) or {}
+            not_in = self.admin_obj.courses_not_in_the_plan(major) or {}
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Error loading 'Not in plan': {e}")
             not_in = {}
@@ -1151,7 +1151,7 @@ class AdminWindow(QtWidgets.QMainWindow):
     #     major = self.Tab6_Major_combobox.currentText()
 
     #     try:
-    #         ok, msg = self.admin_obj.add_course_to_plane(course_code, major)
+    #         ok, msg = self.admin_obj.add_course_to_plan(course_code, major)
     #     except Exception as e:
     #         QMessageBox.critical(self, "Error", f"Error adding course: {e}")
     #         return
@@ -1186,7 +1186,7 @@ class AdminWindow(QtWidgets.QMainWindow):
 
             major = self.Tab6_Major_combobox.currentText()
 
-            ok, msg = self.admin_obj.add_course_to_plane(course_code, major)
+            ok, msg = self.admin_obj.add_course_to_plan(course_code, major)
 
             if ok:
                 QMessageBox.information(self, "Add Course", str(msg))
@@ -1215,7 +1215,7 @@ class AdminWindow(QtWidgets.QMainWindow):
         major = self.Tab6_Major_combobox.currentText()
 
         try:
-            ok, msg = self.admin_obj.delete_course_from_plane(course_code, major)
+            ok, msg = self.admin_obj.delete_course_from_plan(course_code, major)
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Error deleting course: {e}")
             return

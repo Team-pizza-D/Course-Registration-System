@@ -33,7 +33,7 @@ import smtplib
 # print(b)
 a=admin(8206086)
 print(a.display_info())
-ok,msg=a.add_course_to_plane("MEP261","Electrical communication and electronics engineering")
+ok,msg=a.add_course_to_plan("MEP261","Electrical communication and electronics engineering")
 print(ok)
 print(msg)
 
