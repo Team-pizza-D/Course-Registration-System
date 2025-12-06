@@ -1,3 +1,4 @@
+import random
 import sys
 import os
 import sqlite3
@@ -6,7 +7,7 @@ import smtplib
 from PyQt5 import uic, QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QShortcut
 from PyQt5.QtGui import QKeySequence
-from classses2 import Database,  student, admin, user, subject, section, instructor, enforce_strong_password, signup
+from classses2 import Database,  student, admin, user, subject, section, instructor, enforce_strong_password, signup, update_password
 
 
 # _____________________________________________________________
@@ -182,7 +183,6 @@ class LoginWindow(QMainWindow):
                 return
 
             # ========== CHECK PASSWORD STRENGTH ==========
-            from classses2 import enforce_strong_password, signup
 
             if not enforce_strong_password(new_pass):
                 QtWidgets.QMessageBox.warning(
@@ -248,30 +248,24 @@ class LoginWindow(QMainWindow):
                 self.login.show()
 
         def verify_student_id(self):
-            uni_id = self.IDLineEdit.text().strip()
+            self.uni_id = self.IDLineEdit.text().strip()
+            
+            if not self.uni_id:
+                QtWidgets.QMessageBox.warning(self, "Error", "Please enter a University ID.")
+                return
+            s = student(id=self.uni_id)
+            if not s.is_student():
+                QtWidgets.QMessageBox.warning(self, "Error", "Student ID not found.")
+                return
+            # Student exists → enable verification code field
+            self.CodeLineEdit.setEnabled(True)
 
-            try:
-                if not uni_id:
-                    QtWidgets.QMessageBox.warning(self, "Error", "Please enter a University ID.")
-                    return
-                # Create student object
-                s = student(id=uni_id)
-
-                # Student exists → enable verification code field
-                self.CodeLineEdit.setEnabled(True)
-
-                QtWidgets.QMessageBox.information(
-                    self,
-                    "Success",
-                    "Student found. Please enter the verification code."
-                )
-
-            except:
-                QtWidgets.QMessageBox.critical(
-                    self,
-                    "Error",
-                    "Student ID not found."
-                )
+            QtWidgets.QMessageBox.information(
+                self,
+                "Success",
+                "Student found. Please enter the verification code."
+            )  
+            self.expected_code = self.reset_password(self.uni_id)
 
         def verify_code(self):
             code = self.CodeLineEdit.text().strip()
@@ -280,9 +274,102 @@ class LoginWindow(QMainWindow):
                 QtWidgets.QMessageBox.warning(self, "Error", "Please enter the verification code.")
                 return
 
-            # For now only display a message (you will link actual email verification later)
-            QtWidgets.QMessageBox.information(self, "Success", "Verification code accepted.")
+            if code != str(self.expected_code):
+                QtWidgets.QMessageBox.warning(self, "Error", "Incorrect verification code.")
+                return
 
+            # For now only display a message (you will link actual email verification later)
+            if code == str(self.expected_code):
+                QtWidgets.QMessageBox.information(self, "Success", "Verification code accepted.")
+                self.change_pass_window = LoginWindow.ResetPassWindow(self.uni_id)
+                self.change_pass_window.show()
+                self.close()
+
+        def reset_password(self, the_id):
+            this_time_code = random.randint(100000,999999)
+            sender_email = "pizzateamd@gmail.com"
+            app_paas = "wihu xclr tdos yxxh"
+            #======Getting user's email=======#
+            db = sqlite3.connect("Users.db")
+            cr = db.cursor()
+            user_email = "viibrkk@gmail.com"  # Default email
+            cr.execute("SELECT username FROM admins WHERE id = ? UNION SELECT username FROM instructors WHERE id = ? UNION SELECT username FROM students WHERE id = ?", (the_id,the_id,the_id))
+            user_in_tuple = cr.fetchall()
+            user_name = user_in_tuple[0][0]
+            subj = "RESET YOUR PASSWORD"
+            body = f"Hello {user_name}, this is an email to reset your password\nThis is your one time code: {this_time_code}, please enter it carefully\nIf you don't want to reset your password, just ignore this email"
+            msgg = f"{subj}\n\n{body}"
+
+            server = smtplib.SMTP("smtp.gmail.com",587)
+            server.starttls()
+            server.login(sender_email, app_paas)
+            server.sendmail(sender_email, user_email, msgg)
+            server.quit()
+            return this_time_code
+
+    class ResetPassWindow(QtWidgets.QMainWindow):
+        def __init__(self, sid):
+            super().__init__()
+            ui_path = os.path.join(os.path.dirname(__file__), "ResetPass.ui")
+            uic.loadUi(ui_path, self)
+
+            self.setFixedWidth(607)
+            self.setFixedHeight(648)
+
+            self.student_id = sid
+            self.checkBox_showNew10.stateChanged.connect(self.toggle_password)
+            self.ChangePassButton.clicked.connect(self.change_password)
+
+        def change_password(self):
+            new_pass = self.PasslineEditNew10.text().strip()
+            confirm_pass = self.PassLineEditConfirm10.text().strip()
+
+            if not new_pass or not confirm_pass:
+                QtWidgets.QMessageBox.warning(self, "Error", "All fields are required.")
+                return
+
+            if new_pass != confirm_pass:
+                QtWidgets.QMessageBox.warning(self, "Error", "Passwords do not match.")
+                return
+
+            if not enforce_strong_password(new_pass):
+                QtWidgets.QMessageBox.warning(
+                    self,
+                    "Weak Password",
+                    "Password must:\n"
+                    "- Have 1 special character\n"
+                    "- Be at least 8 characters\n"
+                    "- Contain an uppercase letter\n"
+                    "- Not contain 3 consecutive numbers"
+                )
+                return
+
+            try:
+                update_password(self.student_id, new_pass)
+
+                QtWidgets.QMessageBox.information(
+                    self,
+                    "Success",
+                    "Password changed successfully."
+                )
+                self.close()
+                self.login = LoginWindow()
+                self.login.show()
+
+            except Exception as e:
+                QtWidgets.QMessageBox.critical(
+                    self,
+                    "Error",
+                    f"An error occurred:\n{e}"
+                )
+
+        def toggle_password(self):
+            if self.checkBox_showNew10.isChecked():
+                self.PasslineEditNew10.setEchoMode(QtWidgets.QLineEdit.Normal)
+                self.PassLineEditConfirm10.setEchoMode(QtWidgets.QLineEdit.Normal)
+            else:
+                self.PasslineEditNew10.setEchoMode(QtWidgets.QLineEdit.Password)
+                self.PassLineEditConfirm10.setEchoMode(QtWidgets.QLineEdit.Password)
 
 # _____________________________________________________________
 #                        STUDENT WINDOW
