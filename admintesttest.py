@@ -1,12 +1,10 @@
-from operator import index
 import os
-import sqlite3
 import sys
 from PyQt5 import uic, QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow,QShortcut,QMessageBox,QTableWidgetItem, QHeaderView, QAbstractItemView
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QKeySequence
-from classses2 import admin, section, student       
+from classses2 import admin, student       
 from Admin_Window import AdminWindow  
 
 class LoginWindow(QMainWindow):
@@ -141,7 +139,7 @@ class AdminWindow(QtWidgets.QMainWindow):
 
         self.Section_EndTime_Combo.clear()
         self.Section_EndTime_Combo.addItems(end_times)
-        self.map_major_to_plane = {
+        self.map_major_to_plan = {
             "Electrical communication and electronics engineering": "ECE",
             "Electrical power and machines engineering": "PM",
             "Computer engineering": "CE",
@@ -1092,7 +1090,7 @@ class AdminWindow(QtWidgets.QMainWindow):
         term_text = self.Tab6_Term.currentText()
 
         try:
-            not_in = self.admin_obj.courses_not_in_the_plane(major) or {}
+            not_in = self.admin_obj.courses_not_in_the_plan(major) or {}
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Error loading 'Not in plan': {e}")
             not_in = {}
@@ -1120,18 +1118,30 @@ class AdminWindow(QtWidgets.QMainWindow):
         self._fill_tab6_table(self.Tab6_CurrentPlan_table, filtered_in_plan)
 
     def _fill_tab6_table(self, table, data_dict):
+        # 1. Turn off sorting while we update to prevent visual glitches
+        table.setSortingEnabled(False)
+        
+        # 2. Convert to list and SORT IT clearly
+        # This sorts primarily by 'Term' (as integer), and secondarily by 'Code'
         rows = list(data_dict.items())
+        rows.sort(key=lambda x: (int(x[1].get("terms", 0) or 0), x[0]))
+
+        # 3. Clear the table completely first
+        table.setRowCount(0)
         table.setRowCount(len(rows))
 
         for r, (code, info) in enumerate(rows):
-            item_code = QTableWidgetItem(code)
+            item_code = QTableWidgetItem(str(code))
             item_name = QTableWidgetItem(str(info.get("course_name", "")))
             item_credit = QTableWidgetItem(str(info.get("credit", "")))
             item_term = QTableWidgetItem(str(info.get("terms", "")))
             item_prereq = QTableWidgetItem(str(info.get("prerequisites", "")))
 
+            # Center align everything
             for item in (item_code, item_name, item_credit, item_term, item_prereq):
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
+                # Optional: Make items un-editable here explicitly if needed
+                item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
             table.setItem(r, 0, item_code)
             table.setItem(r, 1, item_name)
@@ -1140,27 +1150,10 @@ class AdminWindow(QtWidgets.QMainWindow):
             table.setItem(r, 4, item_prereq)
 
         table.resizeColumnsToContents()
+        
+        # 4. Re-enable sorting (if you use it)
+        table.setSortingEnabled(True)
 
-    # def add_course_to_plan(self):
-    #     row = self.Tab6_NoPlan_table.currentRow()
-    #     if row < 0:
-    #         QMessageBox.warning(self, "Add Course", "Please select a course from 'Not in plan'.")
-    #         return
-
-    #     course_code = self.Tab6_NoPlan_table.item(row, 0).text()
-    #     major = self.Tab6_Major_combobox.currentText()
-
-    #     try:
-    #         ok, msg = self.admin_obj.add_course_to_plane(course_code, major)
-    #     except Exception as e:
-    #         QMessageBox.critical(self, "Error", f"Error adding course: {e}")
-    #         return
-
-    #     if ok:
-    #         QMessageBox.information(self, "Add Course", str(msg))
-    #         self.refresh_tab6()
-    #     else:
-    #         QMessageBox.warning(self, "Add Course", str(msg))
 #_____________________________________________________________________________________________________________________________________________________
     def add_course_to_plan(self):
         
@@ -1186,7 +1179,7 @@ class AdminWindow(QtWidgets.QMainWindow):
 
             major = self.Tab6_Major_combobox.currentText()
 
-            ok, msg = self.admin_obj.add_course_to_plane(course_code, major)
+            ok, msg = self.admin_obj.add_course_to_plan(course_code, major)
 
             if ok:
                 QMessageBox.information(self, "Add Course", str(msg))
@@ -1215,7 +1208,7 @@ class AdminWindow(QtWidgets.QMainWindow):
         major = self.Tab6_Major_combobox.currentText()
 
         try:
-            ok, msg = self.admin_obj.delete_course_from_plane(course_code, major)
+            ok, msg = self.admin_obj.delete_course_from_plan(course_code, major)
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Error deleting course: {e}")
             return
