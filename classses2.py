@@ -297,7 +297,7 @@ class section(subject):
             self.student_name_in_section = [r[1] for r in row]
         find_subject_list=courses_db.execute("SELECT course_code FROM Courses WHERE section= ?",(self.section_name,),fetchone=True)
         if find_subject_list==None:
-            return "db error: section not found"
+            self.subject=subject_name
         else: 
             self.subject= find_subject_list[0].strip()
         
@@ -1249,9 +1249,33 @@ class admin(user): # admin class inherits from user class
         
             
         if sections is not None:
-            sec=sections.strip().upper()
-            if section(sec).section_is_existing():
-                return False , f"Section {sec} already exists."
+            if "," in sections:
+                sec=[section.strip().upper() for section in sections.split(",")]
+                if len(sec)>2 or len(sec)<2:
+                    return False , "please use , to separate new section and old section only using , EX: AA,AW. (notce that old section first)"
+                old_sec=sec[0]
+                new_sec=sec[1]
+                
+                if section(old_sec).subject == None:
+                    return False , f"Section {old_sec} does not exist."
+                else:
+                
+                    if subject(course_code).subject_name != section(old_sec).subject:
+                        return False , f"Section {old_sec} is not associated with course {course_code}."
+                    if old_sec==new_sec:
+                        return False , "Old section and new section cannot be the same."
+                
+
+                if not section(old_sec).section_is_existing():
+                    return False , f"Section {old_sec} does not exist."
+                if section(new_sec).section_is_existing():
+                    return False , f"Section {new_sec} already exists."
+            else:
+                return False , "please use , to separate new section and old section only using , EX: AA,AW. (notce that old section first)"
+            # else:    
+            #     sec=sections.strip().upper()
+            # if section(sec).section_is_existing():
+            #     return False , f"Section {sec} already exists."
             
         if term is not None:
             if not term.isdigit():
@@ -1273,7 +1297,7 @@ class admin(user): # admin class inherits from user class
                 if not pre_sub.is_existing():
                     return False , f"Prerequisite course with code {prereq} does not exist."
             courses_db.execute("UPDATE Courses SET prerequisites = ? WHERE course_code = ?", (prerequisites, course_code), commit=True)
-        if sections is not None:courses_db.execute("UPDATE Courses SET section = ? WHERE course_code = ?", (sec, course_code), commit=True)
+        if sections is not None:courses_db.execute("UPDATE Courses SET section = ? WHERE section = ? AND course_code = ?", (new_sec, old_sec, course_code), commit=True)
             
         if course_name is not None:courses_db.execute("UPDATE Courses SET course_name = ? WHERE course_code = ?", (course_name, course_code), commit=True)
         
