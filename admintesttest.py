@@ -119,7 +119,6 @@ class AdminWindow(QtWidgets.QMainWindow):
         super().__init__()
         ui_path = os.path.join(os.path.dirname(__file__), "Admin_Window.ui")
         uic.loadUi(ui_path, self)
-        self.Tab4_SearchBar.textChanged.connect(self.filter_tab4_table)
         self.setFixedWidth(1471)
         self.setFixedHeight(966)
         self.adminName = admin_name
@@ -128,26 +127,17 @@ class AdminWindow(QtWidgets.QMainWindow):
         self.welcomeLabel.setText(f"Welcome, {self.adminName}!")
         self.tabWidget.setCurrentIndex(0)
         self.current_student = None
-        self.available_section_map = {}   # row -> section (right table)
-        self.current_section_map = {}     # row -> section (left table)
+        self.available_section_map = {}   
+        self.current_section_map = {}     
 
+        # tab 5 - Section time combos
         start_times = generate_start_times()
         end_times = generate_end_times()
-
         self.Section_StartTime_Combo.clear()
         self.Section_StartTime_Combo.addItems(start_times)
 
         self.Section_EndTime_Combo.clear()
         self.Section_EndTime_Combo.addItems(end_times)
-        self.map_major_to_plan = {
-            "Electrical communication and electronics engineering": "ECE",
-            "Electrical power and machines engineering": "PM",
-            "Computer engineering": "CE",
-            "Biomedical engineering": "BIO"
-        }
-
-        
-
 
 
         # General table settings
@@ -163,21 +153,18 @@ class AdminWindow(QtWidgets.QMainWindow):
             table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
             table.verticalHeader().setVisible(False)
 
-        def center_row_items(self, table, row):
-            for col in range(table.columnCount()):
-                item = table.item(row, col)
-                if item:
-                    item.setTextAlignment(QtCore.Qt.AlignCenter)
 
         # Load Tab 1 student table initially
         self.load_tab1_students()
         # Load Tab 3 table initially
-        
+        self.update_subjects_table()
         # Load Tab 4 grade table initially
         self.load_tab4_grade_table()
+        self.Tab4_SearchBar.textChanged.connect(self.filter_tab4_table)
         # Load Tab 6 tables
         self.setup_tab6_tables()
-
+        self.setup_tab6_tables()
+        self.refresh_tab6()
         # ---------- Connections ----------
         self.SignOutButton.clicked.connect(self.sign_out)
         # Tab 1: add/delete student
@@ -194,12 +181,7 @@ class AdminWindow(QtWidgets.QMainWindow):
         # Tab 3: Details
         self.Tab3_MajorChoice.currentIndexChanged.connect(self.update_subjects_table)
         self.Tab3_Term.currentIndexChanged.connect(self.update_subjects_table)
-
-
-        self.update_subjects_table()
-
-
-
+        
         #Tab 4 : Grades
         self.Tab4_Confirm.clicked.connect(self.handle_tab4_grading)
 
@@ -212,19 +194,13 @@ class AdminWindow(QtWidgets.QMainWindow):
         self.Tab5_SectionUpdate.clicked.connect(self.logic_update_section)
         self.Tab5_SectionRemove.clicked.connect(self.logic_remove_section)
 
-        self.setup_tab6_tables()
-        
-        # Connect Signals
+        # Tab6
         self.Tab6_Major_combobox.currentIndexChanged.connect(self.refresh_tab6)
         self.Tab6_Term.currentIndexChanged.connect(self.refresh_tab6)
         self.Tab6_AddPlan.clicked.connect(self.add_course_to_plan)
         self.Tab6_DeletePlan.clicked.connect(self.remove_course_from_plan)
 
-        # Initial Load
-        self.refresh_tab6()
-
-
-
+        
 
     # =========================================================
     # General 
@@ -245,6 +221,7 @@ class AdminWindow(QtWidgets.QMainWindow):
             self.login = LoginWindow()  # return to login
             self.login.show()
     
+    #tab4 search filter
     def filter_tab4_table(self):
         text = self.Tab4_SearchBar.text().strip().lower()
 
@@ -281,8 +258,8 @@ class AdminWindow(QtWidgets.QMainWindow):
             QtWidgets.QMessageBox.warning(self, "Error", "Please fill both first and last name.")
             return
 
-        # Default major (change if needed)
-        major = "Electrical communication and electronics engineering"
+        # Major combo box
+        major = self.Tab1_Major.currentText()
 
         ok, msg = self.admin_obj.add_student(first, last, major)
 
@@ -706,49 +683,44 @@ class AdminWindow(QtWidgets.QMainWindow):
     # =========================================================
 
     def update_subjects_table(self):
-        # --- TABLE FORMATTING ---
+        # Table settings
         self.Subjects_details.verticalHeader().setVisible(False)
         self.Subjects_details.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.Subjects_details.horizontalHeader().setDefaultAlignment(Qt.AlignCenter)
         self.Subjects_details.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.Subjects_details.setSelectionBehavior(QAbstractItemView.SelectRows)
-        # ------------------------
 
-        # 1. Get Inputs
+        #Get Inputs
         selected_major = self.Tab3_MajorChoice.currentText().strip()
         selected_term = self.Tab3_Term.currentText().strip()
 
         # Reset table
         self.Subjects_details.setRowCount(0)
         
-        # NOTE: Your new SQL query returns 6 items (including 'time'), so I increased column count to 6
+        #sets columns
         self.Subjects_details.setColumnCount(6)
         self.Subjects_details.setHorizontalHeaderLabels(["Course Code", "Section ID", "Capacity", "Instructor", "Credit", "Time"])
 
         if not selected_term.isdigit():
             return
-
-        # 2. Call your NEW function
-        # We pass the full major name directly because your new code handles the mapping
+        #gets data from backend
         rows = admin.get_table_data_optimized(None, selected_major, int(selected_term))
         
-        # 3. Fill the table
+        #fills the table
         if rows:
             for row_data in rows:
                 row_position = self.Subjects_details.rowCount()
                 self.Subjects_details.insertRow(row_position)
-                
-                # row_data is: (course_code, section, capacity, instructor, credit, time)
+                                #1             #2      #3         #4        #5      #6
+                # row postion (course_code, section, capacity, instructor, credit, time)
                 self.Subjects_details.setItem(row_position, 0, QTableWidgetItem(str(row_data[0])))
                 self.Subjects_details.setItem(row_position, 1, QTableWidgetItem(str(row_data[1])))
                 self.Subjects_details.setItem(row_position, 2, QTableWidgetItem(str(row_data[2])))
                 self.Subjects_details.setItem(row_position, 3, QTableWidgetItem(str(row_data[3])))
                 self.Subjects_details.setItem(row_position, 4, QTableWidgetItem(str(row_data[4])))
-                
-                # I added this since your new query fetches 'time' as the 6th item
                 self.Subjects_details.setItem(row_position, 5, QTableWidgetItem(str(row_data[5])))
                 
-                # Optional: Center the items
+                #To center all columns
                 for i in range(6):
                     self.Subjects_details.item(row_position, i).setTextAlignment(Qt.AlignCenter)
 
@@ -758,11 +730,12 @@ class AdminWindow(QtWidgets.QMainWindow):
     # =========================================================
 
     def handle_tab4_grading(self):
+        admin_obj = self.admin_obj
         student_id = self.Tab4_Student_ID.text().strip()
         course_code = self.Tab4_Course_code.text().strip()
         grade_value = self.Tab4_Course_code_2.text().strip()
 
-        # Validate fields
+        # To make sure all fields are filled
         if not student_id or not course_code or not grade_value:
             QtWidgets.QMessageBox.warning(self, "Error", "Please fill all fields.")
             return
@@ -771,7 +744,7 @@ class AdminWindow(QtWidgets.QMainWindow):
             QtWidgets.QMessageBox.warning(self, "Error", "Student ID must be numeric.")
             return
 
-        # Grade must be numeric (0–100)
+        # Grade must be numbers ranging from 0 to 100
         try:
             grade_float = float(grade_value)
             if grade_float < 0 or grade_float > 100:
@@ -780,9 +753,6 @@ class AdminWindow(QtWidgets.QMainWindow):
         except:
             QtWidgets.QMessageBox.warning(self, "Error", "Grade must be a number.")
             return
-
-        # Use the existing admin object (NEVER create admin() again)
-        admin_obj = self.admin_obj
 
         # Call backend function
         message = admin_obj.add_grade(student_id, course_code, grade_float)
@@ -818,7 +788,7 @@ class AdminWindow(QtWidgets.QMainWindow):
 
         for r_index, (student_id, course_code, letter_grade) in enumerate(rows):
 
-            # Fetch course name
+            # gets course name from the data base
             cname = courses_db.execute(
                 "SELECT course_name FROM Courses WHERE course_code = ?",
                 (course_code,),
@@ -834,7 +804,7 @@ class AdminWindow(QtWidgets.QMainWindow):
             item_name = QtWidgets.QTableWidgetItem(course_name)
             item_grade = QtWidgets.QTableWidgetItem(letter_grade)
 
-            # Center alignment
+            # Centers the alignment
             for item in (item_stu, item_code, item_name, item_grade):
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
 
@@ -844,22 +814,20 @@ class AdminWindow(QtWidgets.QMainWindow):
             table.setItem(r_index, 2, item_name)
             table.setItem(r_index, 3, item_grade)
 
-        # Make ALL columns stretch
+        # table settings
         header = table.horizontalHeader()
         for col in range(table.columnCount()):
             header.setSectionResizeMode(col, QtWidgets.QHeaderView.Stretch)
-
-        # Disable editing
         table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         table.verticalHeader().setVisible(False)
    
     # =========================================================
     # TAB 5 — Courses Management
     # =========================================================
-    # ---------------------- ADD COURSE ----------------------
-    def logic_add_course(self):
 
-        # 1. Retrieve text from inputs
+    def logic_add_course(self): #creates course
+
+        # inputs
         code = self.Tab5_Course_code.text().strip()
         name = self.Tab5_Course_name.text().strip()
         credit = self.Tab5_Credit.text().strip()
@@ -867,13 +835,12 @@ class AdminWindow(QtWidgets.QMainWindow):
         term = self.Tab5_term.text().strip()
         prereq = self.Tab5_prerequisite.text().strip()
 
-        # 2. Strict Validation: Ensure NO field is empty
+        # Ensures that no fields are empty
         if not code or not name or not credit or not section or not term or not prereq:
             QMessageBox.warning(self, "Missing Data", "For adding a course, all fields must be entered.")
             return
 
-        # 3. Call Backend Function
-        # The backend expects: (course_code, course_name, credit, sections, term, prerequisites)
+        # Calls backend function
         success, message = self.admin_obj.rewrite_add_course(
             course_code=code,
             course_name=name,
@@ -883,22 +850,14 @@ class AdminWindow(QtWidgets.QMainWindow):
             prerequisites=prereq
         )
 
-        # 4. Show Result
         if success:
             QMessageBox.information(self, "Success", message)
-            # Optional: Clear fields after successful add
-            # self.Tab5_Course_code.clear()
-            # self.Tab5_Course_name.clear()
-            # self.Tab5_Credit.clear()
-            # self.Tab5_section.clear()
-            # self.Tab5_term.clear()
-            # self.Tab5_prerequisite.clear()
         else:
             QMessageBox.warning(self, "Error", message)
 
     def logic_update_course(self):
    
-        # 1. Retrieve text
+        # inputs
         code = self.Tab5_Course_code.text().strip()
         name = self.Tab5_Course_name.text().strip()
         credit = self.Tab5_Credit.text().strip()
@@ -906,20 +865,18 @@ class AdminWindow(QtWidgets.QMainWindow):
         term = self.Tab5_term.text().strip()
         prereq = self.Tab5_prerequisite.text().strip()
 
-        # 2. Validation: Course Code is mandatory
+        # checks required fields
         if not code:
             QMessageBox.warning(self, "Missing Data", "Please enter the Course Code to update.")
             return
 
-        # 3. Prepare Data for Backend
-        # If a field is empty string "", convert it to None so the backend knows not to update it.
+         # Call backend function
         name_arg = name if name else None
         credit_arg = credit if credit else None
         section_arg = section if section else None
         term_arg = term if term else None
         prereq_arg = prereq if prereq else None
 
-        # 4. Call Backend Function
         success, message = self.admin_obj.rewrite_update_course(
             course_code=code,
             course_name=name_arg,
@@ -929,48 +886,54 @@ class AdminWindow(QtWidgets.QMainWindow):
             prerequisites=prereq_arg
         )
 
-        # 5. Show Result
+        #Result
         if success:
             QMessageBox.information(self, "Success", message)
         else:
             QMessageBox.warning(self, "Error", message)
 
 
-    # ---------------------- ADD PREREQUISITE ----------------------
     def tab5_add_prerequisite(self):
+        #inputs
         code = self.Tab5_Prerequistie_CourseCode.text().strip()
         prereq = self.Tab5_PrerequistieCode.text().strip()
 
+        # checks required fields
         if not code or not prereq:
             return QtWidgets.QMessageBox.warning(self, "Error", "Please fill all fields.")
 
+        # Call backend function
         ok, msg = self.admin_obj.add_prerequisite_to_course(code, prereq)
 
+        #result
         if ok:
             QtWidgets.QMessageBox.information(self, "Add Prerequisite", msg)
         else:
             QtWidgets.QMessageBox.warning(self, "Add Prerequisite", msg)
 
 
-    # ---------------------- REMOVE PREREQUISITE ----------------------
     def tab5_remove_prerequisite(self):
+        # inputs
         code = self.Tab5_Prerequistie_CourseCode.text().strip()
         prereq = self.Tab5_PrerequistieCode.text().strip()
 
+        # checks required fields
         if not code or not prereq:
             return QtWidgets.QMessageBox.warning(self, "Error", "Please fill all fields.")
 
+        # Call backend function
         ok, msg = self.admin_obj.remove_prerequisite_from_course(code, prereq)
 
+        # Result
         if ok:
             QtWidgets.QMessageBox.information(self, "Remove Prerequisite", msg)
         else:
             QtWidgets.QMessageBox.warning(self, "Remove Prerequisite", msg)
 
 
-    # ---------------------- ADD SECTION ----------------------
+
     def logic_add_section(self):
-    # 1. Retrieve Data
+        # inputs
         start_time = self.Section_StartTime_Combo.currentText()
         end_time = self.Section_EndTime_Combo.currentText()
         day = self.Section_Day_Combo.currentText()
@@ -979,14 +942,12 @@ class AdminWindow(QtWidgets.QMainWindow):
         capacity = self.Tab5_Section_Capacity.text().strip()
         instructor_id = self.Tab5_Section_Instructor.text().strip()
 
-        # 2. Strict Validation: Ensure NO field is empty
-        # Note: For Comboboxes, ensure they aren't empty (assuming they have values selected)
+        # required fields
         if not (start_time and end_time and day and course_code and section_name and capacity and instructor_id):
             QMessageBox.warning(self, "Missing Data", "For adding a section, ALL fields must be filled.")
             return
 
-        # 3. Call Backend
-        # Backend arg order: course_code, section_name, instructor_id, capacity, start_time, end_time, day
+        # Call Backend function
         success, message = self.admin_obj.rewrite_add_section(
             course_code=course_code,
             section_name=section_name,
@@ -997,7 +958,7 @@ class AdminWindow(QtWidgets.QMainWindow):
             day=day
         )
 
-        # 4. Show Result
+        #Result
         if success:
             QMessageBox.information(self, "Success", message)
         else:
@@ -1005,7 +966,7 @@ class AdminWindow(QtWidgets.QMainWindow):
 
     def logic_update_section(self):
        
-        # 1. Retrieve Data
+        #inputs
         course_code = self.Tab5_Section_CourseCord.text().strip()
         section_name = self.Tab5_Section_SectionName.text().strip()
         
@@ -1016,25 +977,17 @@ class AdminWindow(QtWidgets.QMainWindow):
         end_time = self.Section_EndTime_Combo.currentText()
         day = self.Section_Day_Combo.currentText()
 
-        # 2. Validation: Mandatory fields
+        # required fields
         if not course_code or not section_name:
             QMessageBox.warning(self, "Missing Data", "Course Code and Section Name are required for updates.")
             return
 
-        # 3. Prepare Data (Convert empty strings to None)
+        # Call Backend function
         cap_arg = capacity if capacity else None
         inst_arg = instructor_id if instructor_id else None
-        
-        # For time, if the combobox is empty or not selected, pass None.
-        # Note: If your combo boxes always have a value (like "08:00"), this will pass the string.
-        # If the user intentionally wants to NOT update time, they should ideally not touch them, 
-        # but strictly speaking, Comboboxes usually always have a value unless you added a blank item.
-        # If you have a blank item at index 0, check `if start_time == "": start_arg = None`
         start_arg = start_time if start_time else None
         end_arg = end_time if end_time else None
         day_arg = day if day else None
-
-        # 4. Call Backend
         success, message = self.admin_obj.rewrite_update_section(
             course_code=course_code,
             section_name=section_name,
@@ -1045,26 +998,25 @@ class AdminWindow(QtWidgets.QMainWindow):
             day=day_arg
         )
 
-        # 5. Show Result
+        #Result
         if success:
             QMessageBox.information(self, "Success", message)
         else:
             QMessageBox.warning(self, "Error", message)
 
     def logic_remove_section(self):
-        # 1. Retrieve Data
+        # inputs
         section_name = self.Tab5_Section_SectionName.text().strip()
 
-        # 2. Validation
+        # required fields
         if not section_name:
             QMessageBox.warning(self, "Missing Data", "Please enter the Section Name to remove.")
             return
 
-        # 3. Call Backend
-        # Note: backend remove_section only takes section_name
+        # Call Backend function
         success, message = self.admin_obj.remove_section(section_name)
 
-        # 4. Show Result
+        #Result
         if success:
             QMessageBox.information(self, "Success", message)
         else:
@@ -1075,6 +1027,7 @@ class AdminWindow(QtWidgets.QMainWindow):
     ###############################################
 
     def setup_tab6_tables(self):
+        #prepare tables
         for table in (self.Tab6_CurrentPlan_table, self.Tab6_NoPlan_table):
             table.setColumnCount(5)
             table.setHorizontalHeaderLabels(
@@ -1086,15 +1039,16 @@ class AdminWindow(QtWidgets.QMainWindow):
             table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
     def refresh_tab6(self):
+        #update tables
         major = self.Tab6_Major_combobox.currentText()
         term_text = self.Tab6_Term.currentText()
 
+        #call backend functions
         try:
             not_in = self.admin_obj.courses_not_in_the_plan(major) or {}
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Error loading 'Not in plan': {e}")
             not_in = {}
-
         try:
             in_plan = self.admin_obj.display_subjects_by_major_plan(major) or {}
         except Exception as e:
@@ -1114,19 +1068,19 @@ class AdminWindow(QtWidgets.QMainWindow):
         else:
             filtered_in_plan = in_plan
 
+        #updates tables
         self._fill_tab6_table(self.Tab6_NoPlan_table, not_in)
         self._fill_tab6_table(self.Tab6_CurrentPlan_table, filtered_in_plan)
 
     def _fill_tab6_table(self, table, data_dict):
-        # 1. Turn off sorting while we update to prevent visual glitches
+        #Turns off sorting while we update to prevent glitches some glitches we faced 
         table.setSortingEnabled(False)
-        
-        # 2. Convert to list and SORT IT clearly
-        # This sorts primarily by 'Term' (as integer), and secondarily by 'Code'
+      
+        # Convert to list and SORT IT clearly
         rows = list(data_dict.items())
         rows.sort(key=lambda x: (int(x[1].get("terms", 0) or 0), x[0]))
 
-        # 3. Clear the table completely first
+        # Clears the table completely first
         table.setRowCount(0)
         table.setRowCount(len(rows))
 
@@ -1137,10 +1091,9 @@ class AdminWindow(QtWidgets.QMainWindow):
             item_term = QTableWidgetItem(str(info.get("terms", "")))
             item_prereq = QTableWidgetItem(str(info.get("prerequisites", "")))
 
-            # Center align everything
+            # Centers everything
             for item in (item_code, item_name, item_credit, item_term, item_prereq):
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
-                # Optional: Make items un-editable here explicitly if needed
                 item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
             table.setItem(r, 0, item_code)
@@ -1151,13 +1104,11 @@ class AdminWindow(QtWidgets.QMainWindow):
 
         table.resizeColumnsToContents()
         
-        # 4. Re-enable sorting (if you use it)
+        # Re-enables sorting after avoiding glitches
         table.setSortingEnabled(True)
 
-#_____________________________________________________________________________________________________________________________________________________
     def add_course_to_plan(self):
-        
-
+        # Adds a selected course from Not in plan to the current plan
         try:
             row = self.Tab6_NoPlan_table.currentRow()
             if row < 0:
@@ -1177,10 +1128,12 @@ class AdminWindow(QtWidgets.QMainWindow):
                                     "Course code is empty.")
                 return
 
+            #gets the major 
             major = self.Tab6_Major_combobox.currentText()
 
             ok, msg = self.admin_obj.add_course_to_plan(course_code, major)
 
+             #calls backend function
             if ok:
                 QMessageBox.information(self, "Add Course", str(msg))
                 self.refresh_tab6()
@@ -1199,14 +1152,16 @@ class AdminWindow(QtWidgets.QMainWindow):
 
 
     def remove_course_from_plan(self):
-        row = self.Tab6_CurrentPlan_table.currentRow()
+        row = self.Tab6_CurrentPlan_table.currentRow() #checks if a row is selected
         if row < 0:
             QMessageBox.warning(self, "Delete Course", "Please select a course from 'Current plan'.")
             return
 
+        #checks inputs from the combo box 
         course_code = self.Tab6_CurrentPlan_table.item(row, 0).text()
         major = self.Tab6_Major_combobox.currentText()
 
+        #calls backend function
         try:
             ok, msg = self.admin_obj.delete_course_from_plan(course_code, major)
         except Exception as e:
