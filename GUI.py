@@ -250,28 +250,24 @@ class LoginWindow(QMainWindow):
         def verify_student_id(self):
             uni_id = self.IDLineEdit.text().strip()
 
-            try:
-                if not uni_id:
-                    QtWidgets.QMessageBox.warning(self, "Error", "Please enter a University ID.")
-                    return
-                # Create student object
-                s = student(id=uni_id)
+            
+            if not uni_id:
+                QtWidgets.QMessageBox.warning(self, "Error", "Please enter a University ID.")
+                return
+            s = student(id=uni_id)
+            if not s.is_student():
+                QtWidgets.QMessageBox.warning(self, "Error", "Student ID not found.")
+                return
+            # Student exists → enable verification code field
+            self.CodeLineEdit.setEnabled(True)
 
-                # Student exists → enable verification code field
-                self.CodeLineEdit.setEnabled(True)
+            QtWidgets.QMessageBox.information(
+                self,
+                "Success",
+                "Student found. Please enter the verification code."
+            )
 
-                QtWidgets.QMessageBox.information(
-                    self,
-                    "Success",
-                    "Student found. Please enter the verification code."
-                )
-
-            except:
-                QtWidgets.QMessageBox.critical(
-                    self,
-                    "Error",
-                    "Student ID not found."
-                )
+            
 
         def verify_code(self):
             code = self.CodeLineEdit.text().strip()

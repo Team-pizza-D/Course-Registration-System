@@ -27,10 +27,12 @@ Each part is created in a separate Python file and connected through the main fi
 2. Place all project files in the same folder:
 ```css
 main.py
-classes.py
+classses2.py
 GUI.py
 users.py
 programs.py
+Random_Students.py
+Random_Users.py
 README.md
 ```
 3. Open a terminal or command prompt in that folder.  
@@ -44,15 +46,18 @@ Follow the on-screen menu enter University ID and password then press Login.
 ---
 
 ## File Descriptions
+
 **main.py**	Entry point of the program. Displays the main menu and connects all parts of the project.
 
 **Programs.py**	 It contains all the data about the transcripts such as, courses, prerequists, credits, and terms.
 
 **GUI.py**	It contains all code for the GUI interfaces.
 
-**Users.py**	It contains all code for the users and connecting it to Classes.
+**Random_Students.py**	It contains all code for the users and connecting it to Classes.
 
-**Classes.py**	It has all the classes the control the whole project. It connects classes, DataBase, and the GUI to each other.
+**Random_Users.py**	It contains all code for the users and connecting it to Classes.
+
+**Classses2.py**	It has all the classes the control the whole project. It connects classes, DataBase, and the GUI to each other.
 
 **README.md**	Documentation file describing the project, team members,and usage instructions.
 
