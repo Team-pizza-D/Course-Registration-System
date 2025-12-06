@@ -1454,13 +1454,13 @@ class admin(user):
         prerequisites=row[2]
         credit=row[3]
         course_name=row[4]
-        if plane_major.strip()=="Electrical communication and electronics engineering":
+        if plane_major=="Electrical communication and electronics engineering":
             courses_db.execute("INSERT INTO communication (course_code, terms,prerequisites,credit,course_name) VALUES (?, ?, ?, ?, ?)", (course_code, terms, prerequisites, credit, course_name), commit=True)
-        if plane_major.strip()=="Electrical computer engineering":
+        if plane_major=="Electrical computer engineering":
             courses_db.execute("INSERT INTO computer (course_code, terms,prerequisites,credit,course_name) VALUES (?, ?, ?, ?, ?)", (course_code, terms, prerequisites, credit, course_name), commit=True)
-        if plane_major.strip()=="Electrical power and machines engineering":
+        if plane_major=="Electrical power and machines engineering":
             courses_db.execute("INSERT INTO power (course_code, terms,prerequisites,credit,course_name) VALUES (?, ?, ?, ?, ?)", (course_code, terms, prerequisites, credit, course_name), commit=True)
-        if plane_major.strip()=="Electrical biomedical engineering":
+        if plane_major=="Electrical biomedical engineering":
             courses_db.execute("INSERT INTO biomedical (course_code, terms,prerequisites,credit,course_name) VALUES (?, ?, ?, ?, ?)", (course_code, terms, prerequisites, credit, course_name), commit=True)
         return True , f"Course with code {course_code} added to {plane_major} plane successfully."
     def delete_course_from_plane(self,course_code,plane_major   ):
