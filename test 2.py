@@ -386,14 +386,30 @@ db.close()
 # db.close()
 
 def reset_password(the_id):
+    global this_time_code
     this_time_code = random.randint(100000,999999)
-    sender_email = "viibrkk@gmail.com"
+    sender_email = "viibrkk@gmail.com" # ammar put your email later
+    app_pass = "Here you will put the password ammar" ## ammmmaaaarrr ya captain
+
     #======Getting user's email=======#
+
     db = sqlite3.connect("Users.db")
     cr = db.cursor()
+
     cr.execute("SELECT email FROM admins WHERE id = ? UNION SELECT email FROM instructors WHERE id = ? UNION SELECT email FROM students WHERE id = ?", (the_id,the_id,the_id))
     email_in_tuple = cr.fetchall()
     user_email = email_in_tuple[0][0]
+
     cr.execute("SELECT username FROM admins WHERE id = ? UNION SELECT username FROM instructors WHERE id = ? UNION SELECT username FROM students WHERE id = ?", (the_id,the_id,the_id))
-    user_name = cr.fetchall()
-    ### I will continue the function later today
+    user_in_tuple = cr.fetchall()
+    user_name = user_in_tuple[0][0]
+
+    sub = "Reset password"
+    body = f"Hello {user_name}, this is a verification email to reset your password.\nThis is your one time password: {this_time_code}.\nIf you don't want to reset your password, just ignore this email"
+    msgg = f"{sub}\n\n{body}"
+
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+    server.login(sender_email,app_pass)
+    server.sendmail(sender_email, user_email, msgg)
+    server.quit()
