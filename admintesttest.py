@@ -177,6 +177,8 @@ class AdminWindow(QtWidgets.QMainWindow):
         
         # Load Tab 4 grade table initially
         self.load_tab4_grade_table()
+        # Load Tab 6 tables
+        self.setup_tab6_tables()
 
         # ---------- Connections ----------
         self.SignOutButton.clicked.connect(self.sign_out)
@@ -212,10 +214,16 @@ class AdminWindow(QtWidgets.QMainWindow):
         self.Tab5_SectionUpdate.clicked.connect(self.logic_update_section)
         self.Tab5_SectionRemove.clicked.connect(self.logic_remove_section)
 
-        # Tab 6 buttons
-        self.Tab6_Major_combobox.currentIndexChanged.connect(self.tab6_load_tables)
-        self.Tab6_AddPlan.clicked.connect(self.tab6_add_course)
-        self.Tab6_DeletePlan.clicked.connect(self.tab6_delete_course)
+        self.setup_tab6_tables()
+        
+        # Connect Signals
+        self.Tab6_Major_combobox.currentIndexChanged.connect(self.refresh_tab6)
+        self.Tab6_Term.currentIndexChanged.connect(self.refresh_tab6)
+        self.Tab6_AddPlan.clicked.connect(self.add_course_to_plan)
+        self.Tab6_DeletePlan.clicked.connect(self.remove_course_from_plan)
+
+        # Initial Load
+        self.refresh_tab6()
 
 
 
@@ -1069,103 +1077,122 @@ class AdminWindow(QtWidgets.QMainWindow):
     ###############################################
 
 
-    def tab6_load_tables(self):
-        major = self.Tab6_Major_combobox.currentText().strip()
-        term = self.Tab6_Term.currentText().strip()
-        adm = admin(id=self.admin_id)
+    def setup_tab6_tables(self):
+        """Sets up the 5 columns for both tables"""
+        columns = ["Code", "Course Name", "Credit", "Term", "Prerequisites"]
+        
+        for table in [self.Tab6_CurrentPlan_table, self.Tab6_NoPlan_table]:
+            table.setColumnCount(5)
+            table.setHorizontalHeaderLabels(columns)
+            table.verticalHeader().setVisible(False)
+            table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+            table.setSelectionBehavior(QAbstractItemView.SelectRows)
+            table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+            table.horizontalHeader().setDefaultAlignment(Qt.AlignCenter)
 
-        # Convert term to int
-        try:
-            term = int(term)
-        except:
-            QMessageBox.warning(self, "Invalid Term", "Term must be a number.")
-            return
+    def refresh_tab6(self):
+        """Refreshes both tables with 5 columns of data"""
+        full_major_name = self.Tab6_Major_combobox.currentText().strip()
+        selected_term = self.Tab6_Term.currentText().strip()
 
-        # -----------------------------
-        # FIX: Map major → database table
-        # -----------------------------
+        # Map to simple name for 'display_courses_by_plane_level'
         major_map = {
-            "Electrical communication and electronics engineering": "communication",
-            "Electrical computer engineering": "computer",
-            "Electrical power and machines engineering": "power",
-            "Electrical biomedical engineering": "biomedical"
+            'Electrical communication and electronics engineering': "communication",
+            'Electrical computer engineering': "computer",
+            'Electrical power and machines engineering': "power",
+            'Electrical biomedical engineering': "biomedical"
         }
+        simple_plane = major_map.get(full_major_name)
 
-        plane = major_map.get(major)
-        if plane is None:
-            QMessageBox.warning(self, "Error", f"No table found for major: {major}")
-            return
-
-        # Load CURRENT plan (left)
-        result = adm.display_courses_by_plane_level(plane, term)
+        # Clear Tables
         self.Tab6_CurrentPlan_table.setRowCount(0)
-
-        if isinstance(result, dict):
-            for row_idx, (course_code, info) in enumerate(result.items()):
-                self.Tab6_CurrentPlan_table.insertRow(row_idx)
-                course_name, credit, term_val, prereq = info
-                self.Tab6_CurrentPlan_table.setItem(row_idx, 0, QTableWidgetItem(course_code))
-                self.Tab6_CurrentPlan_table.setItem(row_idx, 1, QTableWidgetItem(course_name))
-                self.Tab6_CurrentPlan_table.setItem(row_idx, 2, QTableWidgetItem(str(credit)))
-                self.Tab6_CurrentPlan_table.setItem(row_idx, 3, QTableWidgetItem(prereq))
-                self.Tab6_CurrentPlan_table.setItem(row_idx, 4, QTableWidgetItem(str(term_val)))
-
-        # Load NOT-IN-PLAN (right)
-        no_plan = adm.courses_not_in_the_plane(major)
         self.Tab6_NoPlan_table.setRowCount(0)
-        if isinstance(no_plan, list):
-            for row_idx, course_code in enumerate(no_plan):
-                self.Tab6_NoPlan_table.insertRow(row_idx)
-                self.Tab6_NoPlan_table.setItem(row_idx, 0, QTableWidgetItem(course_code))
 
-
-
-
-    def tab6_add_course(self):
-        major = self.Tab6_Major_combobox.currentText().strip()
-        term = self.Tab6_Term.currentText().strip()
-        adm = admin(id=self.admin_id)
-
-        row = self.Tab6_NoPlan_table.currentRow()
-        if row < 0:
-            QMessageBox.warning(self, "Selection Error",
-                                "Select a course from the 'Not in plan' table.")
+        if not simple_plane or not selected_term.isdigit():
             return
 
-        course_code = self.Tab6_NoPlan_table.item(row, 0).text().strip()
+        # -------------------------------------------
+        # 1. FILL "CURRENT PLAN" TABLE (Left Side)
+        # -------------------------------------------
+        current_courses = admin.display_courses_by_plane_level(None, simple_plane, int(selected_term))
+        
+        if isinstance(current_courses, dict):
+            for code, details in current_courses.items():
+                # details = (Name, Credit, Term, Prereqs) from our updated function
+                QApplication.processEvents()
+                row = self.Tab6_CurrentPlan_table.rowCount()
+                self.Tab6_CurrentPlan_table.insertRow(row)
+                
+                # Helper to center text
+                def make_item(text):
+                    item = QTableWidgetItem(str(text))
+                    item.setTextAlignment(Qt.AlignCenter)
+                    return item
 
-        ok, msg = adm.add_course_to_plane(course_code, major)
+                self.Tab6_CurrentPlan_table.setItem(row, 0, make_item(code))
+                self.Tab6_CurrentPlan_table.setItem(row, 1, make_item(details[0])) # Name
+                self.Tab6_CurrentPlan_table.setItem(row, 2, make_item(details[1])) # Credit
+                self.Tab6_CurrentPlan_table.setItem(row, 3, make_item(details[2])) # Term
+                self.Tab6_CurrentPlan_table.setItem(row, 4, make_item(details[3])) # Prereqs
 
-        if ok:
-            QMessageBox.information(self, "Success", msg)
-        else:
-            QMessageBox.warning(self, "Error", msg)
+        # -------------------------------------------
+        # 2. FILL "NOT IN PLAN" TABLE (Right Side)
+        # -------------------------------------------
+        not_in_plan_courses = admin.courses_not_in_the_plane(None, full_major_name)
 
-        self.tab6_load_tables()
+        if isinstance(not_in_plan_courses, dict):
+            for code, info in not_in_plan_courses.items():
+                row = self.Tab6_NoPlan_table.rowCount()
+                self.Tab6_NoPlan_table.insertRow(row)
 
+                def make_item(text):
+                    item = QTableWidgetItem(str(text))
+                    item.setTextAlignment(Qt.AlignCenter)
+                    return item
 
+                self.Tab6_NoPlan_table.setItem(row, 0, make_item(code))
+                self.Tab6_NoPlan_table.setItem(row, 1, make_item(info['course_name']))
+                self.Tab6_NoPlan_table.setItem(row, 2, make_item(info['credit']))
+                self.Tab6_NoPlan_table.setItem(row, 3, make_item(info['terms']))
+                self.Tab6_NoPlan_table.setItem(row, 4, make_item(info['prerequisites']))
 
-    def tab6_delete_course(self):
-        major = self.Tab6_Major_combobox.currentText().strip()
-        term = self.Tab6_Term.currentText().strip()
-        adm = admin(id=self.admin_id)
-
-        row = self.Tab6_CurrentPlan_table.currentRow()
-        if row < 0:
-            QMessageBox.warning(self, "Selection Error",
-                                "Select a course from the 'Current plan' table.")
+    def add_course_to_plan(self):
+        selected_items = self.Tab6_NoPlan_table.selectedItems()
+        if not selected_items:
+            QMessageBox.warning(self, "Selection Error", "Please select a course to add.")
             return
 
-        course_code = self.Tab6_CurrentPlan_table.item(row, 0).text().strip()
+        # Get Course Code (Column 0)
+        course_code = self.Tab6_NoPlan_table.item(self.Tab6_NoPlan_table.currentRow(), 0).text()
+        full_major_name = self.Tab6_Major_combobox.currentText().strip()
 
-        ok, msg = adm.delete_course_from_plane(course_code, major)
+        # Call Database
+        success, message = admin.add_course_to_plane(None, course_code, full_major_name)
 
-        if ok:
-            QMessageBox.information(self, "Success", msg)
+        if success:
+            QMessageBox.information(self, "Success", message)
+            self.refresh_tab6()
         else:
-            QMessageBox.warning(self, "Error", msg)
+            QMessageBox.warning(self, "Error", message)
 
-        self.tab6_load_tables()
+    def remove_course_from_plan(self):
+        selected_items = self.Tab6_CurrentPlan_table.selectedItems()
+        if not selected_items:
+            QMessageBox.warning(self, "Selection Error", "Please select a course to remove.")
+            return
+
+        # Get Course Code (Column 0)
+        course_code = self.Tab6_CurrentPlan_table.item(self.Tab6_CurrentPlan_table.currentRow(), 0).text()
+        full_major_name = self.Tab6_Major_combobox.currentText().strip()
+
+        # Call Database
+        success, message = admin.delete_course_from_plane(None, course_code, full_major_name)
+
+        if success:
+            QMessageBox.information(self, "Success", message)
+            self.refresh_tab6()
+        else:
+            QMessageBox.warning(self, "Error", message)
 
 
 
