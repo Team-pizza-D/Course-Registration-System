@@ -8,7 +8,7 @@ from PyQt5 import uic, QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow,QShortcut,QMessageBox,QTableWidgetItem, QHeaderView, QAbstractItemView
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QKeySequence
-from classses2 import admin, student, users_db, enforce_strong_password, signup, update_password, user
+from classses2 import admin, student, user, users_db, enforce_strong_password, signup, update_password
 
 # _____________________________________________________________
 #                         Login WINDOW

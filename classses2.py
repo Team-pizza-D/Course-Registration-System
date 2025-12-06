@@ -1825,7 +1825,11 @@ def update_password(student_id, new_password):
     db = sqlite3.connect("Users.db")
     cr = db.cursor()
     the_hashed = bcrypt.hashpw(new_password.encode(), bcrypt.gensalt()).decode()
-    cr.execute("UPDATE students SET password = ?, hashed_password = ? WHERE id = ?", (new_password, the_hashed, student_id))
+    s = user(id=student_id)
+    if s.is_admin():
+        cr.execute("UPDATE admins SET password = ?, hashed_password = ? WHERE id = ?", (new_password, the_hashed, student_id))
+    elif s.is_student():
+        cr.execute("UPDATE students SET password = ?, hashed_password = ? WHERE id = ?", (new_password, the_hashed, student_id))
     db.commit()
     db.close()
 
