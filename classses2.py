@@ -1340,7 +1340,7 @@ class admin(user):
         end_time_list = end_time.split(":")
         start_hour = int(start_time_list[0])
         end_hour = int(end_time_list[0])
-        if start_hour == end_hour:
+        if start_time == end_time:
             return False , "Start time and end time cannot be the same."
         elif start_hour > end_hour:
             return False , "The lecture time conflict with non-academic commitments."
@@ -1391,8 +1391,13 @@ class admin(user):
             end_time_list = end_time.split(":")
             start_hour = int(start_time_list[0])
             end_hour = int(end_time_list[0])
-            if start_hour == end_hour:
+            start_minute = int(start_time_list[1])
+            end_minute = int(end_time_list[1])
+            diff_time= (end_hour + end_minute/60) - (start_hour + start_minute/60)
+            if start_time == end_time:
                 return False , "Start time and end time cannot be the same."
+            elif diff_time < 50/60:
+                return False , "Lecture duration cannot be less than 50 minutes."
             elif start_hour > end_hour:
                 return False , "The lecture time conflict with non-academic commitments."
             elif start_hour - end_hour > 3:
@@ -1444,16 +1449,19 @@ class admin(user):
         sub=subject(course_code)
         if not sub.is_existing():
             return False , f"Course with code {course_code} does not exist."
-        row= courses_db.execute("SELECT course_code,terms,prerequisites,credit FROM Courses WHERE course_code = ?", (course_code,), fetchone=True)
+        row= courses_db.execute("SELECT course_code,terms,prerequisites,credit,course_name FROM Courses WHERE course_code = ?", (course_code,), fetchone=True)
         terms=row[1]
+        prerequisites=row[2]
+        credit=row[3]
+        course_name=row[4]
         if plane_major.strip()=="Electrical communication and electronics engineering":
-            courses_db.execute("INSERT INTO communication (course_code, terms) VALUES (?, ?)", (course_code, terms), commit=True)
+            courses_db.execute("INSERT INTO communication (course_code, terms,prerequisites,credit,course_name) VALUES (?, ?, ?, ?, ?)", (course_code, terms, prerequisites, credit, course_name), commit=True)
         if plane_major.strip()=="Electrical computer engineering":
-            courses_db.execute("INSERT INTO computer (course_code, terms) VALUES (?, ?)", (course_code, terms), commit=True)
+            courses_db.execute("INSERT INTO computer (course_code, terms,prerequisites,credit,course_name) VALUES (?, ?, ?, ?, ?)", (course_code, terms, prerequisites, credit, course_name), commit=True)
         if plane_major.strip()=="Electrical power and machines engineering":
-            courses_db.execute("INSERT INTO power (course_code, terms) VALUES (?, ?)", (course_code, terms), commit=True)
+            courses_db.execute("INSERT INTO power (course_code, terms,prerequisites,credit,course_name) VALUES (?, ?, ?, ?, ?)", (course_code, terms, prerequisites, credit, course_name), commit=True)
         if plane_major.strip()=="Electrical biomedical engineering":
-            courses_db.execute("INSERT INTO biomedical (course_code, terms) VALUES (?, ?)", (course_code, terms), commit=True)
+            courses_db.execute("INSERT INTO biomedical (course_code, terms,prerequisites,credit,course_name) VALUES (?, ?, ?, ?, ?)", (course_code, terms, prerequisites, credit, course_name), commit=True)
         return True , f"Course with code {course_code} added to {plane_major} plane successfully."
     def delete_course_from_plane(self,course_code,plane_major   ):
         course_code=course_code.strip().upper()
