@@ -316,7 +316,7 @@ QMessageBox {
 </string>
     </property>
     <property name="currentIndex">
-     <number>5</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -789,7 +789,7 @@ background-color: rgb(0, 17n 29);</string>
     </widget>
     <widget class="QWidget" name="tab_4">
      <attribute name="title">
-      <string>Sections Capacites</string>
+      <string>Sections Details</string>
      </attribute>
      <widget class="QTableWidget" name="Subjects_details">
       <property name="geometry">
