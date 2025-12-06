@@ -1091,9 +1091,11 @@ class AdminWindow(QtWidgets.QMainWindow):
             table.horizontalHeader().setDefaultAlignment(Qt.AlignCenter)
 
     def refresh_tab6(self):
+        """Refreshes both tables with 5 columns of data"""
         full_major_name = self.Tab6_Major_combobox.currentText().strip()
         selected_term = self.Tab6_Term.currentText().strip()
 
+        # Map to simple name for 'display_courses_by_plane_level'
         major_map = {
             'Electrical communication and electronics engineering': "communication",
             'Electrical computer engineering': "computer",
@@ -1102,55 +1104,57 @@ class AdminWindow(QtWidgets.QMainWindow):
         }
         simple_plane = major_map.get(full_major_name)
 
+        # Clear Tables
+        self.Tab6_CurrentPlan_table.setRowCount(0)
+        self.Tab6_NoPlan_table.setRowCount(0)
+
         if not simple_plane or not selected_term.isdigit():
             return
 
-        # --- PERFORMANCE MODE: ON ---
-        self.Tab6_CurrentPlan_table.setUpdatesEnabled(False)
-        self.Tab6_NoPlan_table.setUpdatesEnabled(False)
-        self.Tab6_CurrentPlan_table.setRowCount(0)
-        self.Tab6_NoPlan_table.setRowCount(0)
+        # -------------------------------------------
+        # 1. FILL "CURRENT PLAN" TABLE (Left Side)
+        # -------------------------------------------
+        current_courses = admin.display_courses_by_plane_level(None, simple_plane, int(selected_term))
         
-        try:
-            # 1. FILL "CURRENT PLAN"
-            current_courses = admin.display_courses_by_plane_level(None, simple_plane, int(selected_term))
-            if current_courses:
-                for code, details in current_courses.items():
-                    row = self.Tab6_CurrentPlan_table.rowCount()
-                    self.Tab6_CurrentPlan_table.insertRow(row)
-                    
-                    # details = (Name, Credit, Term, Prereqs)
-                    self.Tab6_CurrentPlan_table.setItem(row, 0, QTableWidgetItem(str(code)))
-                    self.Tab6_CurrentPlan_table.setItem(row, 1, QTableWidgetItem(str(details[0])))
-                    self.Tab6_CurrentPlan_table.setItem(row, 2, QTableWidgetItem(str(details[1])))
-                    self.Tab6_CurrentPlan_table.setItem(row, 3, QTableWidgetItem(str(details[2])))
-                    self.Tab6_CurrentPlan_table.setItem(row, 4, QTableWidgetItem(str(details[3])))
-                    
-                    # Center align all items
-                    for i in range(5):
-                        self.Tab6_CurrentPlan_table.item(row, i).setTextAlignment(Qt.AlignCenter)
+        if isinstance(current_courses, dict):
+            for code, details in current_courses.items():
+                # details = (Name, Credit, Term, Prereqs) from our updated function
+                QApplication.processEvents()
+                row = self.Tab6_CurrentPlan_table.rowCount()
+                self.Tab6_CurrentPlan_table.insertRow(row)
+                
+                # Helper to center text
+                def make_item(text):
+                    item = QTableWidgetItem(str(text))
+                    item.setTextAlignment(Qt.AlignCenter)
+                    return item
 
-            # 2. FILL "NOT IN PLAN"
-            not_in_plan_courses = admin.courses_not_in_the_plane(None, full_major_name)
-            if not_in_plan_courses:
-                for code, info in not_in_plan_courses.items():
-                    row = self.Tab6_NoPlan_table.rowCount()
-                    self.Tab6_NoPlan_table.insertRow(row)
+                self.Tab6_CurrentPlan_table.setItem(row, 0, make_item(code))
+                self.Tab6_CurrentPlan_table.setItem(row, 1, make_item(details[0])) # Name
+                self.Tab6_CurrentPlan_table.setItem(row, 2, make_item(details[1])) # Credit
+                self.Tab6_CurrentPlan_table.setItem(row, 3, make_item(details[2])) # Term
+                self.Tab6_CurrentPlan_table.setItem(row, 4, make_item(details[3])) # Prereqs
 
-                    self.Tab6_NoPlan_table.setItem(row, 0, QTableWidgetItem(str(code)))
-                    self.Tab6_NoPlan_table.setItem(row, 1, QTableWidgetItem(str(info['course_name'])))
-                    self.Tab6_NoPlan_table.setItem(row, 2, QTableWidgetItem(str(info['credit'])))
-                    self.Tab6_NoPlan_table.setItem(row, 3, QTableWidgetItem(str(info['terms'])))
-                    self.Tab6_NoPlan_table.setItem(row, 4, QTableWidgetItem(str(info['prerequisites'])))
-                    
-                    for i in range(5):
-                        self.Tab6_NoPlan_table.item(row, i).setTextAlignment(Qt.AlignCenter)
+        # -------------------------------------------
+        # 2. FILL "NOT IN PLAN" TABLE (Right Side)
+        # -------------------------------------------
+        not_in_plan_courses = admin.courses_not_in_the_plane(None, full_major_name)
 
-        finally:
-            # --- PERFORMANCE MODE: OFF ---
-            # Re-enable updates so the user sees the final result instantly
-            self.Tab6_CurrentPlan_table.setUpdatesEnabled(True)
-            self.Tab6_NoPlan_table.setUpdatesEnabled(True)
+        if isinstance(not_in_plan_courses, dict):
+            for code, info in not_in_plan_courses.items():
+                row = self.Tab6_NoPlan_table.rowCount()
+                self.Tab6_NoPlan_table.insertRow(row)
+
+                def make_item(text):
+                    item = QTableWidgetItem(str(text))
+                    item.setTextAlignment(Qt.AlignCenter)
+                    return item
+
+                self.Tab6_NoPlan_table.setItem(row, 0, make_item(code))
+                self.Tab6_NoPlan_table.setItem(row, 1, make_item(info['course_name']))
+                self.Tab6_NoPlan_table.setItem(row, 2, make_item(info['credit']))
+                self.Tab6_NoPlan_table.setItem(row, 3, make_item(info['terms']))
+                self.Tab6_NoPlan_table.setItem(row, 4, make_item(info['prerequisites']))
 
     def add_course_to_plan(self):
         selected_items = self.Tab6_NoPlan_table.selectedItems()
