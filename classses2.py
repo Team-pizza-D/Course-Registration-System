@@ -148,7 +148,7 @@ class user: # main user class that will be inherited by student, instructor, adm
 # _______________________________________________________________________________________________________________
 class subject: # subject class 
 
-    def __init__(self, subject_name, subject_code=None, prerequisites=None): # subject constructor
+    def __init__(self, subject_name, subject_code=None,): # subject constructor
         self.subject_code = subject_code
         self.subject_name = subject_name
         prerequisites_row= courses_db.execute("SELECT prerequisites FROM Courses WHERE course_code = ?", (self.subject_name,), fetchone=True)
@@ -196,32 +196,51 @@ class subject: # subject class
             return True
     
     def remove_prerequisite(self, prerequisite):  # to remove a prerequisite from the subject
-        if prerequisite.find(",") != -1:
+        if  "," in prerequisite:
             prereq_list= prerequisite.split(",")
             for preq in prereq_list:
                 preq= preq.strip().upper()
+                if preq=="":
+                    continue
+                if preq==self.subject_name:
+                    return False , f"Course cannot be a prerequisite of itself."
+                if not subject(preq.strip().upper()).is_existing():
+                    return False , f"Prerequisite course with code {preq.strip().upper()} does not exist."
                 if preq in self.prerequisites:
                     self.prerequisites.remove(preq)
                     courses_db.execute("UPDATE Courses SET prerequisites = ? WHERE course_code = ?", (", ".join(self.prerequisites), self.subject_name), commit=True)
                     return True , f"Prerequisite {preq} removed from subject {self.subject_name}."
                 else:
-                    return False , f"Prerequisite {preq} not found in subject {self.subject_name}."
+                    return False , f"Prerequisite {preq} not found in subject {self.subject_name}.  "
         else:
-            prerequisite= prerequisite.strip()
+            
+            prerequisite= prerequisite.strip().upper()
+            if prerequisite==self.subject_name:
+                return False , f"Course cannot be a prerequisite of itself."
+            if not subject(prerequisite).is_existing():
+                return False , f"Prerequisite course with code {prerequisite} does not exist. reminder if you are trying to delete more than one prerequisite, separate them with commas"
             if prerequisite in self.prerequisites:
                 self.prerequisites.remove(prerequisite)
                 courses_db.execute("UPDATE Courses SET prerequisites = ? WHERE course_code = ?", (", ".join(self.prerequisites), self.subject_name), commit=True)
                 return True , f"Prerequisite {prerequisite} removed from subject {self.subject_name}."
             else:
-                return False , f"Prerequisite {prerequisite} not found in subject {self.subject_name}."
+                return False , f"Prerequisite {prerequisite} not found in subject {self.subject_name}. (reminder if you are trying to delete more than one prerequisite, separate them with commas)"
         
   
-        ### can be used by admin to remove prerequisite from subject
+        
     
     def add_prerequisite(self, prerequisite):  # to add a prerequisite to the subject
-        if prerequisite.find(",") != -1:
+        if  "," in prerequisite:
             prereq_list= prerequisite.split(",")
             for preq in prereq_list:
+                if preq=="":
+                    continue
+                if preq==self.subject_name:
+                    return False , f"Course cannot be a prerequisite of itself."
+                if not subject(preq.strip().upper()).is_existing():
+                    return False , f"Prerequisite course with code {preq.strip().upper()} does not exist."
+                if subject( preq.strip().upper()).subject_term > self.subject_term:
+                    return False , f"Prerequisite course with code {preq.strip().upper()} is in a higher term than the subject {self.subject_name}."
                 preq= preq.strip().upper()
                 if preq not in self.prerequisites:
                     self.prerequisites.append(preq)
@@ -231,6 +250,10 @@ class subject: # subject class
                 return False , f"Prerequisite {preq} already exists in subject {self.subject_name}."
         else:
             prerequisite= prerequisite.strip().upper()
+            if prerequisite==self.subject_name:
+                return False , f"Course cannot be a prerequisite of itself."
+            if not subject(prerequisite).is_existing():
+                return False , f"Prerequisite course with code {prerequisite} does not exist. reminder if you are trying to add more than one prerequisite, separate them with commas"
             if prerequisite not in self.prerequisites:
                 self.prerequisites.append(prerequisite)
                 courses_db.execute("UPDATE Courses SET prerequisites = ? WHERE course_code = ?", (", ".join(self.prerequisites), self.subject_name), commit=True)
@@ -244,13 +267,13 @@ class subject: # subject class
             return []
         sections= [r[0] for r in row]
         return sections
-        ### can be used to get list of all sections for this subject  
+         
 # _______________________________________________________________________________________________________________
 class section(subject): # section class composed of subject class
 
-    def __init__(self,section_name,subject_name=None,subject_code=None,schedule=None,capacity=0,instructor=None,prerequisites=None): # section constructor
+    def __init__(self,section_name,subject_name=None,subject_code=None,schedule=None,capacity=0,instructor=None,): # section constructor
 
-        super().__init__(subject_name, subject_code, prerequisites)
+        super().__init__(subject_name, subject_code)
         self.schedule = schedule
         self.instructor = instructor
         self.capacity = capacity
@@ -268,12 +291,10 @@ class section(subject): # section class composed of subject class
             self.student_name_in_section = [r[1] for r in row]
         find_subject_list=courses_db.execute("SELECT course_code FROM courses WHERE section= ?",(self.section_name,),fetchone=True)
         if find_subject_list==None:
-            return None
-        find_subject= find_subject_list[0].strip()
+            self.subject=subject_name
+        else: 
+            self.subject= find_subject_list[0].strip()
         
-        self.subject_= subject(find_subject)
-        self.section_term= self.subject_.subject_term
-        self.subject=self.subject_.subject_name
 
     def section_info_student(self):  # to display section information
         row= courses_db.execute("SELECT course_code, course_name, section, capacity, time, instructor FROM Courses WHERE section = ?",(self.section_name,),fetchone=True) ### database design must be abdated to include instructor name and creat a table name sections
@@ -728,7 +749,8 @@ class student(user): # student class inherits of user class
     def change_password(self, old_password, new_password):  # to change student's password
         if not self.correct_password(old_password):
             return False , "Old password is incorrect."
-        users_db.execute("UPDATE students SET password = ? WHERE id = ?", (new_password, self.id), commit=True)
+        the_hashed = bcrypt.hashpw(new_password.encode(), bcrypt.gensalt()).decode()
+        users_db.execute("UPDATE students SET password = ?, hashed_password = ? WHERE id = ?", (new_password, the_hashed, self.id), commit=True)
         self.password = new_password
         return True , "Password changed successfully."
     
@@ -1117,8 +1139,14 @@ class admin(user): # admin class inherits from user class
         return f"Grade {grade} ({letter_grade}) added for student ID {student_id} in course {course_code}."
     
     def add_student(self,first_name,last_name,major): # to add a new student to the database
-        full_name= first_name + " " + last_name
-        st=student(username=full_name,major=major,database=True)
+        IDT1 = users_db.execute("SELECT id FROM students WHERE term = ?", (1,), fetchall=True)
+        IDT2 = users_db.execute("SELECT id FROM students WHERE term = ?", (2,), fetchall=True)
+        IDY1 = IDT1 + IDT2
+        IDY10 = [x[0] for x in IDY1]
+        max_id = max(IDY10)
+        new_id = int(max_id) + 1
+        full_name= first_name.strip().title() + " " + last_name.strip().title()
+        st=student(username=full_name,major=major,database=True,id=new_id)
         return True , f"Student {full_name} added with ID {st.id} and password {st.password}."   
     
     def delete_student(self, student_id): # to delete a student from the database
@@ -1193,9 +1221,15 @@ class admin(user): # admin class inherits from user class
         else:
             prereq_list= [prerequisites.strip().upper()]
         for prereq in prereq_list:
+            if prereq=="":
+                continue
+            if prereq==course_code:
+                return False , f"Course cannot be a prerequisite of itself."
             pre_sub=subject(prereq)
             if not pre_sub.is_existing():
                 return False , f"Prerequisite course with code {prereq} does not exist."
+            if pre_sub.subject_term > int(term):
+                return False , f"Prerequisite course with code {prereq} is offered in a higher term than the new course."
         courses_db.execute("INSERT INTO Courses (course_code, course_name, credit, section, instructor, capacity, time,term,prerequisites) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (course_code, course_name, int(credit), sec, "TBA", 30, "To be scheduled", int(term),prerequisites), commit=True)
         return True , f"Course {course_code} - {course_name} added successfully with section {sec}, you will have to update the instructor and capacity from section management."
     
@@ -1214,9 +1248,33 @@ class admin(user): # admin class inherits from user class
         
             
         if sections is not None:
-            sec=sections.strip().upper()
-            if section(sec).section_is_existing():
-                return False , f"Section {sec} already exists."
+            if "," in sections:
+                sec=[section.strip().upper() for section in sections.split(",")]
+                if len(sec)>2 or len(sec)<2:
+                    return False , "please use , to separate new section and old section only using , EX: AA,AW. (notce that old section first)"
+                old_sec=sec[0]
+                new_sec=sec[1]
+                
+                if section(old_sec).subject == None:
+                    return False , f"Section {old_sec} does not exist."
+                else:
+                
+                    if subject(course_code).subject_name != section(old_sec).subject:
+                        return False , f"Section {old_sec} is not associated with course {course_code}."
+                    if old_sec==new_sec:
+                        return False , "Old section and new section cannot be the same."
+                
+
+                if not section(old_sec).section_is_existing():
+                    return False , f"Section {old_sec} does not exist."
+                if section(new_sec).section_is_existing():
+                    return False , f"Section {new_sec} already exists."
+            else:
+                return False , "please use , to separate new section and old section only using , EX: AA,AW. (notce that old section first)"
+            # else:    
+            #     sec=sections.strip().upper()
+            # if section(sec).section_is_existing():
+            #     return False , f"Section {sec} already exists."
             
         if term is not None:
             if not term.isdigit():
@@ -1230,11 +1288,15 @@ class admin(user): # admin class inherits from user class
             else:
                 prereq_list= [prerequisites.strip().upper()]
             for prereq in prereq_list:
+                if prereq=="":
+                    continue
+                if prereq==course_code:
+                    return False , f"Course cannot be a prerequisite of itself."
                 pre_sub=subject(prereq)
                 if not pre_sub.is_existing():
                     return False , f"Prerequisite course with code {prereq} does not exist."
             courses_db.execute("UPDATE Courses SET prerequisites = ? WHERE course_code = ?", (prerequisites, course_code), commit=True)
-        if sections is not None:courses_db.execute("UPDATE Courses SET section = ? WHERE course_code = ?", (sec, course_code), commit=True)
+        if sections is not None:courses_db.execute("UPDATE Courses SET section = ? WHERE section = ? AND course_code = ?", (new_sec, old_sec, course_code), commit=True)
             
         if course_name is not None:courses_db.execute("UPDATE Courses SET course_name = ? WHERE course_code = ?", (course_name, course_code), commit=True)
         
@@ -1297,19 +1359,26 @@ class admin(user): # admin class inherits from user class
         sub=subject(course_code)
         if not sub.is_existing():
             return False , f"Course with code {course_code} does not exist."
+        
         sec=section_name.strip().upper()
+        if sub.subject_name != section(sec).subject:
+            
+            return False , f"Section {sec} does not belong to course {course_code}."
         if not section(sec).section_is_existing():
             return False , f"Section {sec} does not exist."
         if instructor_id is not None:
             if not instructor(instructor_id).is_existing():
                 return False , f"Instructor with ID {instructor_id} does not exist."
-            courses_db.execute("UPDATE Courses SET instructor = ? WHERE course_code = ? AND section = ?", (instructor_id, course_code, sec), commit=True)
+
+        if capacity is None and start_time is None and end_time is None is None and instructor_id is None:
+            return False , "At least one field (instructor ID, capacity, or time) must be provided to update."    
+            
         if capacity is not None:
             if not capacity.isdigit():
                 return False , "Capacity must be a positive integer."
             elif int(capacity)<=0:
                 return False , "Capacity must be a positive integer."
-            courses_db.execute("UPDATE Courses SET capacity = ? WHERE course_code = ? AND section = ?", (int(capacity), course_code, sec), commit=True)
+            
         if start_time is not None and end_time is not None and day is not None:
             if day == "Sunday":
                 day_code = "S"
@@ -1338,8 +1407,16 @@ class admin(user): # admin class inherits from user class
                 return False , "Lecture duration cannot exceed 3 hours."
             time = f"{day_code} {start_time}-{end_time}"
             courses_db.execute("UPDATE Courses SET time = ? WHERE course_code = ? AND section = ?", (time, course_code, sec), commit=True)
+        if instructor_id is not None:
+            instructor_name= instructor(instructor_id).my_name()
+            courses_db.execute("UPDATE Courses SET instructor = ? WHERE course_code = ? AND section = ?", (instructor_name, course_code, sec), commit=True)
+        if capacity is not None:
+            courses_db.execute("UPDATE Courses SET capacity = ? WHERE course_code = ? AND section = ?", (int(capacity), course_code, sec), commit=True)
+
         return True , f"Section {sec} for course {course_code} updated successfully."
    
+        
+        
     def courses_not_in_the_plan(self,plan_major):  # to display all subjects not in the plan_major 
         if plan_major == "Electrical communication and electronics engineering":
             row = courses_db.execute("SELECT course_code FROM communication", fetchall=True)
@@ -1502,16 +1579,20 @@ class admin(user): # admin class inherits from user class
 
         return True, f"Course with code {course_code} added to {plan_major} plan successfully."
 
-    def delete_course_from_plan(self,course_code,plan_major   ):
+
+    def delete_course_from_plan(self,course_code,plan_major  ):
         course_code=course_code.strip().upper()
-        sub=subject(course_code)
-        sec=sub.get_all_sections()
+        row= courses_db.execute("SELECT section FROM Courses WHERE course_code = ?",(course_code.strip().upper(),),fetchall=True)
+        if row==None or len(row)==0:
+            return []
+        sec= [r[0] for r in row]
+         
+        
         for section_name in sec:
             sect=section(section_name=section_name)
             if len(sect.student_id_in_section)>0:
                 return False , f"Cannot delete course with code {course_code} from {plan_major} plan because students are enrolled in its sections."
-        if not sub.is_existing():
-            return False , f"Course with code {course_code} does not exist."
+       
         if plan_major=="Electrical communication and electronics engineering":
             courses_db.execute("DELETE FROM communication WHERE course_code = ?", (course_code,), commit=True)
         if plan_major=="Electrical computer engineering":
@@ -1523,16 +1604,12 @@ class admin(user): # admin class inherits from user class
         return True , f"Course with code {course_code} deleted from {plan_major} plan successfully."
     
     def add_prerequisite_to_course(self,course_code,prerequisite):
-        sub=subject(course_code.strip().upper())
-        if not sub.is_existing():
-            return False , f"Course with code {course_code} does not exist."
+        sub=subject(course_code)
         okay,massege= sub.add_prerequisite(prerequisite)
         return okay, massege
     
     def remove_prerequisite_from_course(self,course_code,prerequisite):
         sub=subject(course_code)
-        if not sub.is_existing():
-            return False , f"Course with code {course_code} does not exist."
         okay,massege= sub.remove_prerequisite(prerequisite)
         return okay, massege
     
@@ -1743,5 +1820,15 @@ def signup(FN, LN, Npassword, M): # FN = first name , LN = last name
 
 
 
+def update_password(student_id, new_password):
+
+    db = sqlite3.connect("Users.db")
+    cr = db.cursor()
+    the_hashed = bcrypt.hashpw(new_password.encode(), bcrypt.gensalt()).decode()
+    cr.execute("UPDATE students SET password = ?, hashed_password = ? WHERE id = ?", (new_password, the_hashed, student_id))
+    db.commit()
+    db.close()
+
+    return
 
 
