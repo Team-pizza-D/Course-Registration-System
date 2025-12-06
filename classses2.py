@@ -299,7 +299,7 @@ class section(subject):
         if find_subject_list==None:
             return "db error: section not found"
         else: 
-            self.subject_name= find_subject_list[0].strip()
+            self.subject= find_subject_list[0].strip()
         
             
 
@@ -1338,7 +1338,7 @@ class admin(user): # admin class inherits from user class
             return False , f"Course with code {course_code} does not exist."
         
         sec=section_name.strip().upper()
-        if sub.subject_name != section(sec).subject_name:
+        if sub.subject_name != section(sec).subject:
             
             return False , f"Section {sec} does not belong to course {course_code}."
         if not section(sec).section_is_existing():
@@ -1393,7 +1393,7 @@ class admin(user): # admin class inherits from user class
         return True , f"Section {sec} for course {course_code} updated successfully."
         
         
-    def courses_not_in_the_plane(self,plan_major):  # to display all subjects not in the plane_major 
+    def courses_not_in_the_plan(self,plan_major):  # to display all subjects not in the plane_major 
         if plan_major == "Electrical communication and electronics engineering":
             row = courses_db.execute("SELECT course_code FROM communication", fetchall=True)
         elif plan_major == "Electrical computer engineering":
