@@ -4,7 +4,7 @@ from PyQt5 import uic, QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow,QShortcut,QMessageBox,QTableWidgetItem, QHeaderView, QAbstractItemView
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QKeySequence
-from classses2 import admin, student       
+from classses2 import admin, student, users_db   
 from Admin_Window import AdminWindow  
 
 class LoginWindow(QMainWindow):
@@ -112,8 +112,6 @@ def generate_end_times():
     return times
 
 
-
-
 class AdminWindow(QtWidgets.QMainWindow):
     def __init__(self, admin_id, admin_name):
         super().__init__()
@@ -130,12 +128,11 @@ class AdminWindow(QtWidgets.QMainWindow):
         self.available_section_map = {}   
         self.current_section_map = {}     
 
-        # tab 5 - Section time combos
+        # tab 5 - Section time combo boxes
         start_times = generate_start_times()
         end_times = generate_end_times()
         self.Section_StartTime_Combo.clear()
         self.Section_StartTime_Combo.addItems(start_times)
-
         self.Section_EndTime_Combo.clear()
         self.Section_EndTime_Combo.addItems(end_times)
 
@@ -160,7 +157,6 @@ class AdminWindow(QtWidgets.QMainWindow):
         self.update_subjects_table()
         # Load Tab 4 grade table initially
         self.load_tab4_grade_table()
-        self.Tab4_SearchBar.textChanged.connect(self.filter_tab4_table)
         # Load Tab 6 tables
         self.setup_tab6_tables()
         self.setup_tab6_tables()
@@ -184,6 +180,7 @@ class AdminWindow(QtWidgets.QMainWindow):
         
         #Tab 4 : Grades
         self.Tab4_Confirm.clicked.connect(self.handle_tab4_grading)
+        self.Tab4_SearchBar.textChanged.connect(self.filter_tab4_table)
 
         # Tab 5: Courses Management
         self.Tab5_CourseAdd.clicked.connect(self.logic_add_course)
@@ -245,10 +242,9 @@ class AdminWindow(QtWidgets.QMainWindow):
 
             table.setRowHidden(row, not match_found)
 
-
-    # =========================================================
-    # TAB 1 - Student Add/Delete
-    # =========================================================
+    ###############################################
+    # TAB 1 — Student add/delete
+    ###############################################
 
     def tab1_add_student(self):
         first = self.Tab1_FirstName.text().strip()
@@ -286,7 +282,6 @@ class AdminWindow(QtWidgets.QMainWindow):
         self.Tab1_Student_ID.clear()
 
     def load_tab1_students(self):
-        from classses2 import users_db
 
         rows = users_db.execute(
             "SELECT id, username, email FROM students",
@@ -322,9 +317,9 @@ class AdminWindow(QtWidgets.QMainWindow):
         table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         table.verticalHeader().setVisible(False)
 
-    # =========================================================
+    ###############################################
     # TAB 2 — Subject Enrollment
-    # =========================================================
+    ###############################################
 
     def handle_submit_student(self):
         
@@ -403,16 +398,13 @@ class AdminWindow(QtWidgets.QMainWindow):
 
             row += 1
 
-        # Column widths
+        #table settings
         table.setColumnWidth(0, 40)
         table.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Fixed)
-
-        table.setColumnWidth(3, 70)  # Section
+        table.setColumnWidth(3, 70)  
         table.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.Fixed)
-
-        table.setColumnWidth(5, 60)  # Credit
+        table.setColumnWidth(5, 60)  
         table.horizontalHeader().setSectionResizeMode(5, QtWidgets.QHeaderView.Fixed)
-
         for col in [1, 2, 4]:
             table.horizontalHeader().setSectionResizeMode(col, QtWidgets.QHeaderView.Stretch)
 
@@ -429,12 +421,12 @@ class AdminWindow(QtWidgets.QMainWindow):
         if clicked_row is None:
             return
 
-        # If unchecked -> restore all
+        # If unchecked restores it to normal
         if state == 0:
             self.restore_available_rows()
             return
 
-        # If checked -> gray out others
+        # If a box is checked  no checkbox can be checked until unchecked again
         for row in range(table.rowCount()):
             checkbox = table.cellWidget(row, 0)
             if row != clicked_row:
@@ -602,7 +594,7 @@ class AdminWindow(QtWidgets.QMainWindow):
                     item.setForeground(QtGui.QColor("white"))
 
     def add_selected_course(self):
-        if self.current_student is None:
+        if self.current_student is None:    #checks if a student is selected
             QtWidgets.QMessageBox.warning(
                 self, "Enrollment", "Please submit a valid Student ID first."
             )
@@ -617,10 +609,11 @@ class AdminWindow(QtWidgets.QMainWindow):
                 selected_section = self.available_section_map.get(row)
                 break
 
-        if not selected_section:
+        if not selected_section: #checks if a course is selected
             QtWidgets.QMessageBox.warning(self, "Enrollment", "Please select a course to add.")
             return
 
+        #calls backend function
         try:
             ok, msg = self.admin_obj.add_subject(selected_section, self.current_student.id)
         except Exception as e:
@@ -631,6 +624,7 @@ class AdminWindow(QtWidgets.QMainWindow):
             )
             return
 
+        #result
         if ok:
             QtWidgets.QMessageBox.information(self, "Enrollment", msg)
             self.load_student_current_courses_table()
@@ -639,7 +633,7 @@ class AdminWindow(QtWidgets.QMainWindow):
             QtWidgets.QMessageBox.warning(self, "Enrollment", msg)
 
     def remove_selected_course(self):
-        if self.current_student is None:
+        if self.current_student is None: #checks if a student is selected
             QtWidgets.QMessageBox.warning(
                 self, "Remove Course", "Please submit a valid Student ID first."
             )
@@ -654,10 +648,11 @@ class AdminWindow(QtWidgets.QMainWindow):
                 selected_section = self.current_section_map.get(row)
                 break
 
-        if not selected_section:
+        if not selected_section: #checks if a course is selected
             QtWidgets.QMessageBox.warning(self, "Remove Course", "Please select a course to remove.")
             return
 
+        #calls backend function
         try:
             ok, msg = self.admin_obj.remove_subject(
                 selected_section,
@@ -671,6 +666,7 @@ class AdminWindow(QtWidgets.QMainWindow):
             )
             return
 
+        #result
         if ok:
             QtWidgets.QMessageBox.information(self, "Remove Course", msg)
             self.load_student_current_courses_table()
@@ -678,9 +674,9 @@ class AdminWindow(QtWidgets.QMainWindow):
         else:
             QtWidgets.QMessageBox.warning(self, "Remove Course", msg)
  
-    # =========================================================
-    # TAB 3 — Subject details 
-    # =========================================================
+    ###############################################
+    # TAB 3 — Section Details
+    ###############################################
 
     def update_subjects_table(self):
         # Table settings
@@ -724,10 +720,9 @@ class AdminWindow(QtWidgets.QMainWindow):
                 for i in range(6):
                     self.Subjects_details.item(row_position, i).setTextAlignment(Qt.AlignCenter)
 
-
-    # =========================================================
+    ###############################################
     # TAB 4 — Grading
-    # =========================================================
+    ###############################################
 
     def handle_tab4_grading(self):
         admin_obj = self.admin_obj
@@ -821,9 +816,9 @@ class AdminWindow(QtWidgets.QMainWindow):
         table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         table.verticalHeader().setVisible(False)
    
-    # =========================================================
-    # TAB 5 — Courses Management
-    # =========================================================
+    ###############################################
+    # TAB 5 — COURSE Management
+    ###############################################
 
     def logic_add_course(self): #creates course
 
@@ -892,7 +887,6 @@ class AdminWindow(QtWidgets.QMainWindow):
         else:
             QMessageBox.warning(self, "Error", message)
 
-
     def tab5_add_prerequisite(self):
         #inputs
         code = self.Tab5_Prerequistie_CourseCode.text().strip()
@@ -911,7 +905,6 @@ class AdminWindow(QtWidgets.QMainWindow):
         else:
             QtWidgets.QMessageBox.warning(self, "Add Prerequisite", msg)
 
-
     def tab5_remove_prerequisite(self):
         # inputs
         code = self.Tab5_Prerequistie_CourseCode.text().strip()
@@ -929,8 +922,6 @@ class AdminWindow(QtWidgets.QMainWindow):
             QtWidgets.QMessageBox.information(self, "Remove Prerequisite", msg)
         else:
             QtWidgets.QMessageBox.warning(self, "Remove Prerequisite", msg)
-
-
 
     def logic_add_section(self):
         # inputs
@@ -1023,7 +1014,7 @@ class AdminWindow(QtWidgets.QMainWindow):
             QMessageBox.warning(self, "Error", message)
 
     ###############################################
-    # TAB 6 — COURSE PLAN MANAGEMENT
+    # TAB 6 — PLAN MANAGEMENT
     ###############################################
 
     def setup_tab6_tables(self):
@@ -1145,11 +1136,6 @@ class AdminWindow(QtWidgets.QMainWindow):
             tb = traceback.format_exc()
             QMessageBox.critical(self, "Unexpected Error",
                                 f"{e}\n\n{tb}")
-
-
-  
-
-
 
     def remove_course_from_plan(self):
         row = self.Tab6_CurrentPlan_table.currentRow() #checks if a row is selected
