@@ -3,10 +3,7 @@ import sqlite3
 import os
 import bcrypt
 
-
-
-
-class Database:
+class Database: # SQLite database helper class
 
     """
     Simple helper class to interact with a SQLite database.
@@ -1740,3 +1737,11 @@ def signup(FN, LN, Npassword, M): # FN = first name , LN = last name
     db.close()
 
     return s
+
+
+
+
+
+
+
+
