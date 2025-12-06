@@ -344,8 +344,8 @@ QMessageBox {
       <widget class="QLineEdit" name="Tab1_LastName">
        <property name="geometry">
         <rect>
-         <x>640</x>
-         <y>100</y>
+         <x>400</x>
+         <y>80</y>
          <width>221</width>
          <height>41</height>
         </rect>
@@ -357,8 +357,8 @@ QMessageBox {
       <widget class="QLabel" name="label_9">
        <property name="geometry">
         <rect>
-         <x>350</x>
-         <y>40</y>
+         <x>110</x>
+         <y>20</y>
          <width>181</width>
          <height>41</height>
         </rect>
@@ -377,8 +377,8 @@ QMessageBox {
       <widget class="QLabel" name="label_10">
        <property name="geometry">
         <rect>
-         <x>670</x>
-         <y>40</y>
+         <x>430</x>
+         <y>20</y>
          <width>171</width>
          <height>31</height>
         </rect>
@@ -397,8 +397,8 @@ QMessageBox {
       <widget class="QLineEdit" name="Tab1_FirstName">
        <property name="geometry">
         <rect>
-         <x>330</x>
-         <y>100</y>
+         <x>90</x>
+         <y>80</y>
          <width>221</width>
          <height>41</height>
         </rect>
@@ -410,8 +410,8 @@ QMessageBox {
       <widget class="QLabel" name="label_11">
        <property name="geometry">
         <rect>
-         <x>40</x>
-         <y>40</y>
+         <x>110</x>
+         <y>150</y>
          <width>191</width>
          <height>41</height>
         </rect>
@@ -430,8 +430,8 @@ QMessageBox {
       <widget class="QLineEdit" name="Tab1_Student_ID">
        <property name="geometry">
         <rect>
-         <x>20</x>
-         <y>100</y>
+         <x>90</x>
+         <y>210</y>
          <width>221</width>
          <height>41</height>
         </rect>
@@ -443,8 +443,8 @@ QMessageBox {
       <widget class="QPushButton" name="Tab1_AddStudent">
        <property name="geometry">
         <rect>
-         <x>370</x>
-         <y>220</y>
+         <x>1060</x>
+         <y>80</y>
          <width>231</width>
          <height>41</height>
         </rect>
@@ -463,8 +463,8 @@ QMessageBox {
       <widget class="QPushButton" name="Tab1_DeleteStudent">
        <property name="geometry">
         <rect>
-         <x>760</x>
-         <y>220</y>
+         <x>350</x>
+         <y>210</y>
          <width>241</width>
          <height>41</height>
         </rect>
@@ -476,8 +476,8 @@ QMessageBox {
       <widget class="QLabel" name="label_19">
        <property name="geometry">
         <rect>
-         <x>1040</x>
-         <y>40</y>
+         <x>800</x>
+         <y>20</y>
          <width>91</width>
          <height>41</height>
         </rect>
@@ -496,8 +496,8 @@ QMessageBox {
       <widget class="QComboBox" name="Tab1_Major">
        <property name="geometry">
         <rect>
-         <x>900</x>
-         <y>100</y>
+         <x>660</x>
+         <y>80</y>
          <width>371</width>
          <height>41</height>
         </rect>
@@ -591,7 +591,7 @@ QComboBox QAbstractItemView::item:hover {
  </string>
        </property>
        <property name="verticalScrollBarPolicy">
-        <enum>Qt::ScrollBarAlwaysOff</enum>
+        <enum>Qt::ScrollBarAlwaysOn</enum>
        </property>
        <property name="horizontalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -1214,7 +1214,7 @@ QComboBox QAbstractItemView::item:hover {
     }</string>
       </property>
       <property name="verticalScrollBarPolicy">
-       <enum>Qt::ScrollBarAlwaysOff</enum>
+       <enum>Qt::ScrollBarAlwaysOn</enum>
       </property>
       <property name="horizontalScrollBarPolicy">
        <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -1289,7 +1289,7 @@ QComboBox QAbstractItemView::item:hover {
       <property name="font">
        <font>
         <family>Consolas,Courier New,monospace</family>
-        <pointsize>14</pointsize>
+        <pointsize>20</pointsize>
         <weight>50</weight>
         <italic>false</italic>
         <bold>false</bold>
@@ -2212,7 +2212,7 @@ QComboBox QAbstractItemView::item:hover {
     }</string>
       </property>
       <property name="verticalScrollBarPolicy">
-       <enum>Qt::ScrollBarAlwaysOff</enum>
+       <enum>Qt::ScrollBarAlwaysOn</enum>
       </property>
       <property name="horizontalScrollBarPolicy">
        <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -2372,7 +2372,7 @@ QComboBox QAbstractItemView::item:hover {
     <property name="font">
      <font>
       <family>Consolas,Courier New,monospace</family>
-      <pointsize>-1</pointsize>
+      <pointsize>20</pointsize>
      </font>
     </property>
     <property name="styleSheet">

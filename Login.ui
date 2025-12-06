@@ -24,6 +24,7 @@
   </property>
   <property name="font">
    <font>
+    <italic>false</italic>
     <underline>false</underline>
     <strikeout>false</strikeout>
     <kerning>false</kerning>
@@ -358,6 +359,7 @@ QPushButton:pressed {
      <font>
       <family>Consolas,Courier New monospace</family>
       <pointsize>20</pointsize>
+      <underline>true</underline>
      </font>
     </property>
     <property name="mouseTracking">
@@ -429,6 +431,12 @@ QPushButton:pressed {
      <font>
       <family>Consolas,Courier New monospace</family>
       <pointsize>20</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+      <underline>true</underline>
+      <strikeout>false</strikeout>
+      <kerning>true</kerning>
      </font>
     </property>
     <property name="mouseTracking">

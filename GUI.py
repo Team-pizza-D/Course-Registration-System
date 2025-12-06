@@ -8,8 +8,7 @@ from PyQt5 import uic, QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow,QShortcut,QMessageBox,QTableWidgetItem, QHeaderView, QAbstractItemView
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QKeySequence
-from classses2 import admin, student, users_db, enforce_strong_password, signup, update_password
-
+from classses2 import admin, student, users_db, enforce_strong_password, signup, update_password, user
 
 # _____________________________________________________________
 #                         Login WINDOW
@@ -97,7 +96,8 @@ class LoginWindow(QMainWindow):
         # Admin login (you said you will implement it later)
         admin_data = self.check_admin(UniID, password)
         if admin_data:
-            self.openAdminWindow()
+            admin_id, admin_name = admin_data
+            self.openAdminWindow(admin_id, admin_name)
             return
 
         QtWidgets.QMessageBox.warning(self, "Login Failed", "Invalid ID or Password.")
@@ -107,9 +107,9 @@ class LoginWindow(QMainWindow):
         self.main_window = StudentWindow(sid, sname, smajor)
         self.main_window.show()
         
-    def openAdminWindow(self):
+    def openAdminWindow(self, admin_id, admin_name):
         self.hide()
-        self.main_window = AdminWindow()
+        self.main_window = AdminWindow(admin_id=admin_id, admin_name=admin_name)
         self.main_window.show()
 
     def signupfunction(self):
@@ -254,9 +254,10 @@ class LoginWindow(QMainWindow):
             if not self.uni_id:
                 QtWidgets.QMessageBox.warning(self, "Error", "Please enter a University ID.")
                 return
-            s = student(id=self.uni_id)
-            if not s.is_student():
-                QtWidgets.QMessageBox.warning(self, "Error", "Student ID not found.")
+            s = user(id=self.uni_id)
+            
+            if not s.is_student() and not s.is_admin():
+                QtWidgets.QMessageBox.warning(self, "Error", "ID not found.")
                 return
             # Student exists → enable verification code field
             self.CodeLineEdit.setEnabled(True)
@@ -1326,7 +1327,6 @@ def generate_start_times():
 
     return times
 
-
 def generate_end_times():
     times = [None]
     hour = 8
@@ -1346,8 +1346,6 @@ def generate_end_times():
             hour += 1
 
     return times
-
-
 
 class AdminWindow(QtWidgets.QMainWindow):
     def __init__(self, admin_id, admin_name):
@@ -2396,17 +2394,4 @@ class AdminWindow(QtWidgets.QMainWindow):
             self.refresh_tab6()
         else:
             QMessageBox.warning(self, "Delete Course", str(msg))
-
-
-# _____________________________________________________________
-#                            MAIN
-# _____________________________________________________________
-def main():
-    app = QApplication(sys.argv)
-    window = LoginWindow()
-    window.show()
-    sys.exit(app.exec_())
-
-
-if __name__ == "__main__":
-    main()
+            

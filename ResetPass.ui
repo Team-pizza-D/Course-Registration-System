@@ -179,7 +179,7 @@ QPushButton {
     <property name="font">
      <font>
       <family>Consolas,Courier New,monospace</family>
-      <pointsize>-1</pointsize>
+      <pointsize>20</pointsize>
      </font>
     </property>
     <property name="mouseTracking">
