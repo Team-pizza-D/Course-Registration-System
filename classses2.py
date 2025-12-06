@@ -1438,13 +1438,14 @@ class admin(user):
                 fetchone=True)
 
             course_name = row[0]
-            credit      = row[1]     
+            credit      = row[1]
+            terms       = row[2]     
             if row[3] is None:
                 prerequisites = ""
             else:
                 prerequisites = row[3]
 
-            if row[2] is None or row[2] == "":
+            if terms is None or terms == "":
                 term_row = courses_db.execute("""
                     SELECT COALESCE(comm.terms, comp.terms, pow.terms, bio.terms)
                     FROM Courses AS c
@@ -1457,8 +1458,9 @@ class admin(user):
 
                 if term_row and term_row[0] is not None:
                     terms = term_row[0]
-            else:
-                terms = row[2]        
+                else:
+                    terms = ""
+                   
 
             courses_info[course_code] = {
                 "course_name": course_name,
@@ -1502,40 +1504,62 @@ class admin(user):
         #         "prerequisites": prerequisites
         #     }
         # return courses_info
-    
+    #________________________________________________________________________________________________________________________
+    # def add_course_to_plane(self, course_code, plane_major):
+
+    #     course_code = course_code.strip().upper()
+    #     sub = subject(course_code)
+
+    #     if not sub.is_existing():
+    #             return False, f"Course with code {course_code} does not exist."
+    #     row = courses_db.execute(
+    #         "SELECT course_name, credit, term, prerequisites FROM Courses WHERE course_code = ?",
+    #         (course_code,), fetchone=True
+    #     )
+
+    #     if not row:
+    #         return False, "Course not found in Courses table."
+
+    #     course_name = row[0]
+    #     credit = row[1]
+    #     terms = row[2]
+    #     prerequisites = row[3] if row[3] else ""
+
+    #     if terms is None or terms == "":
+    #         term_row = courses_db.execute("""
+    #             SELECT COALESCE(comm.terms, comp.terms, pow.terms, bio.terms)
+    #             FROM Courses c
+    #             LEFT JOIN communication AS comm ON comm.course_code = c.course_code
+    #             LEFT JOIN computer      AS comp ON comp.course_code = c.course_code
+    #             LEFT JOIN power         AS pow  ON pow.course_code = c.course_code
+    #             LEFT JOIN biomedical    AS bio  ON bio.course_code = c.course_code
+    #             WHERE c.course_code = ?
+    #         """, (course_code,), fetchone=True)
+
+    #         if term_row and term_row[0] is not None:
+    #             terms = term_row[0]
+
+    #     major_tables = {
+    #         "Electrical communication and electronics engineering": "communication",
+    #         "Electrical computer engineering": "computer",
+    #         "Electrical power and machines engineering": "power",
+    #         "Electrical biomedical engineering": "biomedical"
+    #     }
+
+    #     table_name = major_tables.get(plane_major)
+    #     if table_name is None:
+    #         return False, f"Unknown major: {plane_major}"
+
+    #     courses_db.execute(
+    #         f"INSERT INTO {table_name} (course_code, terms, prerequisites, credit, course_name) VALUES (?, ?, ?, ?, ?)",
+    #         (course_code, terms, prerequisites, credit, course_name),
+    #         commit=True
+    #     )
+
+    #     return True, f"Course with code {course_code} added to {plane_major} plane successfully."
+#________________________________________________________________________________________________________________________
     def add_course_to_plane(self, course_code, plane_major):
-
         course_code = course_code.strip().upper()
-        sub = subject(course_code)
-
-        if not sub.is_existing():
-                return False, f"Course with code {course_code} does not exist."
-        row = courses_db.execute(
-            "SELECT course_name, credit, term, prerequisites FROM Courses WHERE course_code = ?",
-            (course_code,), fetchone=True
-        )
-
-        if not row:
-            return False, "Course not found in Courses table."
-
-        course_name = row[0]
-        credit = row[1]
-        terms = row[2]
-        prerequisites = row[3] if row[3] else ""
-
-        if terms is None or terms == "":
-            term_row = courses_db.execute("""
-                SELECT COALESCE(comm.terms, comp.terms, pow.terms, bio.terms)
-                FROM Courses c
-                LEFT JOIN communication AS comm ON comm.course_code = c.course_code
-                LEFT JOIN computer      AS comp ON comp.course_code = c.course_code
-                LEFT JOIN power         AS pow  ON pow.course_code = c.course_code
-                LEFT JOIN biomedical    AS bio  ON bio.course_code = c.course_code
-                WHERE c.course_code = ?
-            """, (course_code,), fetchone=True)
-
-            if term_row and term_row[0] is not None:
-                terms = term_row[0]
 
         major_tables = {
             "Electrical communication and electronics engineering": "communication",
@@ -1548,11 +1572,54 @@ class admin(user):
         if table_name is None:
             return False, f"Unknown major: {plane_major}"
 
-        courses_db.execute(
-            f"INSERT INTO {table_name} (course_code, terms, prerequisites, credit, course_name) VALUES (?, ?, ?, ?, ?)",
-            (course_code, terms, prerequisites, credit, course_name),
-            commit=True
+        already = courses_db.execute(
+            f"SELECT 1 FROM {table_name} WHERE course_code = ?",
+            (course_code,),
+            fetchone=True
         )
+        if already:
+            return False, f"Course with code {course_code} is already in {plane_major} plan."
+
+        row = courses_db.execute(
+            "SELECT course_name, credit, term, prerequisites "
+            "FROM Courses WHERE course_code = ?",
+            (course_code,),
+            fetchone=True
+        )
+        if not row:
+            return False, "Course not found in Courses table."
+
+        course_name = row[0] or ""
+        credit = row[1]
+        terms = row[2]
+        prerequisites = row[3] if row[3] else ""
+
+        if terms is None or terms == "":
+            term_row = courses_db.execute("""
+                SELECT COALESCE(comm.terms, comp.terms, pow.terms, bio.terms)
+                FROM Courses c
+                LEFT JOIN communication AS comm ON comm.course_code = c.course_code
+                LEFT JOIN computer      AS comp ON comp.course_code = c.course_code
+                LEFT JOIN power         AS pow  ON pow.course_code  = c.course_code
+                LEFT JOIN biomedical    AS bio  ON bio.course_code  = c.course_code
+                WHERE c.course_code = ?
+            """, (course_code,), fetchone=True)
+
+            if term_row and term_row[0] is not None:
+                terms = term_row[0]
+            else:
+                terms = ""
+
+        try:
+            courses_db.execute(
+                f"INSERT INTO {table_name} "
+                f"(course_code, terms, prerequisites, credit, course_name) "
+                f"VALUES (?, ?, ?, ?, ?)",
+                (course_code, terms, prerequisites, credit, course_name),
+                commit=True
+            )
+        except Exception as e:
+            return False, f"Database error while adding course: {e}"
 
         return True, f"Course with code {course_code} added to {plane_major} plane successfully."
 

@@ -31,6 +31,11 @@ import smtplib
 # print(a.section_info_student())
 # b = (a.student_id_in_section())
 # print(b)
+a=admin(8206086)
+print(a.display_info())
+ok,msg=a.add_course_to_plane("MEP261","Electrical communication and electronics engineering")
+print(ok)
+print(msg)
 
 
 # ahmad=student(id=2453089)

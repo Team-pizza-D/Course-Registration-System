@@ -1141,26 +1141,69 @@ class AdminWindow(QtWidgets.QMainWindow):
 
         table.resizeColumnsToContents()
 
-    def add_course_to_plan(self):
-        row = self.Tab6_NoPlan_table.currentRow()
-        if row < 0:
-            QMessageBox.warning(self, "Add Course", "Please select a course from 'Not in plan'.")
-            return
+    # def add_course_to_plan(self):
+    #     row = self.Tab6_NoPlan_table.currentRow()
+    #     if row < 0:
+    #         QMessageBox.warning(self, "Add Course", "Please select a course from 'Not in plan'.")
+    #         return
 
-        course_code = self.Tab6_NoPlan_table.item(row, 0).text()
-        major = self.Tab6_Major_combobox.currentText()
+    #     course_code = self.Tab6_NoPlan_table.item(row, 0).text()
+    #     major = self.Tab6_Major_combobox.currentText()
+
+    #     try:
+    #         ok, msg = self.admin_obj.add_course_to_plane(course_code, major)
+    #     except Exception as e:
+    #         QMessageBox.critical(self, "Error", f"Error adding course: {e}")
+    #         return
+
+    #     if ok:
+    #         QMessageBox.information(self, "Add Course", str(msg))
+    #         self.refresh_tab6()
+    #     else:
+    #         QMessageBox.warning(self, "Add Course", str(msg))
+#_____________________________________________________________________________________________________________________________________________________
+    def add_course_to_plan(self):
+        
 
         try:
-            ok, msg = self.admin_obj.add_course_to_plane(course_code, major)
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"Error adding course: {e}")
-            return
+            row = self.Tab6_NoPlan_table.currentRow()
+            if row < 0:
+                QMessageBox.warning(self, "Add Course",
+                                    "Please select a course from 'Not in plan'.")
+                return
 
-        if ok:
-            QMessageBox.information(self, "Add Course", str(msg))
-            self.refresh_tab6()
-        else:
-            QMessageBox.warning(self, "Add Course", str(msg))
+            item = self.Tab6_NoPlan_table.item(row, 0)
+            if item is None:
+                QMessageBox.warning(self, "Add Course",
+                                    "Selected row has no course code.")
+                return
+
+            course_code = item.text().strip()
+            if not course_code:
+                QMessageBox.warning(self, "Add Course",
+                                    "Course code is empty.")
+                return
+
+            major = self.Tab6_Major_combobox.currentText()
+
+            ok, msg = self.admin_obj.add_course_to_plane(course_code, major)
+
+            if ok:
+                QMessageBox.information(self, "Add Course", str(msg))
+                self.refresh_tab6()
+            else:
+                QMessageBox.warning(self, "Add Course", str(msg))
+
+        except Exception as e:
+            import traceback
+            tb = traceback.format_exc()
+            QMessageBox.critical(self, "Unexpected Error",
+                                f"{e}\n\n{tb}")
+
+
+  
+
+
 
     def remove_course_from_plan(self):
         row = self.Tab6_CurrentPlan_table.currentRow()
