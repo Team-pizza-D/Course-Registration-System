@@ -159,8 +159,10 @@ QLineEdit::focus
 QMessageBox {
     color: white;
 }
-QLabel {
-    color: white;
+QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 10pt;
 }
 QPushButton {
     color: white;
@@ -277,7 +279,7 @@ QPushButton:pressed {
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../Downloads/change-password-5.png</pixmap>
+     <pixmap>icons/change-password-5.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>

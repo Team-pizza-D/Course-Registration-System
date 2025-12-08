@@ -1236,7 +1236,7 @@ class StudentWindow(QtWidgets.QMainWindow):
             uic.loadUi(ui_path, self)
 
             self.setFixedWidth(664)
-            self.setFixedHeight(705)
+            self.setFixedHeight(909)
 
             # Store student ID
             self.student_id = student_id
@@ -1246,6 +1246,8 @@ class StudentWindow(QtWidgets.QMainWindow):
 
             # Confirm button
             self.ConfirmButton.clicked.connect(self.process_password_change)
+            self.PasslineEditNew.textChanged.connect(self.update_pass_requirements)
+
 
             # ENTER key triggers confirm
             QShortcut(QKeySequence("Return"), self, self.ConfirmButton.click)
@@ -1270,7 +1272,8 @@ class StudentWindow(QtWidgets.QMainWindow):
                 return
 
 
-            if enforce_strong_password(new_pass):
+            self.update_pass_requirements()
+            if not enforce_strong_password(new_pass):
                 # Match check
                 if new_pass != confirm_pass:
                     QtWidgets.QMessageBox.warning(self, "Error", "New password and confirmation do not match.")
@@ -1302,6 +1305,54 @@ class StudentWindow(QtWidgets.QMainWindow):
                     "- Not contain 3 consecutive numbers"
                 )
                 return
+        def update_pass_requirements(self):
+            password = self.PasslineEditNew.text()
+
+            # --------- Requirements ---------
+            has_special = any(not c.isalnum() for c in password)
+            long_enough = len(password) >= 8
+            has_upper = any(c.isupper() for c in password)
+
+            # "Not contain 3 consecutive numbers" (it's okay to have numbers if not consecutive)
+            enforce_strong_password = lambda p: (
+                len(p) < 8 or
+                not any(not c.isalnum() for c in p) or
+                not any(c.isupper() for c in p) or
+                any(p[i:i+3].isdigit() and p[i] == p[i+1] == p[i+2] for i in range(len(p) - 2))
+            )
+            no_three_consecutive = enforce_strong_password
+
+            # --------- Per-line coloring ---------
+            color_special = "#00cc44" if has_special else "#cc0000"
+            color_length = "#00cc44" if long_enough else "#cc0000"
+            color_upper  = "#00cc44" if has_upper else "#cc0000"
+            color_3digits = "#00cc44" if no_three_consecutive else "#cc0000"
+
+            text = ""
+            text += (
+                f"<span style='color:{color_special}'>"
+                f"{'✔️' if has_special else '❌'} Must contain a special character"
+                f"</span><br>"
+            )
+            text += (
+                f"<span style='color:{color_length}'>"
+                f"{'✔️' if long_enough else '❌'} Minimum 8 characters"
+                f"</span><br>"
+            )
+            text += (
+                f"<span style='color:{color_upper}'>"
+                f"{'✔️' if has_upper else '❌'} Must contain an uppercase letter"
+                f"</span><br>"
+            )
+            text += (
+                f"<span style='color:{color_3digits}'>"
+                f"{'✔️' if no_three_consecutive else '❌'} No 3 consecutive digits"
+                f"</span><br>"
+            )
+
+            # Keep label style (only text is colored via HTML)
+            self.PassAcceptLabel.setText(text)
+
 
             
 # _____________________________________________________________

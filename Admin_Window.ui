@@ -50,7 +50,7 @@ QWidget
 QLabel{
     font-family: Consolas, &quot;Courier New&quot;, monospace;
 	color: rgb(232, 232, 232);
-	font: 20pt;
+	font: 10pt;
 }
 
 /*-----QPushButton-----*/
@@ -316,12 +316,12 @@ QMessageBox {
 </string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="icon">
       <iconset>
-       <normaloff>../../Downloads/ion--md-person-add.svg</normaloff>../../Downloads/ion--md-person-add.svg</iconset>
+       <normaloff>icons/ion--md-person-add.svg</normaloff>icons/ion--md-person-add.svg</iconset>
      </attribute>
      <attribute name="title">
       <string>Add / Delete Student</string>
@@ -613,7 +613,7 @@ QComboBox QAbstractItemView::item:hover {
     <widget class="QWidget" name="tab_3">
      <attribute name="icon">
       <iconset>
-       <normaloff>../../Downloads/heroicons-outline--arrow-down-on-square.svg</normaloff>../../Downloads/heroicons-outline--arrow-down-on-square.svg</iconset>
+       <normaloff>icons/heroicons-outline--arrow-down-on-square.svg</normaloff>icons/heroicons-outline--arrow-down-on-square.svg</iconset>
      </attribute>
      <attribute name="title">
       <string>Subject Enrollment</string>
@@ -867,7 +867,7 @@ background-color: rgb(0, 17n 29);</string>
     <widget class="QWidget" name="tab_4">
      <attribute name="icon">
       <iconset>
-       <normaloff>../../Downloads/mynaui--users-group.svg</normaloff>../../Downloads/mynaui--users-group.svg</iconset>
+       <normaloff>icons/mynaui--users-group.svg</normaloff>icons/mynaui--users-group.svg</iconset>
      </attribute>
      <attribute name="title">
       <string>Sections Capacites</string>
@@ -1091,7 +1091,7 @@ QComboBox QAbstractItemView::item:hover {
     <widget class="QWidget" name="tab_2">
      <attribute name="icon">
       <iconset>
-       <normaloff>../../Downloads/lucide--file-pen.svg</normaloff>../../Downloads/lucide--file-pen.svg</iconset>
+       <normaloff>icons/lucide--file-pen-paper.svg</normaloff>icons/lucide--file-pen-paper.svg</iconset>
      </attribute>
      <attribute name="title">
       <string>Grading System</string>
@@ -1272,7 +1272,7 @@ QComboBox QAbstractItemView::item:hover {
     <widget class="QWidget" name="tab_5">
      <attribute name="icon">
       <iconset>
-       <normaloff>../../Downloads/heroicons-outline--book-open.svg</normaloff>../../Downloads/heroicons-outline--book-open.svg</iconset>
+       <normaloff>icons/heroicons-outline--book-open.svg</normaloff>icons/heroicons-outline--book-open.svg</iconset>
      </attribute>
      <attribute name="title">
       <string>Courses Management</string>
@@ -1289,7 +1289,7 @@ QComboBox QAbstractItemView::item:hover {
       <property name="font">
        <font>
         <family>Consolas,Courier New,monospace</family>
-        <pointsize>20</pointsize>
+        <pointsize>14</pointsize>
         <weight>50</weight>
         <italic>false</italic>
         <bold>false</bold>
@@ -1502,6 +1502,13 @@ QComboBox QAbstractItemView::item:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 20pt;
+}</string>
+      </property>
       <property name="text">
        <string>Courses</string>
       </property>
@@ -1527,6 +1534,13 @@ QComboBox QAbstractItemView::item:hover {
         <width>221</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 20pt;
+}</string>
       </property>
       <property name="text">
        <string>Prerequisite</string>
@@ -2002,7 +2016,7 @@ QComboBox QAbstractItemView::item:hover {
     <widget class="QWidget" name="tab_6">
      <attribute name="icon">
       <iconset>
-       <normaloff>../../Downloads/heroicons-outline--calendar.svg</normaloff>../../Downloads/heroicons-outline--calendar.svg</iconset>
+       <normaloff>icons/heroicons-outline--calendar.svg</normaloff>icons/heroicons-outline--calendar.svg</iconset>
      </attribute>
      <attribute name="title">
       <string>Plan Management</string>
@@ -2015,6 +2029,13 @@ QComboBox QAbstractItemView::item:hover {
         <width>91</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 20pt;
+}</string>
       </property>
       <property name="text">
        <string>Major</string>
@@ -2341,6 +2362,13 @@ QComboBox QAbstractItemView::item:hover {
         <height>31</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 20pt;
+}</string>
+      </property>
       <property name="text">
        <string>Term</string>
       </property>
@@ -2355,6 +2383,13 @@ QComboBox QAbstractItemView::item:hover {
       <width>641</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 20pt;
+}</string>
     </property>
     <property name="text">
      <string>Welcome </string>
@@ -2385,7 +2420,7 @@ background-color: rgb(0, 17n 29);</string>
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../../Downloads/si--arrow-left-circle-fill.svg</normaloff>../../Downloads/si--arrow-left-circle-fill.svg</iconset>
+      <normaloff>icons/si--arrow-left-circle-fill.svg</normaloff>icons/si--arrow-left-circle-fill.svg</iconset>
     </property>
     <property name="flat">
      <bool>false</bool>

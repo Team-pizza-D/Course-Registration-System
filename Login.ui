@@ -145,8 +145,10 @@ QLineEdit::focus
 QMessageBox {
     color: white;
 }
-QLabel {
-    color: white;
+QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 10pt;
 }
 QPushButton {
     color: white;
@@ -312,7 +314,7 @@ QPushButton:pressed {
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../Downloads/login-user-name-1.png</pixmap>
+     <pixmap>icons/login-user-name-1.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -359,7 +361,6 @@ QPushButton:pressed {
      <font>
       <family>Consolas,Courier New monospace</family>
       <pointsize>20</pointsize>
-      <underline>true</underline>
      </font>
     </property>
     <property name="mouseTracking">
@@ -431,12 +432,6 @@ QPushButton:pressed {
      <font>
       <family>Consolas,Courier New monospace</family>
       <pointsize>20</pointsize>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-      <underline>true</underline>
-      <strikeout>false</strikeout>
-      <kerning>true</kerning>
      </font>
     </property>
     <property name="mouseTracking">
