@@ -147,8 +147,10 @@ QLineEdit::focus
 QMessageBox {
     color: white;
 }
-QLabel {
-    color: white;
+QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 10pt;
 }
 QPushButton {
     color: white;
@@ -204,7 +206,7 @@ QPushButton {
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../Downloads/63570592.png</pixmap>
+     <pixmap>icons/63570592.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -425,7 +427,7 @@ background-color: rgb(0, 17n 29);</string>
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../../Downloads/si--arrow-left-circle-fill.svg</normaloff>../../Downloads/si--arrow-left-circle-fill.svg</iconset>
+      <normaloff>icons/si--arrow-left-circle-fill.svg</normaloff>icons/si--arrow-left-circle-fill.svg</iconset>
     </property>
     <property name="flat">
      <bool>false</bool>

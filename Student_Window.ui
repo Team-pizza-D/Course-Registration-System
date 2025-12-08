@@ -23,7 +23,30 @@
    <bool>false</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true">QWidget
+   <string notr="true">/*Copyright (c) DevSec Studio. All rights reserved.
+
+MIT License
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+/*-----QWidget-----*/
+QWidget
 {
 	background-color: #00111d;
 	color: #000000;
@@ -32,6 +55,14 @@
 }
 
 
+/*-----QLabel-----*/
+QLabel{
+    font-family: Consolas, &quot;Courier New&quot;, monospace;
+	color: rgb(232, 232, 232);
+	font: 10pt;
+}
+
+/*-----QPushButton-----*/
 QPushButton {
     height: 50px;
     width: 120px;
@@ -40,7 +71,7 @@ QPushButton {
     color: rgb(232, 232, 232);
     font-family: Consolas, &quot;Courier New&quot;, monospace;
     font-size: 14px;
-    border-radius: 10px;
+    border-radius: 5px;
 
     /* Gradient background */
     background: qlineargradient(
@@ -76,26 +107,42 @@ QPushButton:pressed {
     padding-bottom: 3px;
 }
 
-QTableWidget {
-        background-color: #001622;
-        color: white;
-        font-size: 14px;
-        border: 1px solid #4c4c4c;
-    }
 
-QHeaderView::section {
-        background-color: #0b2e4a;
-        color: white;
-        padding: 5px;
-        border: 1px solid #32414B;
-        font-weight: bold;
-    }
+/*-----QToolButton-----*/
+QToolButton
+{
+	background-color: #00111d;
+	color: #000000;
+	border-style: solid;
+	border-color: #000000;
+	padding: 5px;
 
-QTableWidget::item:selected {
-        background-color: #1e90ff;
-        color: black;
-    }
+}
 
+
+QToolButton::hover
+{
+	background-color: #00111d;
+	color: #000000;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #01dcff;
+
+}
+
+
+QToolButton::pressed
+{
+	background-color: #01dcff;
+	color: #000000;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #01dcff;
+
+}
+
+
+/*-----QLineEdit-----*/
 QLineEdit
 {
 	background-color: #082336;
@@ -131,15 +178,83 @@ QLineEdit::focus
 
 }
 
+
 QMessageBox {
     color: white;
 }
-QLabel {
-    color: white;
+
+
+QScrollBar:vertical {
+    background: #00111d; 
+    width: 14px;
+    margin: 0px;
+    border-radius: 6px;
 }
-QPushButton {
-    color: white;
-}</string>
+
+QScrollBar::handle:vertical {
+    background: #2b2b2b;
+    min-height: 30px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #3c3c3c;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+/* Horizontal same theme */
+QScrollBar:horizontal {
+    background: #00111d;
+    height: 14px;
+    margin: 0px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #2b2b2b;
+    min-width: 30px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #3c3c3c;
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: none;
+}
+
+    
+    QTableWidget {
+        background-color: #001622;
+        color: white;
+        font-size: 14px;
+        border: 1px solid #4c4c4c;
+    }
+
+    QHeaderView::section {
+        background-color: #0b2e4a;
+        color: white;
+        padding: 5px;
+        border: 1px solid #32414B;
+        font-weight: bold;
+    }
+
+    QTableWidget::item:selected {
+        background-color: #1e90ff;
+        color: black;
+    }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="tabWidget">
@@ -232,7 +347,7 @@ QTabBar::tab {
 </string>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>1</number>
     </property>
     <property name="iconSize">
      <size>
@@ -243,7 +358,7 @@ QTabBar::tab {
     <widget class="QWidget" name="tab">
      <attribute name="icon">
       <iconset>
-       <normaloff>../../Downloads/prime--calendar-clock.svg</normaloff>../../Downloads/prime--calendar-clock.svg</iconset>
+       <normaloff>icons/prime--calendar-clock.svg</normaloff>icons/prime--calendar-clock.svg</iconset>
      </attribute>
      <attribute name="title">
       <string>Current Schedule</string>
@@ -338,7 +453,7 @@ QTabBar::tab {
     <widget class="QWidget" name="tab_2">
      <attribute name="icon">
       <iconset>
-       <normaloff>../../Downloads/heroicons-solid--document-text.svg</normaloff>../../Downloads/heroicons-solid--document-text.svg</iconset>
+       <normaloff>icons/heroicons-solid--document-text.svg</normaloff>icons/heroicons-solid--document-text.svg</iconset>
      </attribute>
      <attribute name="title">
       <string>Transcript</string>
@@ -465,6 +580,56 @@ QScrollBar::add-page:horizontal,
 QScrollBar::sub-page:horizontal {
     background: none;
 }
+QScrollBar:vertical {
+    background: #00111d; 
+    width: 14px;
+    margin: 0px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #2b2b2b;
+    min-height: 30px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #3c3c3c;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+/* Horizontal same theme */
+QScrollBar:horizontal {
+    background: #00111d;
+    height: 14px;
+    margin: 0px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #2b2b2b;
+    min-width: 30px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #3c3c3c;
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: none;
+}
 </string>
       </property>
       <property name="widgetResizable">
@@ -476,7 +641,7 @@ QScrollBar::sub-page:horizontal {
          <x>0</x>
          <y>0</y>
          <width>1330</width>
-         <height>569</height>
+         <height>565</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
@@ -616,6 +781,58 @@ QScrollBar::sub-page:horizontal {
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="styleSheet">
+           <string notr="true">QScrollBar:vertical {
+    background: #00111d; 
+    width: 14px;
+    margin: 0px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #2b2b2b;
+    min-height: 30px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #3c3c3c;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+/* Horizontal same theme */
+QScrollBar:horizontal {
+    background: #00111d;
+    height: 14px;
+    margin: 0px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #2b2b2b;
+    min-width: 30px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #3c3c3c;
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: none;
+}</string>
+          </property>
           <property name="editTriggers">
            <set>QAbstractItemView::NoEditTriggers</set>
           </property>
@@ -650,7 +867,7 @@ QScrollBar::sub-page:horizontal {
     <widget class="QWidget" name="tab_3">
      <attribute name="icon">
       <iconset>
-       <normaloff>../../Downloads/basil--add-outline (1).svg</normaloff>../../Downloads/basil--add-outline (1).svg</iconset>
+       <normaloff>icons/basil--add-outline (1).svg</normaloff>icons/basil--add-outline (1).svg</iconset>
      </attribute>
      <attribute name="title">
       <string>Add / Remove Courses</string>
@@ -891,7 +1108,7 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
     <widget class="QWidget" name="tab_4">
      <attribute name="icon">
       <iconset>
-       <normaloff>../../Downloads/solar--user-id-linear.svg</normaloff>../../Downloads/solar--user-id-linear.svg</iconset>
+       <normaloff>icons/solar--user-id-linear.svg</normaloff>icons/solar--user-id-linear.svg</iconset>
      </attribute>
      <attribute name="title">
       <string>Student Information</string>
@@ -931,7 +1148,6 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
         <weight>50</weight>
         <italic>false</italic>
         <bold>false</bold>
-        <underline>true</underline>
        </font>
       </property>
       <property name="styleSheet">
@@ -1023,7 +1239,7 @@ background-color: rgb(0, 17n 29);</string>
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../../Downloads/si--arrow-left-circle-fill.svg</normaloff>../../Downloads/si--arrow-left-circle-fill.svg</iconset>
+      <normaloff>icons/si--arrow-left-circle-fill.svg</normaloff>icons/si--arrow-left-circle-fill.svg</iconset>
     </property>
     <property name="flat">
      <bool>false</bool>

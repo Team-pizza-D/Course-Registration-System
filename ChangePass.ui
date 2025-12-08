@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>664</width>
-    <height>705</height>
+    <height>932</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -171,7 +171,7 @@ QPushButton {
     <property name="geometry">
      <rect>
       <x>270</x>
-      <y>600</y>
+      <y>660</y>
       <width>101</width>
       <height>41</height>
      </rect>
@@ -316,7 +316,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>370</x>
-      <y>510</y>
+      <y>610</y>
       <width>131</width>
       <height>17</height>
      </rect>
@@ -341,7 +341,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>370</x>
-      <y>440</y>
+      <y>540</y>
       <width>191</width>
       <height>51</height>
      </rect>
@@ -357,7 +357,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>450</y>
+      <y>550</y>
       <width>291</width>
       <height>31</height>
      </rect>
@@ -414,6 +414,19 @@ QPushButton:pressed {
      <enum>QLineEdit::Password</enum>
     </property>
    </widget>
+   <widget class="QLabel" name="PassAcceptLabel">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>430</y>
+      <width>201</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -421,7 +434,7 @@ QPushButton:pressed {
      <x>0</x>
      <y>0</y>
      <width>664</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
