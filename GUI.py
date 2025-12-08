@@ -1306,6 +1306,7 @@ class StudentWindow(QtWidgets.QMainWindow):
                 )
                 return
         def update_pass_requirements(self):
+<<<<<<< HEAD
             import re
 
             password = self.PasslineEditNew.text()
@@ -1332,10 +1333,16 @@ class StudentWindow(QtWidgets.QMainWindow):
                 self.PassAcceptLabel.setText(text)
                 return 
             # Requirements
+=======
+            password = self.PasslineEditNew.text()
+
+            # --------- Requirements ---------
+>>>>>>> b43e505cbcc6d5e7cce9076bea2b3d2631ebba1f
             has_special = any(not c.isalnum() for c in password)
             long_enough = len(password) >= 8
             has_upper = any(c.isupper() for c in password)
 
+<<<<<<< HEAD
             has_three_consecutive = bool(re.search(r"\d{3,}", password))
             no_three_consecutive = not has_three_consecutive
 
@@ -1360,11 +1367,49 @@ class StudentWindow(QtWidgets.QMainWindow):
                 f"{'✔️' if has_upper else '❌'} Must contain an uppercase letter"
                 f"</span><br>"
 
+=======
+            # "Not contain 3 consecutive numbers" (it's okay to have numbers if not consecutive)
+            enforce_strong_password = lambda p: (
+                len(p) < 8 or
+                not any(not c.isalnum() for c in p) or
+                not any(c.isupper() for c in p) or
+                any(p[i:i+3].isdigit() and p[i] == p[i+1] == p[i+2] for i in range(len(p) - 2))
+            )
+            no_three_consecutive = enforce_strong_password
+
+            # --------- Per-line coloring ---------
+            color_special = "#00cc44" if has_special else "#cc0000"
+            color_length = "#00cc44" if long_enough else "#cc0000"
+            color_upper  = "#00cc44" if has_upper else "#cc0000"
+            color_3digits = "#00cc44" if no_three_consecutive else "#cc0000"
+
+            text = ""
+            text += (
+                f"<span style='color:{color_special}'>"
+                f"{'✔️' if has_special else '❌'} Must contain a special character"
+                f"</span><br>"
+            )
+            text += (
+                f"<span style='color:{color_length}'>"
+                f"{'✔️' if long_enough else '❌'} Minimum 8 characters"
+                f"</span><br>"
+            )
+            text += (
+                f"<span style='color:{color_upper}'>"
+                f"{'✔️' if has_upper else '❌'} Must contain an uppercase letter"
+                f"</span><br>"
+            )
+            text += (
+>>>>>>> b43e505cbcc6d5e7cce9076bea2b3d2631ebba1f
                 f"<span style='color:{color_3digits}'>"
                 f"{'✔️' if no_three_consecutive else '❌'} No 3 consecutive digits"
                 f"</span><br>"
             )
 
+<<<<<<< HEAD
+=======
+            # Keep label style (only text is colored via HTML)
+>>>>>>> b43e505cbcc6d5e7cce9076bea2b3d2631ebba1f
             self.PassAcceptLabel.setText(text)
 
 
